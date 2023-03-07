@@ -51,6 +51,18 @@ button {
     transition: background 0.2s linear;
 }
 
+#login-button {
+    background-color: cornflowerblue;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 5px 10px;
+    /*text-transform: uppercase;*/
+    transition: background 0.2s linear;
+}
+
 input {
     border: none;
     border-radius: 3px;
