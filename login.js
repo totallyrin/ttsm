@@ -20,6 +20,6 @@ loginButton.addEventListener("click", (e) => {
         location.reload();
     } else {
         // loginErrorMsg.style.opacity = 1;
-        loginErrorMsg.toggle('showing')
+        loginErrorMsg.classList.toggle('showing');
     }
 })

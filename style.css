@@ -61,6 +61,8 @@ button {
     padding: 5px 10px;
     /*text-transform: uppercase;*/
     transition: background 0.2s linear;
+    cursor: pointer;
+    display: inline-block;
 }
 
 input {
