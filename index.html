@@ -9,16 +9,20 @@
 <main>
   <div id="auth">
     <h1>LOGIN</h1>
-    <form>
-      username: <input type="text" id="username" required>
+    <div id="login-error-msg-holder">
+      <p id="login-error-msg">invalid username <span id="error-msg-second-line">and/or password</span></p>
+    </div>
+    <br>
+    <form id="login-form">
+      <input type="text" id="username" placeholder="username" required>
       <br>
-      password: <input type="password" id="password" required>
+      <input type="password" id="password" placeholder="password" required>
       <br>
       <input type="checkbox" id="passtoggle" onclick="togglePassword()"> show password
       <br>
       <input type="checkbox" checked="checked" id="remember"> remember me
       <br>
-      <button id="login">login</button>
+      <button id="login-button">login</button>
     </form>
   </div>
 </main>
