@@ -14,13 +14,13 @@
     </div>
     <br>
     <form id="login-form">
-      <label for="username"></label><input type="text" id="username" placeholder="username" required>
+      <label for="username"></label><input type="text" id="username" placeholder="username" required onfocus="hideLoginError()">
       <br>
-      <label for="password"></label><input type="password" id="password" placeholder="password" required>
+      <label for="password"></label><input type="password" id="password" placeholder="password" required onfocus="hideLoginError()">
       <br>
-      <label for="passtoggle"></label><input type="checkbox" id="passtoggle" onclick="togglePassword()"> show password
+      <label for="passtoggle"></label><input type="checkbox" id="passtoggle" onclick="togglePassword()" onfocus="hideLoginError()"> show password
       <br>
-      <label for="remember"></label><input type="checkbox" checked="checked" id="remember"> remember me
+      <label for="remember"></label><input type="checkbox" checked="checked" id="remember" onfocus="hideLoginError()"> remember me
       <br>
 <!--      <button id="login-button">login</button>-->
       <input type="submit" value="login" id="login-button">

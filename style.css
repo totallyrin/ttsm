@@ -5,6 +5,7 @@
 
 * {
     font-family: 'Source Code Pro', monospace;
+    /*transition: background 0.2s linear;*/
 }
 
 body {
@@ -66,6 +67,11 @@ button {
     width: fit-content;
 }
 
+#login-button:hover {
+    border: solid 2px #4668a5;
+    margin: -2px -2px 3px -2px;
+}
+
 input {
     border: none;
     border-radius: 3px;
@@ -73,6 +79,16 @@ input {
     padding: 5px;
     margin-bottom: 5px;
     width: 50%;
+}
+
+#username:hover {
+    border: solid 2px #8f8f9d;
+    margin: -2px -2px 3px -2px;
+}
+
+#password:hover {
+    border: solid 2px #8f8f9d;
+    margin: -2px -2px 3px -2px;
 }
 
 #passtoggle {
@@ -86,21 +102,19 @@ input {
 }
 
 #login-error-msg-holder {
-    /*background-color: lightcoral;*/
-    /*border-radius: 6px;*/
-    /*padding: 0 20px 0 20px;*/
-    /*transition: background 0.2s linear;*/
-    /*color: #1f1f1f;*/
-    display: none;
+    /*transition: all 0.1s linear;*/
+    color: #1f1f1f;
+    display: inline-block;
+    opacity: 0;
 }
 
 #login-error-msg-holder.showing {
     background-color: lightcoral;
     border-radius: 6px;
     padding: 0 20px 0 20px;
-    transition: background 0.2s linear;
     color: #1f1f1f;
     display: inline-block;
+    opacity: 1;
 }
 
 /*#login {*/

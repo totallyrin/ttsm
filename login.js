@@ -22,3 +22,7 @@ loginButton.addEventListener("click", (e) => {
         loginErrorMsg.classList.add('showing');
     }
 })
+
+function hideLoginError() {
+    loginErrorMsg.classList.remove('showing');
+}
