@@ -3,7 +3,7 @@ const loginButton = document.getElementById("login-button");
 const loginErrorMsg = document.getElementById("login-error-msg-holder");
 
 function togglePassword() {
-    var x = document.getElementById("password");
+    let x = document.getElementById("password");
     if (x.type === "password") {
         x.type = "text";
     } else {
@@ -16,8 +16,9 @@ loginButton.addEventListener("click", (e) => {
     const password = loginForm.password.value;
 
     if (username === "user" && password === "pass") {
-        alert("You have successfully logged in.");
-        location.reload();
+        // alert("You have successfully logged in.");
+        // location.reload();
+        location.assign("client/home.html");
     } else {
         loginErrorMsg.classList.add('showing');
     }
