@@ -19,7 +19,6 @@ loginButton.addEventListener("click", (e) => {
         alert("You have successfully logged in.");
         location.reload();
     } else {
-        // loginErrorMsg.style.opacity = 1;
-        loginErrorMsg.classList.toggle('showing');
+        loginErrorMsg.classList.add('showing');
     }
 })

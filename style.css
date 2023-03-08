@@ -63,6 +63,7 @@ button {
     transition: background 0.2s linear;
     cursor: pointer;
     display: inline-block;
+    width: fit-content;
 }
 
 input {
