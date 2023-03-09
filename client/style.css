@@ -19,34 +19,38 @@ body {
 
 nav {
     background-color: #1f1f1f;
-    box-shadow: -3px 0 12px black;
-    /*border-radius: 6px;*/
-    width: 100%;
-    max-height: 85vh;
-    padding: 20px 20px 20px 20px;
-    margin-bottom: 50px;
+    border: solid #121212;
+    box-shadow: 0 0 15px black;
+    border-radius: 6px;
+    padding: 20px 50px 20px 50px;
+    margin: 1% 1% 2% 1%;
     overflow: auto;
     transition: background 0.2s linear;
     text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-main.login {
+main {
     background-color: #1f1f1f;
     border: solid #121212;
     box-shadow: 0 0 15px black;
     border-radius: 6px;
     padding: 20px 20px 20px 20px;
-    margin: auto auto 20px;
+    /*margin: 10% 5% 10% 5%;*/
+    margin: 1% 1% 1% 1%;
     overflow: auto;
     transition: background 0.2s linear;
     text-align: center;
     justify-content: center;
     align-items: center;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 50%;
+    /* below code is used to center login screen */
+    /*position: fixed;*/
+    /*top: 50%;*/
+    /*left: 50%;*/
+    /*transform: translate(-50%, -50%);*/
+    /*width: 50%;*/
 }
 
 form {
@@ -69,8 +73,16 @@ button {
     font-size: 15px;
     font-weight: bold;
     padding: 5px 10px;
+    margin: 0 5px 0 5px;
     /*text-transform: uppercase;*/
     transition: background 0.2s linear;
+    width: 75px;
+}
+
+button:hover {
+    border: solid 2px #4668a5;
+    margin: 0 3px 0 3px;
+    width: 79px;
 }
 
 #login-button {
@@ -138,17 +150,63 @@ input {
     opacity: 1;
 }
 
-/*#login {*/
-/*    background-color: cornflowerblue;*/
-/*    border: none;*/
-/*    border-radius: 3px;*/
-/*    color: white;*/
-/*    font-size: 15px;*/
-/*    font-weight: bold;*/
-/*    padding: 5px 10px;*/
-/*    !*text-transform: uppercase;*!*/
-/*    transition: background 0.2s linear;*/
-/*    float: right;*/
-/*    margin-left: 5px;*/
-/*}*/
+a {
+    color: #f0f0f0;
+}
+
+a:hover {
+
+}
+
+a:visited {
+    text-decoration: none;
+    /*color: #f0f0f0;*/
+}
+
+.games {
+    margin: 20px 20px 20px 20px;
+    display: inline-flex;
+    text-align: center;
+    justify-content: space-between;
+    /*justify-content: center;*/
+    column-gap: 5%;
+    align-items: center;
+    width: 50%;
+}
+
+p {
+    width: 20%;
+}
+
+p.online {
+    color: #6bb700;
+}
+
+p.offline {
+    color:#bc2f49;
+}
+
+img {
+    width: 64px;
+    height: 64px;
+}
+
+ul {
+    list-style: none;
+    margin-bottom: 20px;
+    margin-top: 0;
+    padding: 0;
+    min-height: 40px;
+}
+
+li {
+    padding: 10px;
+    word-wrap: break-word;
+}
+
+li:nth-child(even) {
+    background-color: #292929;
+    border-radius: 6px;
+    transition: background 0.2s linear;
+}
 

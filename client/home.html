@@ -1,18 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <link rel = "stylesheet" href = "style.css">
-<script src = "login.js" defer></script>
+<script src = "client.js" defer></script>
 <head>
     <meta charset="UTF-8">
     <title>SERVER CONTROLLER</title>
 </head>
 
 <nav>
-<h1>username</h1>
+    <a href="../index.html" class="nav-link" id="log-out">log out</a>
+    <h1 id="user">username</h1>
+    <img src="../img/account.png" style="" alt="account">
 </nav>
 
-<main>
+<main onload="serverInit()">
+    <ul>
+        <li><div id="minecraft" class="games">
+            <img src="../img/minecraft.png" alt="minecraft">
+            <p>minecraft</p>
+            <p id="minecraft-status">status</p>
+            <button id="minecraft-button" onclick="startStop('minecraft')">on/off</button>
+        </div></li>
 
+        <li><div id="terraria" class="games">
+            <img src="../img/terraria.png" alt="terraria">
+            <p>terraria</p>
+            <p id="terraria-status">status</p>
+            <button id="terraria-button" onclick="startStop('terraria')">on/off</button>
+        </div></li>
+
+        <li><div id="valheim" class="games">
+            <img src="../img/valheim.png" alt="valheim">
+            <p>valheim</p>
+            <p id="valheim-status">status</p>
+            <button id="valheim-button" onclick="startStop('valheim')">on/off</button>
+        </div></li>
+
+        <li><div id="pz" class="games">
+            <img src="../img/pz.png" alt="pz">
+            <p>project zomboid</p>
+            <p id="pz-status">status</p>
+            <button id="pz-button" onclick="startStop('pz')">on/off</button>
+        </div></li>
+    </ul>
 </main>
 
 </html>
