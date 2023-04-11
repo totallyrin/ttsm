@@ -14,33 +14,34 @@
 </nav>
 
 <main onload="serverInit()">
+    <pre id="console"></pre>
     <ul>
         <li><div id="minecraft" class="games">
             <img src="../img/minecraft.png" alt="minecraft">
             <p>minecraft</p>
-            <p id="minecraft-status">status</p>
-            <button id="minecraft-button" onclick="startStop('minecraft')">on/off</button>
+            <p id="minecraft-status" class="status">pinging</p>
+            <button id="minecraft-button" onclick="updateStatuses('minecraft')">on/off</button>
         </div></li>
 
         <li><div id="terraria" class="games">
             <img src="../img/terraria.png" alt="terraria">
             <p>terraria</p>
-            <p id="terraria-status">status</p>
-            <button id="terraria-button" onclick="startStop('terraria')">on/off</button>
+            <p id="terraria-status" class="status">pinging</p>
+            <button id="terraria-button" onclick="updateStatuses('terraria')">on/off</button>
         </div></li>
 
         <li><div id="valheim" class="games">
             <img src="../img/valheim.png" alt="valheim">
             <p>valheim</p>
-            <p id="valheim-status">status</p>
-            <button id="valheim-button" onclick="startStop('valheim')">on/off</button>
+            <p id="valheim-status" class="status">pinging</p>
+            <button id="valheim-button" onclick="updateStatuses('valheim')">on/off</button>
         </div></li>
 
         <li><div id="pz" class="games">
             <img src="../img/pz.png" alt="pz">
             <p>project zomboid</p>
-            <p id="pz-status">status</p>
-            <button id="pz-button" onclick="startStop('pz')">on/off</button>
+            <p id="pz-status" class="status">pinging</p>
+            <button id="pz-button" onclick="updateStatuses('pz')">on/off</button>
         </div></li>
     </ul>
 </main>

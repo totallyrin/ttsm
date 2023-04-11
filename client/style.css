@@ -178,12 +178,17 @@ p {
     width: 20%;
 }
 
+p.status {
+    color: #eeb132;
+}
+
 p.online {
     color: #6bb700;
 }
 
 p.offline {
-    color:#bc2f49;
+    /*color: #bc2f49;*/
+    color: #ed3e42
 }
 
 img {

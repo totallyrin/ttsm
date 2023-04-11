@@ -8,5 +8,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "ps-node": "^0.1.6",
+    "ws": "^8.13.0"
+  }
 }
