@@ -14,17 +14,25 @@ function updateStatuses(data) {
     let game = data.game;
     let status = document.getElementById((game + '-status'));
     let button = document.getElementById((game + '-button'));
-    button.innerText = data.running ? 'stop' : 'start';
-    status.textContent = data.running ? 'online' : 'offline';
-    if (data.running) {
+    if (data.running === 'pinging') {
+        button.innerText = 'stop';
+        status.textContent = 'pinging';
+        status.classList.remove('online');
         status.classList.remove('offline');
-        status.classList.add('online');
+        status.classList.add('status');
     }
     else {
-        status.classList.remove('online');
-        status.classList.add('offline');
+        button.innerText = data.running ? 'stop' : 'start';
+        status.textContent = data.running ? 'online' : 'offline';
+        if (data.running) {
+            status.classList.remove('offline');
+            status.classList.add('online');
+        } else {
+            status.classList.remove('online');
+            status.classList.add('offline');
+        }
+        status.classList.remove('status');
     }
-    status.classList.remove('status');
 }
 
 /**
