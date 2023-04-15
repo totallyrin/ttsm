@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "discord.js": "^14.9.0",
     "node-pty": "^0.10.1",
-    "ps-node": "^0.1.6",
     "ws": "^8.13.0"
   }
 }

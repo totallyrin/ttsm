@@ -3,14 +3,17 @@
  */
 const { spawn } = require('child_process');
 const { exec } = require('child_process');
-const WebSocket = require('ws');
 
-const wss = new WebSocket.Server({port: 8080});
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({port: 443});
 global.WebSocket = require('ws');
 
 const os = require('os');
 const pty = require('node-pty');
 const shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
+
+const { startBot } = require('../discord/discord.js');
+// const client = new Discord.Client(undefined);
 
 let minecraft = {
     server: undefined,
@@ -32,39 +35,12 @@ let pz = {
     running: false
 };
 
-// const games = ['minecraft', 'terraria', 'valheim', 'pz'];
-const servers = {
+exports.servers = {
     minecraft: minecraft,
     terraria: terraria,
     valheim: valheim,
     pz: pz
 };
-
-// let minecraftServer;
-// let minecraftServerRunning = false;
-
-// let terrariaServer;
-// let terrariaServerRunning = false;
-
-// let valheimServer;
-// let valheimServerRunning = false;
-
-// let pzServer;
-// let pzServerRunning = false;
-
-// let servers = {
-//     minecraft: undefined,
-//     terraria: undefined,
-//     valheim: undefined,
-//     pz: undefined
-// };
-//
-// let running = {
-//     minecraft: false,
-//     terraria: false,
-//     valheim: false,
-//     pz: false
-// };
 
 /**
  * function to kill all foreign game servers
@@ -72,7 +48,7 @@ const servers = {
  * @returns {Promise<void>}
  */
 async function killAll() {
-    for (const game in games) {
+    for (const game in exports.servers) {
         await killServer(game);
     }
 }
@@ -176,39 +152,32 @@ function killServer(game) {
  *
  * @param ws web server for messaging
  */
-function updateStatusesOnce(ws) {
-    // console.log('sending server statuses to client');
-    // minecraft
-    ws.send(JSON.stringify({type: 'serverState', game: 'minecraft', running: minecraft.running}));
-    // terraria
-    ws.send(JSON.stringify({type: 'serverState', game: 'terraria', running: terraria.running}));
-    // valheim
-    ws.send(JSON.stringify({type: 'serverState', game: 'valheim', running: valheim.running}));
-    // project zomboid
-    ws.send(JSON.stringify({type: 'serverState', game: 'pz', running: pz.running}));
+function updateAll(ws) {
+    for (const server in exports.servers) {
+        ws.send(JSON.stringify({type: 'serverState', game: server, running: exports.servers[server].running}));
+    }
 }
 
 /**
- * function to send server status updates every @param secs seconds
+ * function to send server status updates
  *
  * @param ws web server for messaging
- * @param secs interval, in seconds
+ * @param game
+ * @param status
  */
-function updateStatuses(ws, secs) {
-    if (secs > 0) {
-        setInterval(() => {
-            updateStatusesOnce(ws);
-        }, secs * 1000);
-    }
-    else {
-        updateStatusesOnce(ws);
-    }
-}
 
 function updateStatus(ws, game, status) {
-    servers[game].running = status;
-    updateStatusesOnce(ws);
+    exports.servers[game].running = status;
+    ws.send(JSON.stringify({type: 'serverState', game: game, running: exports.servers[game].running}));
 }
+
+
+console.log('starting discord bot');
+// run discord bot
+// process.chdir('discord');
+// minecraft.server = spawn('java', []);
+// process.chdir('..');
+startBot();
 
 /**
  * code to run on new client connection
@@ -217,7 +186,7 @@ wss.on('connection', (ws) => {
     console.log('client connected');
 
     // send server status to webpage
-    updateStatusesOnce(ws);
+    updateAll(ws);
 
     // when message is received from client:
     ws.on('message', async (message) => {

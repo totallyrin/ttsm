@@ -2,7 +2,7 @@
  * client code
  */
 
-const ws = new WebSocket('ws://localhost:8080');
+const ws = new WebSocket('ws://localhost:443');
 
 const minecraftButton = document.getElementById('minecraft-button'),
     terrariaButton = document.getElementById('terraria-button'),
