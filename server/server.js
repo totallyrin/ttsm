@@ -13,7 +13,7 @@ const pty = require('node-pty');
 const shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
 
 const { startBot } = require('../discord/discord.js');
-// const client = new Discord.Client(undefined);
+const { deploy } = require("../discord/deploy-commands");
 
 let minecraft = {
     server: undefined,
@@ -171,12 +171,8 @@ function updateStatus(ws, game, status) {
     ws.send(JSON.stringify({type: 'serverState', game: game, running: exports.servers[game].running}));
 }
 
-
 console.log('starting discord bot');
-// run discord bot
-// process.chdir('discord');
-// minecraft.server = spawn('java', []);
-// process.chdir('..');
+deploy();
 startBot();
 
 /**
