@@ -4,10 +4,29 @@
 
 const ws = new WebSocket('ws://localhost:443');
 
-const minecraftButton = document.getElementById('minecraft-button'),
-    terrariaButton = document.getElementById('terraria-button'),
-    valheimButton = document.getElementById('valheim-button'),
-    pzButton = document.getElementById('pz-button');
+/**
+ * add server to webpage
+ *
+ * @param game game server to add
+ */
+function addServer(game) {
+    const serverList = document.getElementById('server-list');
+    const server = document.createElement('li');
+    server.innerHTML = `
+        <li><div id="${game}" class="games">
+            <img src="../img/${game}.png" alt="${game}">
+            <p>${game === 'pz' ? 'Project Zomboid' : game.charAt(0).toUpperCase() + game.slice(1)}</p>
+            <p id="${game}-status" class="status">pinging</p>
+            <button id="${game}-button">on/off</button>
+        </div></li>`;
+
+    serverList.append(server);
+
+    // add button functionality
+    document.getElementById(`${game}-button`).onclick = () => {
+        ws.send(JSON.stringify({ type: 'startStop', game: game }));
+    };
+}
 
 /**
  * function responsible for updating game statuses, given message from server.js
@@ -41,40 +60,24 @@ function updateStatuses(data) {
     }
 }
 
-/**
- * function responsible for handling messages received from server.js
- *
- * @param event message that was sent
- */
+if (!localStorage.getItem('isLoggedIn')) {
+    // redirect users to login page if not logged in
+    window.location.assign('..\\index.html');
+}
+
 // receive messages from server
 ws.onmessage = function (event) {
     // get data from message
     const data = JSON.parse(event.data);
     // if message is about server status, call update function
-    if (data.type === 'serverState') {
-        updateStatuses(data);
-    } else {
-        document.getElementById('console').textContent += event.data;
+    switch (data.type) {
+        case 'serverState':
+            updateStatuses(data);
+            break;
+        case 'serverList':
+            addServer(data.name);
+            break;
+        default:
+            document.getElementById('console').textContent += event.data;
     }
-};
-
-// send messages to start and stop server based on button press
-// minecraft
-minecraftButton.onclick = () => {
-    ws.send(JSON.stringify({ type: 'startStop', game: 'minecraft' }));
-};
-
-// terraria
-terrariaButton.onclick = () => {
-    ws.send(JSON.stringify({ type: 'startStop', game: 'terraria' }));
-};
-
-// valheim
-valheimButton.onclick = () => {
-    ws.send(JSON.stringify({ type: 'startStop', game: 'valheim' }));
-};
-
-// project zomboid
-pzButton.onclick = () => {
-    ws.send(JSON.stringify({ type: 'startStop', game: 'pz' }));
 };

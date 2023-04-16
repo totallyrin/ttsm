@@ -61,66 +61,16 @@ async function killAll() {
  */
 function killServer(game) {
     return new Promise((resolve, reject) => {
+        console.log(game)
         switch (game) {
-            // minecraft
+            // java-based servers
+            case 'pz':
             case 'minecraft':
                 // Find the process ID of the Minecraft server
                 exec('tasklist | find "java.exe"', (error, stdout, stderr) => {
                     if (error) {
                         // console.error(`exec error: ${error}`);
-                        console.error('could not find any unknown minecraft servers');
-                        // reject(error);
-                        resolve();
-                        return;
-                    }
-
-                    // Extract the process ID from the output
-                    const pid = stdout.trim().split(/\s+/)[1];
-
-                    // Kill the process
-                    exec(`taskkill /F /PID ${pid}`, (error, stdout, stderr) => {
-                        if (error) {
-                            console.error(`exec error: ${error}`);
-                            reject(error);
-                        }
-
-                        console.log('unknown minecraft servers killed');
-                        resolve();
-                    });
-                });
-                break;
-            case 'terraria':
-                // Find the process ID of the Minecraft server
-                exec('tasklist | find "TerrariaServer.exe"', (error, stdout, stderr) => {
-                    if (error) {
-                        // console.error(`exec error: ${error}`);
-                        console.error('could not find any unknown terraria servers');
-                        // reject(error);
-                        resolve();
-                        return;
-                    }
-
-                    // Extract the process ID from the output
-                    const pid = stdout.trim().split(/\s+/)[1];
-
-                    // Kill the process
-                    exec(`taskkill /F /PID ${pid}`, (error, stdout, stderr) => {
-                        if (error) {
-                            console.error(`exec error: ${error}`);
-                            reject(error);
-                        }
-
-                        console.log('unknown terraria servers killed');
-                        resolve();
-                    });
-                });
-                break;
-            case 'valheim':
-                // Find the process ID of the Minecraft server
-                exec('tasklist | find "valheim_server.exe"', (error, stdout, stderr) => {
-                    if (error) {
-                        // console.error(`exec error: ${error}`);
-                        console.error('could not find any unknown valheim servers');
+                        console.error(`could not find any unknown ${game} servers`);
                         // reject(error);
                         resolve();
                         return;
@@ -141,14 +91,170 @@ function killServer(game) {
                     });
                 });
                 break;
-            case 'pz':
+            case 'valheim':
+            case 'terraria':
+                // Find the process ID of the Minecraft server
+                exec(`tasklist | find "${game.charAt(0).toUpperCase() + game.slice(1)}Server.exe"`, (error, stdout, stderr) => {
+                    if (error) {
+                        // console.error(`exec error: ${error}`);
+                        console.error(`could not find any unknown ${game} servers`);
+                        // reject(error);
+                        resolve();
+                        return;
+                    }
+
+                    // Extract the process ID from the output
+                    const pid = stdout.trim().split(/\s+/)[1];
+
+                    // Kill the process
+                    exec(`taskkill /F /PID ${pid}`, (error, stdout, stderr) => {
+                        if (error) {
+                            console.error(`exec error: ${error}`);
+                            reject(error);
+                        }
+
+                        console.log('unknown servers killed');
+                        resolve();
+                    });
+                });
                 break;
         }
     });
 }
 
 /**
- * function to send server status updates a single time
+ * function to start a server
+ *
+ * @param ws websocket to send status updates over
+ * @param game server to start
+ * @param cmd start command
+ * @param args start arguments
+ * @param stop stop command
+ * @param online online confirmation phrase
+ * @param offline offline confirmation phrase
+ * @returns {Promise<void>}
+ */
+async function startServer(ws, game, cmd, args, stop, online, offline) {
+    // if server is running, send stop command
+    if (exports.servers[game].running) {
+        console.log(`attempting to stop ${game} server`);
+        try {
+            exports.servers[game].server.stdin.write(stop);
+        } catch (e) {
+            console.log(`could not stop ${game} server safely; attempting to kill`);
+            try {
+                exports.servers[game].server.kill();
+            } catch (e) {
+                console.log(`could not kill ${game} server`);
+            }
+        }
+    }
+    // if server is not running,
+    else {
+        updateStatus(ws, game, 'pinging');
+
+        // kill unknown servers
+        await killServer(game);
+
+        console.log(`starting game server`);
+        // start a new server
+        process.chdir(`game_servers\\${game}`);
+        exports.servers[game].server = spawn(cmd, args);
+        process.chdir('..\\..');
+
+        exports.servers[game].server.stdout.on('data', (data) => {
+            if (data !== ('\n' || '\r')) {
+                console.log(`${game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.toString().trim()}`);
+                if (data.includes(online))
+                    updateStatus(ws, game, true);
+                if (data.includes(offline))
+                    updateStatus(ws, game, 'pinging');
+                ws.send(data);
+            }
+        });
+
+        exports.servers[game].server.stderr.on('data', (data) => {
+            console.error(`${game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.trim()}`);
+            ws.send(data);
+        });
+
+        exports.servers[game].server.on('close', (code) => {
+            console.log(`${game.charAt(0).toUpperCase() + game.slice(1)} server exited with code ${code}`);
+            updateStatus(ws, game, false);
+        });
+    }
+}
+
+/**
+ * function to start a server using node-pty
+ *
+ * @param ws websocket to send status updates over
+ * @param game server to start
+ * @param args start arguments
+ * @param stop stop command
+ * @param online online confirmation phrase
+ * @param offline offline confirmation phrase
+ * @returns {Promise<void>}
+ */
+async function startServerPTY(ws, game, args, stop, online, offline) {
+    // if server is running, send stop command
+    if (exports.servers[game].running) {
+        console.log(`attempting to stop ${game} server`);
+        try {
+            exports.servers[game].server.write(stop);
+        }
+        catch (e) {
+            console.log(`could not stop ${game} server safely; attempting to kill`);
+            try {
+                exports.servers[game].server.kill();
+            }
+            catch (e) {
+                console.log(`could not kill ${game} server`);
+            }
+        }
+    }
+    // if server is not running,
+    else {
+        updateStatus(ws, game, 'pinging');
+
+        // kill unknown servers
+        await killServer(game);
+
+        console.log(`starting ${game} server`);
+        // start a new server
+        process.chdir(`game_servers\\${game}`);
+        exports.servers[game].server = pty.spawn(shell, args, {
+            name: `${game === 'pz' ? 'PZ' : game.charAt(0).toUpperCase() + game.slice(1)}Server`,
+            cwd: process.env.PWD,
+            env: process.env
+        });
+        process.chdir('..\\..');
+
+        exports.servers[game].server.onData((data) => {
+            if (data.charAt(0) !== ('\n' || '\r' || '\\\n' || ' ')) {
+                console.log(`${game === 'pz' ? 'PZ' : game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.trim()}`);
+                if (data.includes(online))
+                    updateStatus(ws, game, true);
+                if (data.includes(offline)) {
+                    updateStatus(ws, game, 'pinging');
+                }
+                if (data.includes('Terminate batch job (Y/N)?')) {
+                    exports.servers[game].server.write('Y');
+                    updateStatus(ws, game, false);
+                }
+            }
+            ws.send(JSON.stringify(data));
+        });
+
+        exports.servers[game].server.onExit((data) => {
+            console.log(`${game.charAt(0).toUpperCase() + game.slice(1)} server exited with code ${data.exitCode}`);
+            updateStatus(ws, game, false);
+        });
+    }
+}
+
+/**
+ * function to send server status updates for all servers
  *
  * @param ws web server for messaging
  */
@@ -162,14 +268,15 @@ function updateAll(ws) {
  * function to send server status updates
  *
  * @param ws web server for messaging
- * @param game
- * @param status
+ * @param game game to update
+ * @param status status to update to
  */
-
 function updateStatus(ws, game, status) {
     exports.servers[game].running = status;
     ws.send(JSON.stringify({type: 'serverState', game: game, running: exports.servers[game].running}));
 }
+
+// main code below
 
 console.log('starting discord bot');
 deploy();
@@ -181,8 +288,18 @@ startBot();
 wss.on('connection', (ws) => {
     console.log('client connected');
 
+    // send server list to client
+    for (const game in exports.servers) {
+        ws.send(JSON.stringify({type: 'serverList', name: game.toString()}));
+    }
+
     // send server status to webpage
     updateAll(ws);
+
+    // start loop so that webpage status is updated
+    setInterval(() => {
+        updateAll(ws);
+    }, 0.5 * 1000);
 
     // when message is received from client:
     ws.on('message', async (message) => {
@@ -192,165 +309,30 @@ wss.on('connection', (ws) => {
         if (data.type === 'startStop') {
             switch (data.game) {
                 case 'minecraft':
-                    // if server is running, send stop command
-                    if (minecraft.running) {
-                        console.log('attempting to stop minecraft server');
-                        try {
-                            minecraft.server.stdin.write('/stop\n');
-                        }
-                        catch (e) {
-                            console.log('could not stop minecraft server safely; attempting to kill');
-                            try {
-                                minecraft.server.kill();
-                            }
-                            catch (e) {
-                                console.log('could not kill minecraft server');
-                            }
-                        }
-                    }
-                    // if server is not running,
-                    else {
-                        updateStatus(ws, 'minecraft', 'pinging');
-
-                        // kill unknown servers
-                        await killServer('minecraft');
-
-                        console.log('starting minecraft server');
-                        // start a new server
-                        process.chdir('game_servers\\minecraft');
-                        minecraft.server = spawn('java', ['-Xmx1024M', '-Xms1024M', '-jar', 'server.jar', 'nogui']);
-                        process.chdir('..\\..');
-
-                        minecraft.server.stdout.on('data', (data) => {
-                            if (data !== ('\n' || '\r')) {
-                                console.log(`Minecraft server: ${data.toString().trim()}`);
-                                if (data.includes('Done'))
-                                    updateStatus(ws, 'minecraft', true);
-                                if (data.includes('Stopping the server'))
-                                    updateStatus(ws, 'minecraft', 'pinging');
-                                // ws.send(data);
-                            }
-                        });
-
-                        minecraft.server.stderr.on('data', (data) => {
-                            console.error(`Minecraft server: ${data.trim()}`);
-                            // ws.send(data);
-                        });
-
-                        minecraft.server.on('close', (code) => {
-                            console.log(`Minecraft server exited with code ${code}`);
-                            updateStatus(ws, 'minecraft', false);
-                        });
-                    }
+                    await startServer(ws, data.game, 'java', ['-Xmx1024M', '-Xms1024M', '-jar', 'server.jar', 'nogui'], '/stop\n', 'Done', 'Stopping the server');
                     break;
                 case 'terraria':
-                    // if server is running, send stop command
-                    if (terraria.running) {
-                        console.log('attempting to stop terraria server');
-                        try {
-                            terraria.server.write('exit\r');
-                        }
-                        catch (e) {
-                            console.log('could not stop terraria server safely; attempting to kill');
-                            try {
-                                terraria.server.kill();
-                            }
-                            catch (e) {
-                                console.log('could not kill terraria server');
-                            }
-                        }
-                    }
-                    // if server is not running,
-                    else {
-                        updateStatus(ws, 'terraria', 'pinging');
-
-                        // kill unknown servers
-                        await killServer('terraria');
-
-                        console.log('starting terraria server');
-                        // start a new server
-                        process.chdir('game_servers\\terraria');
-                        terraria.server = pty.spawn(shell, ['.\\start-server.bat'], {
-                            name: 'TerrariaServer',
-                            cwd: process.env.PWD,
-                            env: process.env
-                        });
-                        process.chdir('..\\..');
-
-                        terraria.server.onData((data) => {
-                            if (data !== ('\n' || '\r' || '\\\n')) {
-                                console.log(`Terraria server: ${data.trim()}`);
-                                if (data.includes('Server started'))
-                                    updateStatus(ws, 'terraria', true);
-                                if (data.includes('Saving before exit...'))
-                                    updateStatus(ws, 'terraria', false);
-                            }
-                        });
-
-                        terraria.server.onExit((data) => {
-                            console.log(`Terraria server exited with code ${data.exitCode}`);
-                            updateStatus(ws, 'terraria', false);
-                        });
-                    }
+                    await startServerPTY(ws, data.game, ['.\\start-server.bat'], 'exit\r', 'Server started', 'Saving before exit...');
                     break;
                 case 'valheim':
-                    // if server is running, send stop command
-                    if (valheim.running) {
-                        console.log('attempting to stop valheim server');
-                        try {
-                            // send CTRL+C to stop server
-                            valheim.server.write('\x03');
-                            updateStatus(ws, 'valheim', false);
-                        }
-                        catch (e) {
-                            console.log('could not stop server; attempting to kill')
-                            try {
-                                valheim.server.kill();
-                                updateStatus(ws, 'valheim', false);
-                            }
-                            catch (e) {
-                                console.log('could not kill valheim server');
-                            }
-                        }
-                    }
-                    // if server is not running,
-                    else {
-                        updateStatus(ws, 'valheim', 'pinging');
-
-                        // kill unknown servers
-                        await killServer('valheim');
-
-                        console.log('starting valheim server');
-                        // start a new server
-                        process.chdir('game_servers\\valheim');
-                        valheim.server = pty.spawn(shell, ['.\\start_server.bat'], {
-                            name: 'ValheimServer',
-                            cwd: process.env.PWD,
-                            env: process.env
-                        });
-                        process.chdir('..\\..');
-
-                        valheim.server.onData((data) => {
-                            if (data !== ('\n' || '\r' || '\\\n')) {
-                                console.log(`Valheim server: ${data.trim()}`);
-                                if (data.includes('Game server connected'))
-                                    updateStatus(ws, 'valheim', true);
-                                if (data.includes('Terminate batch job (Y/N)?')) {
-                                    valheim.server.write('Y');
-                                    updateStatus(ws, 'valheim', false);
-                                }
-                            }
-                        });
-
-                        valheim.server.onExit((data) => {
-                            console.log(`Valheim server exited with code ${data.exitCode}`);
-                            updateStatus(ws, 'valheim', false);
-                        });
-                    }
+                    await startServerPTY(ws, data.game, ['.\\start-server.bat'], '\x03', 'Game server connected', 'World save writing');
                     break;
                 case 'pz':
+                    await startServerPTY(ws, data.game, ['.\\start-server.bat'], 'quit\r', 'Server Steam ID', 'QuitCommand');
                     break;
             }
+            updateAll(ws);
         }
+        if (data.type === 'console') {
+            // enable console
+            if (data.enabled) {
+
+            }
+            // disable console
+            else {
+
+            }
+        }
+
     });
 });

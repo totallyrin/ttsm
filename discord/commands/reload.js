@@ -1,6 +1,31 @@
 
 const { SlashCommandBuilder } = require('discord.js');
 
+const path = require("path");
+const fs = require("fs");
+
+function getCommandChoices() {
+    const commandsPath = path.join(__dirname, '../commands');
+    const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+
+    return commandFiles.map(file => {
+        const filePath = path.join(commandsPath, file);
+        const command = require(filePath);
+        // Check if command has a name and description property
+        if ('data' in command && 'execute' in command && command.data.name && command.data.description) {
+            return {
+                name: command.data.name,
+                value: command.data.name
+            };
+        } else {
+            console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+            return null;
+        }
+    }).filter(choice => choice !== null);
+}
+
+const choices = getCommandChoices();
+
 module.exports = {
   data: new SlashCommandBuilder()
       .setName('reload')
@@ -8,7 +33,8 @@ module.exports = {
       .addStringOption(option =>
           option.setName('command')
               .setDescription('The command to reload.')
-              .setRequired(true)),
+              .setRequired(true)
+              .addChoices(...choices)),
     // check if command exists
     async execute(interaction) {
         const commandName = interaction.options.getString('command', true).toLowerCase();

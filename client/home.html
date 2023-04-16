@@ -8,41 +8,14 @@
 </head>
 
 <nav>
-    <a href="../index.html" class="nav-link" id="log-out">log out</a>
+    <a href="../index.html" class="nav-link" id="log-out" onclick="localStorage.removeItem('isLoggedIn');">log out</a>
     <h1 id="user">username</h1>
     <img src="../img/account.png" style="" alt="account">
 </nav>
 
 <main>
-    <pre id="console"></pre>
-    <ul>
-        <li><div id="minecraft" class="games">
-            <img src="../img/minecraft.png" alt="minecraft">
-            <p>minecraft</p>
-            <p id="minecraft-status" class="status">pinging</p>
-            <button id="minecraft-button">on/off</button>
-        </div></li>
-
-        <li><div id="terraria" class="games">
-            <img src="../img/terraria.png" alt="terraria">
-            <p>terraria</p>
-            <p id="terraria-status" class="status">pinging</p>
-            <button id="terraria-button">on/off</button>
-        </div></li>
-
-        <li><div id="valheim" class="games">
-            <img src="../img/valheim.png" alt="valheim">
-            <p>valheim</p>
-            <p id="valheim-status" class="status">pinging</p>
-            <button id="valheim-button">on/off</button>
-        </div></li>
-
-        <li><div id="pz" class="games">
-            <img src="../img/pz.png" alt="pz">
-            <p>project zomboid</p>
-            <p id="pz-status" class="status">pinging</p>
-            <button id="pz-button">on/off</button>
-        </div></li>
+    <ul id="server-list">
+        <li><pre id="console"></pre></li>
     </ul>
 </main>
 

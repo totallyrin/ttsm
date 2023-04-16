@@ -215,3 +215,8 @@ li:nth-child(even) {
     transition: background 0.2s linear;
 }
 
+pre {
+    overflow: scroll;
+    overflow-wrap: break-word;
+}
+

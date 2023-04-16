@@ -3,6 +3,18 @@ const { clientId, guildId, token } = require('./config.json');
 const fs = require('node:fs');
 const path = require('node:path');
 
+async function deleteCommands(rest) {
+    // for guild-based commands
+    await rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: [] })
+        .then(() => console.log('Successfully deleted all guild commands.'))
+        .catch(console.error);
+
+    // for global commands
+    await rest.put(Routes.applicationCommands(clientId), { body: [] })
+        .then(() => console.log('Successfully deleted all application commands.'))
+        .catch(console.error);
+}
+
 module.exports.deploy = function () {
     const commands = [];
 
@@ -20,11 +32,14 @@ module.exports.deploy = function () {
         }
     }
 
-// Construct and prepare an instance of the REST module
+    // Construct and prepare an instance of the REST module
     const rest = new REST().setToken(token);
 
-// and deploy your commands!
+    // and deploy your commands!
     (async () => {
+        // uncomment line below to delete all commands
+        // await deleteCommands(rest);
+
         try {
             console.log(`Started refreshing ${commands.length} application (/) commands.`);
 

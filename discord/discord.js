@@ -54,6 +54,10 @@ module.exports.startBot = function () {
             return;
         }
 
+        if (typeof client.cooldowns === 'undefined') {
+            client.cooldowns = new Collection();
+        }
+
         const { cooldowns } = client;
 
         if (!cooldowns.has(command.data.name)) {

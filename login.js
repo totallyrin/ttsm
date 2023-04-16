@@ -30,7 +30,8 @@ loginButton.addEventListener('click', (e) => {
     if (username === 'user' && password === 'pass') {
         // alert('You have successfully logged in.');
         // location.reload();
-        location.assign('client/home.html');
+        window.location.assign('client/home.html');
+        localStorage.setItem('isLoggedIn', true);
     } else {
         loginErrorMsg.classList.add('showing');
     }
