@@ -15,6 +15,8 @@ const shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
 const { startBot } = require('../discord/discord.js');
 const { deploy } = require("../discord/deploy-commands");
 
+const clients = new Set();
+
 let minecraft = {
     server: undefined,
     running: false
@@ -169,13 +171,14 @@ async function startServer(ws, game, cmd, args, stop, online, offline) {
                     updateStatus(ws, game, true);
                 if (data.includes(offline))
                     updateStatus(ws, game, 'pinging');
-                ws.send(data);
+                // ws.send(JSON.stringify(`${game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.toString().trim()}\n`));
+                sendAll(`${game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.toString().trim()}\n`);
             }
         });
 
         exports.servers[game].server.stderr.on('data', (data) => {
             console.error(`${game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.trim()}`);
-            ws.send(data);
+            ws.send(JSON.stringify(`${game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.trim()}\n`));
         });
 
         exports.servers[game].server.on('close', (code) => {
@@ -231,19 +234,22 @@ async function startServerPTY(ws, game, args, stop, online, offline) {
         process.chdir('..\\..');
 
         exports.servers[game].server.onData((data) => {
-            if (data.charAt(0) !== ('\n' || '\r' || '\\\n' || ' ')) {
-                console.log(`${game === 'pz' ? 'PZ' : game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.trim()}`);
-                if (data.includes(online))
-                    updateStatus(ws, game, true);
-                if (data.includes(offline)) {
-                    updateStatus(ws, game, 'pinging');
+            if (!data.includes('[K')) {
+                if (data.charAt(0) !== ('\n' || '\r' || '\\\n' || ' ')) {
+                    console.log(`${game === 'pz' ? 'PZ' : game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.trim()}`);
+                    if (data.includes(online))
+                        updateStatus(ws, game, true);
+                    if (data.includes(offline)) {
+                        updateStatus(ws, game, 'pinging');
+                    }
+                    if (data.includes('Terminate batch job (Y/N)?')) {
+                        exports.servers[game].server.write('Y');
+                        updateStatus(ws, game, false);
+                    }
                 }
-                if (data.includes('Terminate batch job (Y/N)?')) {
-                    exports.servers[game].server.write('Y');
-                    updateStatus(ws, game, false);
-                }
+                // ws.send(JSON.stringify(`${game === 'pz' ? 'PZ' : game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.trim()}\n`));
+                sendAll(`${game === 'pz' ? 'PZ' : game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.trim()}\n`);
             }
-            ws.send(JSON.stringify(data));
         });
 
         exports.servers[game].server.onExit((data) => {
@@ -276,6 +282,12 @@ function updateStatus(ws, game, status) {
     ws.send(JSON.stringify({type: 'serverState', game: game, running: exports.servers[game].running}));
 }
 
+function sendAll(data) {
+    for (const client of clients) {
+        client.send(JSON.stringify(data));
+    }
+}
+
 // main code below
 
 console.log('starting discord bot');
@@ -287,6 +299,7 @@ startBot();
  */
 wss.on('connection', (ws) => {
     console.log('client connected');
+    clients.add(ws);
 
     // send server list to client
     for (const game in exports.servers) {

@@ -216,7 +216,32 @@ li:nth-child(even) {
 }
 
 pre {
-    overflow: scroll;
-    overflow-wrap: break-word;
+    display: flex;
+    flex-direction: column-reverse;
+    border-radius: 6px;
+}
+
+pre code {
+    background-color: #2b2d31;
+    border: 1px solid var(--main-color);
+    border-radius: 6px;
+    display: block;
+    padding: 20px;
+}
+
+code {
+    min-height: 10vh;
+    max-height: 10vh;
+    overflow: auto;
+    text-align: left;
+    color: #dbdee1;
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+    text-indent: 0;
+    white-space: pre-wrap;
+    scrollbar-width: thin;
+    scrollbar-color: var(--main-color);
+    background: var(--body-color);
+    border: 1px solid var(--main-color);
 }
 

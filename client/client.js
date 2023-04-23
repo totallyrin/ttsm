@@ -78,6 +78,8 @@ ws.onmessage = function (event) {
             addServer(data.name);
             break;
         default:
-            document.getElementById('console').textContent += event.data;
+            let console = document.getElementById('console');
+            console.textContent += data;
+            console.scrollTop = console.scrollHeight;
     }
 };
