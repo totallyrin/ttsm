@@ -69,6 +69,11 @@ else {
     document.getElementById('user').innerText = localStorage.getItem('username');
 }
 
+ws.onopen = function (event) {
+    const username = localStorage.getItem('username');
+    ws.send(JSON.stringify({type: 'username', username: username}));
+}
+
 // receive messages from server
 ws.onmessage = function (event) {
     // get data from message

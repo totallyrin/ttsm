@@ -80,6 +80,11 @@ function hideLoginError() {
     loginErrorMsg.classList.remove('showing');
 }
 
+ws.onopen = function (event) {
+    // const username = localStorage.getItem('username');
+    ws.send(JSON.stringify({type: 'username', username: undefined}));
+}
+
 // receive messages from server
 ws.onmessage = function (event) {
     // get data from message

@@ -119,9 +119,6 @@ async function login(ws, username, password) {
         console.log('Connected to the database.');
     });
 
-    // const username = loginForm.username.value;
-    // const password = loginForm.password.value;
-
     if (username && password) {
         // Query the database for the user
         await db.get(`SELECT * FROM users WHERE username = ? AND password = ?`, [username, await hash(password)], (err, row) => {
@@ -149,6 +146,41 @@ async function login(ws, username, password) {
         }
         console.log('Closed the database connection.');
     });
+}
+
+/**
+ * get username of client
+ *
+ * @param ws client
+ * @returns {Promise<unknown>} returns username of client (if exists)
+ */
+function getUsername(ws) {
+
+    return new Promise((resolve, reject) => {
+        ws.on('message', async (message) => {
+            // get message data
+            const data = JSON.parse(message);
+
+            if (data.type === 'username') {
+                resolve(data.username);
+            }
+        });
+    });
+}
+
+/**
+ * helper function to get the client object based on the WebSocket object
+ *
+ * @param ws WebSocket of client
+ * @returns {any|null}
+ */
+function getClient(ws) {
+    for (const client of clients) {
+        if (client.ws === ws) {
+            return client;
+        }
+    }
+    return null;
 }
 
 /**
@@ -403,9 +435,16 @@ startBot();
 /**
  * code to run on new client connection
  */
-wss.on('connection', (ws) => {
-    console.log('client connected');
-    clients.add(ws);
+wss.on('connection', async (ws) => {
+    const username = await getUsername(ws);
+    if (username) {
+        console.log(`client ${username} connected`);
+    }
+    else {
+        console.log('unknown client connected');
+    }
+    clients.add({ws, username});
+    const client = getClient(ws);
 
     // send server list to client
     for (const game in exports.servers) {
@@ -442,27 +481,36 @@ wss.on('connection', (ws) => {
             }
             updateAll(ws);
         }
-        if (data.type === 'console') {
-            // enable console
-            if (data.enabled) {
-
-            }
-            // disable console
-            else {
-
-            }
-        }
+        // if (data.type === 'console') {
+        //     // enable console
+        //     if (data.enabled) {
+        //
+        //     }
+        //     // disable console
+        //     else {
+        //
+        //     }
+        // }
         if (data.type === 'login') {
             // if username and password not given, throw error
             if (!(data.username && data.password)) {
                 ws.send(JSON.stringify({type: 'login', success: false, error: 'Invalid username or password'}));
-            }
-            else {
+            } else {
                 await login(ws, data.username, data.password);
             }
         }
         if (data.type === 'addUser') {
             await addUser(data.username, data.password);
+        }
+    });
+
+    ws.on('close', () => {
+        if (username) {
+            clients.delete(client);
+            console.log(`client ${username} disconnected`);
+        }
+        else {
+            console.log('unknown client disconnected');
         }
     });
 });
