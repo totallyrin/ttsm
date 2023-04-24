@@ -21,7 +21,7 @@ if (!localStorage.getItem('isLoggedIn')) {
     window.location.assign('..\\index.html');
 }
 
-ws.onopen = function (event) {
+ws.onopen = function () {
     const username = localStorage.getItem('username');
     ws.send(JSON.stringify({type: 'username', username: username}));
 }

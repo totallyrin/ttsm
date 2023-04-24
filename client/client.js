@@ -69,7 +69,7 @@ else {
     document.getElementById('user').innerText = localStorage.getItem('username');
 }
 
-ws.onopen = function (event) {
+ws.onopen = function () {
     const username = localStorage.getItem('username');
     ws.send(JSON.stringify({type: 'username', username: username}));
 }
