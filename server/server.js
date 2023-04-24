@@ -156,7 +156,7 @@ async function login(ws, username, password) {
  */
 function getUsername(ws) {
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         ws.on('message', async (message) => {
             // get message data
             const data = JSON.parse(message);
