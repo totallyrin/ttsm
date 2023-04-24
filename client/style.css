@@ -139,15 +139,22 @@ input {
     color: #1f1f1f;
     display: inline-block;
     opacity: 0;
+    width: 300px;
+    height: 20px;
+    padding: 1% 1% 1% 1%;
 }
 
 #login-error-msg-holder.showing {
+    text-align: center;
+    align-items: center;
     background-color: lightcoral;
     border-radius: 6px;
-    padding: 0 20px 0 20px;
     color: #1f1f1f;
     display: inline-block;
     opacity: 1;
+    width: 300px;
+    height: 20px;
+    padding: 1% 1% 1% 1%;
 }
 
 a {
@@ -243,5 +250,20 @@ code {
     scrollbar-color: var(--main-color);
     background: var(--body-color);
     border: 1px solid var(--main-color);
+}
+
+#config-nav {
+    padding: 0 20px 0 20px;
+    margin: 1% 1% 2% 1%;
+    overflow: auto;
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#config-nav > * {
+    flex: 1;
 }
 

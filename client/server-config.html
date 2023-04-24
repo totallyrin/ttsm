@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel = "stylesheet" href = "style.css">
+<script src = "server-config.js" defer></script>
+<head>
+    <meta charset="UTF-8">
+    <title>SERVER CONTROLLER</title>
+</head>
+
+<nav>
+    <a href="../index.html" class="nav-link" id="log-out" onclick="localStorage.removeItem('isLoggedIn');">log out</a>
+    <h1 id="user">username</h1>
+    <img src="../img/account.png" style="" alt="account">
+</nav>
+
+<main>
+    <div id="config-nav">
+        <a href="./home.html" id="back" style="text-align: left">← home</a>
+        <h1 id="config">config</h1>
+        <div style="text-align: right">
+            <button id="save-button">save</button>
+        </div>
+    </div>
+
+</main>
+
+</html>

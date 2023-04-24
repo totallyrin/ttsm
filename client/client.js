@@ -15,7 +15,8 @@ function addServer(game) {
     server.innerHTML = `
         <li><div id="${game}" class="games">
             <img src="../img/${game}.png" alt="${game}">
-            <p>${game === 'pz' ? 'Project Zomboid' : game.charAt(0).toUpperCase() + game.slice(1)}</p>
+            <a href="./server-config.html?game=${game}" class="server-link" data-game="${game}">${game === 'pz' ?
+                                            'Project Zomboid' : game.charAt(0).toUpperCase() + game.slice(1)}</a>
             <p id="${game}-status" class="status">pinging</p>
             <button id="${game}-button">on/off</button>
         </div></li>`;

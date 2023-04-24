@@ -17,6 +17,9 @@ const { deploy } = require("../discord/deploy-commands");
 
 const clients = new Set();
 
+const crypto = require('crypto');
+const sqlite3 = require('sqlite3').verbose();
+
 let minecraft = {
     server: undefined,
     running: false
@@ -43,6 +46,110 @@ exports.servers = {
     valheim: valheim,
     pz: pz
 };
+
+/**
+ * password hashing function
+ *
+ * @param password
+ * @returns {Promise<string>}
+ */
+async function hash(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hash));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+/**
+ * function to add a new user to the database
+ *
+ * @param username
+ * @param password
+ * @returns {Promise<void>}
+ */
+async function addUser(username, password) {
+    console.log(`creating user ${username}`)
+    // Open the database
+    const db = await new sqlite3.Database('users.db', (err) => {
+        if (err) {
+            console.error(err.message);
+        }
+        console.log('Connected to the database.');
+    });
+
+    // create the users table if it doesn't exist
+    await db.run(`
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL UNIQUE,
+            password TEXT NOT NULL
+        );
+    `);
+
+    // insert the new user into the database
+    await db.run('INSERT INTO users (username, password) VALUES (?, ?)', username, await hash(password), function (err) {
+        if (err) throw err;
+        console.log(`User '${username}' added to database.`);
+    });
+
+    // Close the database
+    db.close((err) => {
+        if (err) {
+            console.error(err.message);
+        }
+        console.log('Closed the database connection.');
+    });
+}
+
+/**
+ * login function, authenticates user given credentials
+ *
+ * @param ws websocket (user sending request)
+ * @param username
+ * @param password
+ * @returns {Promise<void>}
+ */
+async function login(ws, username, password) {
+    // Open the database
+    const db = new sqlite3.Database('users.db', (err) => {
+        if (err) {
+            console.error(err.message);
+        }
+        console.log('Connected to the database.');
+    });
+
+    // const username = loginForm.username.value;
+    // const password = loginForm.password.value;
+
+    if (username && password) {
+        // Query the database for the user
+        await db.get(`SELECT * FROM users WHERE username = ? AND password = ?`, [username, await hash(password)], (err, row) => {
+            if (err) {
+                console.error(err.message);
+            }
+            else if (!row) {
+                ws.send(JSON.stringify({type: 'login', success: false, error: 'Incorrect username or password'}));
+            }
+            else {
+                // User exists and password is correct
+                ws.send(JSON.stringify({type: 'login', success: true}));
+            }
+        });
+    }
+    else {
+        // Invalid input
+        ws.send(JSON.stringify({type: 'login', success: false, error: 'Incorrect username or password'}));
+    }
+
+    // Close the database
+    db.close((err) => {
+        if (err) {
+            console.error(err.message);
+        }
+        console.log('Closed the database connection.');
+    });
+}
 
 /**
  * function to kill all foreign game servers
@@ -289,7 +396,6 @@ function sendAll(data) {
 }
 
 // main code below
-
 console.log('starting discord bot');
 deploy();
 startBot();
@@ -346,6 +452,17 @@ wss.on('connection', (ws) => {
 
             }
         }
-
+        if (data.type === 'login') {
+            // if username and password not given, throw error
+            if (!(data.username && data.password)) {
+                ws.send(JSON.stringify({type: 'login', success: false, error: 'Invalid username or password'}));
+            }
+            else {
+                await login(ws, data.username, data.password);
+            }
+        }
+        if (data.type === 'addUser') {
+            await addUser(data.username, data.password);
+        }
     });
 });
