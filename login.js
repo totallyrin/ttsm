@@ -89,6 +89,7 @@ ws.onmessage = function (event) {
         if (data.success) {
             // User exists and password is correct
             window.location.assign('client/home.html');
+            localStorage.setItem('username', data.username);
             localStorage.setItem('isLoggedIn', true);
         }
         else {

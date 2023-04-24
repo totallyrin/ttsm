@@ -133,7 +133,7 @@ async function login(ws, username, password) {
             }
             else {
                 // User exists and password is correct
-                ws.send(JSON.stringify({type: 'login', success: true}));
+                ws.send(JSON.stringify({type: 'login', success: true, username: username}));
             }
         });
     }

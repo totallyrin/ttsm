@@ -65,6 +65,9 @@ if (!localStorage.getItem('isLoggedIn')) {
     // redirect users to login page if not logged in
     window.location.assign('..\\index.html');
 }
+else {
+    document.getElementById('user').innerText = localStorage.getItem('username');
+}
 
 // receive messages from server
 ws.onmessage = function (event) {
