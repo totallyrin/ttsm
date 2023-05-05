@@ -13,10 +13,10 @@ function addServer(game) {
     const serverList = document.getElementById('server-list');
     const server = document.createElement('li');
     server.innerHTML = `
-        <li><div id="${game}" class="games">
-            <img src="../img/${game}.png" alt="${game}">
+        <li><div id="${game}" class="${game}s">
+            <img src="../public/img/game.png" alt="${game}">
             <a href="./server-config.html?game=${game}" class="server-link" data-game="${game}">${game === 'pz' ?
-                                            'Project Zomboid' : game.charAt(0).toUpperCase() + game.slice(1)}</a>
+        'Project Zomboid' : game.charAt(0).toUpperCase() + game.slice(1)}</a>
             <p id="${game}-status" class="status">pinging</p>
             <button id="${game}-button">on/off</button>
         </div></li>`;

@@ -71,7 +71,7 @@ async function hash(password) {
 async function addUser(username, password) {
     console.log(`creating user ${username}`)
     // Open the database
-    const db = await new sqlite3.Database('users.db', (err) => {
+    const db = await new sqlite3.Database('server/users.db', (err) => {
         if (err) {
             console.error(err.message);
         }
@@ -112,7 +112,7 @@ async function addUser(username, password) {
  */
 async function login(ws, username, password) {
     // Open the database
-    const db = new sqlite3.Database('users.db', (err) => {
+    const db = new sqlite3.Database('server/users.db', (err) => {
         if (err) {
             console.error(err.message);
         }
@@ -304,6 +304,7 @@ async function startServer(ws, game, cmd, args, stop, online, offline) {
         process.chdir('..\\..');
 
         exports.servers[game].server.stdout.on('data', (data) => {
+            if (typeof data !== "string") return;
             if (data !== ('\n' || '\r')) {
                 console.log(`${game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.toString().trim()}`);
                 if (data.includes(online))
@@ -316,6 +317,7 @@ async function startServer(ws, game, cmd, args, stop, online, offline) {
         });
 
         exports.servers[game].server.stderr.on('data', (data) => {
+            if (typeof data !== "string") return;
             console.error(`${game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.trim()}`);
             ws.send(JSON.stringify(`${game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.trim()}\n`));
         });
@@ -373,6 +375,7 @@ async function startServerPTY(ws, game, args, stop, online, offline) {
         process.chdir('..\\..');
 
         exports.servers[game].server.onData((data) => {
+            if (typeof data !== "string") return;
             if (!data.includes('[K')) {
                 if (data.charAt(0) !== ('\n' || '\r' || '\\\n' || ' ')) {
                     console.log(`${game === 'pz' ? 'PZ' : game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.trim()}`);
