@@ -9,11 +9,11 @@ const game = urlParams.get('game');
 
 // Display different content based on the "game" query parameter
 if (game !== undefined) {
-    document.getElementById('config').textContent = `${game === 'pz' ?
+    document.getElementById('games').textContent = `${game === 'pz' ?
         'Project Zomboid' : game.charAt(0).toUpperCase() + game.slice(1)} Server`;
 }
 else {
-    document.getElementById('config').innerHTML = '<p>Invalid game specified in URL.</p>';
+    document.getElementById('games').innerHTML = '<p>Invalid game specified in URL.</p>';
 }
 
 if (!localStorage.getItem('isLoggedIn')) {

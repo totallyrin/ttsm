@@ -3,6 +3,7 @@ import { CssVarsProvider } from '@mui/joy/styles';
 import { Alert, Button, CssBaseline, FormControl, FormLabel, Input, Link, Sheet, Typography } from '@mui/joy';
 import Footer from '../components/footer';
 import { getSession, signIn } from 'next-auth/react';
+import Head from "next/head";
 
 export default function LoginPage() {
     const [isClicked, setClicked] = useState(false);
@@ -14,6 +15,10 @@ export default function LoginPage() {
     return (
         <CssBaseline>
             <CssVarsProvider defaultMode="system">
+                <Head>
+                    <meta charSet="UTF-8" />
+                    <title>TTSM - Login</title>
+                </Head>
                 <Sheet
                     variant="outlined"
                     sx={{

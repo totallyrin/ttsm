@@ -32,7 +32,6 @@ export default function Navbar(props: NavbarProps) {
                 my: 4, // margin top & bottom
                 py: 1, // padding top & bottom
                 px: 1, // padding left & right
-                bgcolor: 'background.body',
                 borderRadius: 'sm',
                 boxShadow: 'sm',
                 flexGrow: 0,

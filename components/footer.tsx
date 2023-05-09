@@ -1,6 +1,7 @@
 import { Button, Link, List, ListItem, Typography } from '@mui/joy';
 import { useColorScheme } from '@mui/joy/styles';
 import * as React from 'react';
+import {KeyboardArrowLeft, KeyboardArrowRight} from "@mui/icons-material";
 
 
 function ModeToggle() {
@@ -33,16 +34,17 @@ export default function footer() {
             orientation="horizontal"
             variant="outlined"
             sx={{
-                width: "auto",
+                width: 'auto',
                 mx: 4, // margin left & right
                 my: 4, // margin top & bottom
                 py: 1, // padding top & bottom
                 px: 1, // padding left & right
-                bgcolor: 'background.body',
                 borderRadius: 'sm',
                 boxShadow: 'sm',
                 flexGrow: 0,
                 display: 'flex',
+                // position: 'fixed',
+                // bottom: 0,
                 justifyContent: 'space-between',
                 '--ListItemDecorator-size': '48px',
                 '--ListItem-paddingY': '1rem',
@@ -60,8 +62,10 @@ export default function footer() {
             </ListItem>
             <ListItem>
                 <Link href="https://github.com/totallyrin/servercontroller">
-                    <Button variant="soft">
-                        &lt; Github &gt;
+                    <Button variant="soft"
+                            startDecorator={<KeyboardArrowLeft />}
+                            endDecorator={<KeyboardArrowRight />}>
+                        Github
                     </Button>
                 </Link>
             </ListItem>
