@@ -1,11 +1,16 @@
-import * as React from 'react';
-import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
-import { CssBaseline, Sheet, Typography} from '@mui/joy';
-import { FormControl, FormLabel, Input } from '@mui/joy';
-import { Button, Link } from '@mui/joy';
+import { useRef, useState } from 'react';
+import { CssVarsProvider } from '@mui/joy/styles';
+import { Alert, Button, CssBaseline, FormControl, FormLabel, Input, Link, Sheet, Typography } from '@mui/joy';
 import Footer from '../components/footer';
+import { getSession, signIn } from 'next-auth/react';
 
 export default function LoginPage() {
+    const [isClicked, setClicked] = useState(false);
+    const [isError, setError] = useState(false);
+    const [isSuccess, setSuccess] = useState(false);
+    const username = useRef('');
+    const password = useRef('');
+
     return (
         <CssBaseline>
             <CssVarsProvider defaultMode="system">
@@ -32,33 +37,77 @@ export default function LoginPage() {
                         <Typography level="body2">Sign in to continue.</Typography>
                     </div>
 
+                    {isError && (<Alert color="danger" variant="solid">
+                        Please enter a valid username and password.
+                    </Alert>)}
+
+                    {isSuccess && (<Alert color="success" variant="solid" invertedColors>
+                        Correct username and password!
+                    </Alert>)}
+
                     <FormControl>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel>Username</FormLabel>
                         <Input
+                            required
                             // html input attribute
-                            name="email"
-                            type="email"
-                            placeholder="johndoe@email.com"
+                            name="username"
+                            type="username"
+                            placeholder="username"
+                            onChange={(event) => {
+                                username.current = event.target.value;
+                            }}
+                            onSubmit={(event) => {
+                                event.preventDefault();
+                            }}
                         />
                     </FormControl>
                     <FormControl>
                         <FormLabel>Password</FormLabel>
                         <Input
+                            required
                             name="password"
                             type="password"
                             placeholder="password"
+                            onChange={(event) => {
+                                password.current = event.target.value;
+                            }}
+                            onSubmit={(event) => {
+                                event.preventDefault();
+                            }}
                         />
                     </FormControl>
 
 
                     <Button
+                        disabled={isClicked}
                         sx={{ mt: 1 /* margin top */ }}
-                        onClick={() => {
-                            // TODO: implement login function
+                        onClick={async (e) => {
+                            setClicked(true);
+                            if (username.current !== '' && password.current !== '') {
+                                e.preventDefault()
+
+                                const result = await signIn('credentials', {
+                                    username: username.current,
+                                    password: password.current,
+                                    // redirect: false,
+                                    callbackUrl: '/home'
+                                });
+
+                                await result;
+
+                                if (result?.ok) {
+                                    const session = await getSession();
+                                    console.log(session?.user?.name);
+                                    setSuccess(true);
+                                }
+
+                            }
+                            else setError(true);
+                            setClicked(false);
                         }}
-                    >Log in</Button>
+                    >{isClicked ? 'Logging in...' : 'Log in'}</Button>
                     <Typography
-                        {/* TODO: implement sign-up page and functionality */}
+                         // TODO: implement sign-up page and functionality
                         endDecorator={<Link href="/sign-up">Sign up</Link>}
                         fontSize="sm"
                         sx={{ alignSelf: 'center' }}

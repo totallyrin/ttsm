@@ -130,7 +130,7 @@ async function login(ws, username, password) {
             }
             else {
                 // User exists and password is correct
-                ws.send(JSON.stringify({type: 'login', success: true, username: username}));
+                ws.send(JSON.stringify({type: 'login', success: true, id: row.id, username: row.username}));
             }
         });
     }
@@ -439,13 +439,27 @@ startBot();
  * code to run on new client connection
  */
 wss.on('connection', async (ws) => {
-    const username = await getUsername(ws);
-    if (username) {
-        console.log(`client ${username} connected`);
-    }
-    else {
-        console.log('unknown client connected');
-    }
+    let username;
+    Promise.race([
+        getUsername(ws),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout after 5 seconds')), 5000))
+    ])
+        .then(user => {
+            username = user;
+            console.log(`client ${username} connected`);
+        })
+        .catch(error => {
+            console.log('unknown client connected');
+            username = 'unknown';
+        });
+
+    // const username = await getUsername(ws);
+    // if (username) {
+    //     console.log(`client ${username} connected`);
+    // }
+    // else {
+    //     console.log('unknown client connected');
+    // }
     clients.add({ws, username});
     const client = getClient(ws);
 

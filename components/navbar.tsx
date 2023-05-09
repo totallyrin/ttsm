@@ -27,7 +27,7 @@ export default function Navbar(props: NavbarProps) {
             orientation="horizontal"
             variant="outlined"
             sx={{
-                width: "auto",
+                width: 'auto',
                 mx: 4, // margin left & right
                 my: 4, // margin top & bottom
                 py: 1, // padding top & bottom
@@ -55,7 +55,7 @@ export default function Navbar(props: NavbarProps) {
             <ListItem>
                 <Link href="https://github.com/totallyrin/servercontroller">
                     <Button variant="soft">
-                        &lt; Github &gt;
+                        Account
                     </Button>
                 </Link>
             </ListItem>
