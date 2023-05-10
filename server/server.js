@@ -407,6 +407,7 @@ async function startServerPTY(ws, game, args, stop, online, offline) {
  * @param ws web server for messaging
  */
 function updateAll(ws) {
+    // console.log('sending server status');
     for (const server in exports.servers) {
         ws.send(JSON.stringify({type: 'serverState', game: server, running: exports.servers[server].running}));
     }
@@ -430,6 +431,15 @@ function sendAll(data) {
     }
 }
 
+function sendServerList(ws) {
+    // send server list to client
+    for (const game in exports.servers) {
+        console.log(`sending ${game.toString()}`);
+        ws.send(JSON.stringify({type: 'serverList', name: game.toString()}));
+    }
+    // ws.send(JSON.stringify({type: 'END'}));
+}
+
 // main code below
 console.log('starting discord bot');
 deploy();
@@ -446,39 +456,39 @@ wss.on('connection', async (ws) => {
     ])
         .then(user => {
             username = user;
-            console.log(`client ${username} connected`);
+            // console.log(`client ${username} connected`);
         })
         .catch(error => {
-            console.log('unknown client connected');
+            // console.log('unknown client connected');
             username = 'unknown';
         });
 
     // const username = await getUsername(ws);
-    // if (username) {
-    //     console.log(`client ${username} connected`);
-    // }
-    // else {
-    //     console.log('unknown client connected');
-    // }
+    if (username && username !== '') {
+        console.log(`client ${username} connected`);
+    }
+    else {
+        console.log('unknown client connected');
+    }
     clients.add({ws, username});
     const client = getClient(ws);
 
     // send server list to client
-    for (const game in exports.servers) {
-        ws.send(JSON.stringify({type: 'serverList', name: game.toString()}));
-    }
+    sendServerList(ws);
 
     // send server status to webpage
     updateAll(ws);
 
     // start loop so that webpage status is updated
     setInterval(() => {
+        // console.log(`updating client ${username}`);
         updateAll(ws);
-    }, 0.5 * 1000);
+    }, 5 * 1000);
 
     // when message is received from client:
     ws.on('message', async (message) => {
         // get message data
+        console.log('message received from client');
         const data = JSON.parse(message);
 
         if (data.type === 'startStop') {
@@ -498,16 +508,6 @@ wss.on('connection', async (ws) => {
             }
             updateAll(ws);
         }
-        // if (data.type === 'console') {
-        //     // enable console
-        //     if (data.enabled) {
-        //
-        //     }
-        //     // disable console
-        //     else {
-        //
-        //     }
-        // }
         if (data.type === 'login') {
             // if username and password not given, throw error
             if (!(data.username && data.password)) {
@@ -518,6 +518,9 @@ wss.on('connection', async (ws) => {
         }
         if (data.type === 'addUser') {
             await addUser(data.username, data.password);
+        }
+        if (data.type === 'serverList') {
+            sendServerList(ws);
         }
     });
 

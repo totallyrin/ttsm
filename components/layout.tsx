@@ -25,15 +25,16 @@ export async function getServerSideProps(context) {
     };
 }
 
-export default function Layout({ props, page, serverList, children }) {
+export default function Layout({ username, props, page, serverList, children }) {
     const colors = ['primary', 'info', 'danger', 'success'] as const;
+    const title = `TTSM - ${page}`;
 
     return (
         <CssBaseline>
             <CssVarsProvider defaultMode="system">
                 <Head>
                     <meta charSet="UTF-8" />
-                    <title>TTSM - {page}</title>
+                    <title>{title}</title>
                 </Head>
                 <Sheet sx={{
                     display: 'grid',
@@ -42,7 +43,7 @@ export default function Layout({ props, page, serverList, children }) {
                     minHeight: '100vh', // set min-height to ensure the layout takes up the full height of the viewport
                     minWidth: 'fit-content',
                 }}>
-                    <Navbar username={props?.user ? props.user : ''} />
+                    <Navbar username={username} />
                     <Sheet sx={{
                         display: 'grid',
                         gridTemplateColumns: 'auto 1fr',

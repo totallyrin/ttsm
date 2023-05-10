@@ -26,31 +26,6 @@ export async function getServerSideProps(context) {
 }
 
 function ServerListItem({ ws, game, running }: { ws: WebSocket, game: string, running: 'pinging' | boolean }) {
-    // const [running, setRunning] = useState<'pinging' | boolean>('pinging');
-    //
-    // useEffect(() => {
-    //     // const ws = new WebSocket('ws://localhost:443');
-    //
-    //     ws.onopen = function () {
-    //         const username = localStorage.getItem('username');
-    //         ws.send(JSON.stringify({ type: 'username', username: username }));
-    //     };
-    //
-    //     ws.onmessage = function (event: any) {
-    //         const data = JSON.parse(event.data);
-    //         if (data.type === 'serverState' && data.game === game) {
-    //             setRunning(data.running);
-    //         }
-    //     };
-    //
-    //     // ws.send(JSON.stringify({ type: 'getState', game: game }));
-    //
-    //     return () => {
-    //         ws.close();
-    //     };
-    //
-    // }, [game]);
-
     const gameName = game === 'pz' ? 'Project Zomboid' : game.charAt(0).toUpperCase() + game.slice(1);
 
     return (
@@ -91,68 +66,171 @@ function ServerListItem({ ws, game, running }: { ws: WebSocket, game: string, ru
 
 export default function Home({ props }) {
     const session = useSession();
-    const ws = new WebSocket('ws://localhost:443');
-    const serverList = getServerList(ws);
-    let runningList = {};
-    serverList.forEach(function (game) {
-        runningList[game] = 'pinging';
-    });
-
-    ws.onopen = function () {
-        ws.send(JSON.stringify({type: 'username', username: session.data?.user?.name}));
-    }
-
-    // receive messages from server
-    ws.onmessage = function (event) {
-        // get data from message
-        const data = JSON.parse(event.data);
-        // if message is about server status, call update function
-        switch (data.type) {
-            case 'serverState':
-                // updateStatuses(data);
-                runningList[data.game] = data.running;
-                // console.log(runningList);
-                break;
-            // commented out case below since it should be handled by getServerList(ws)
-            // case 'serverList':
-            //     addServer(data.name);
-            //     break;
-            // default:
-            //     let console = document.getElementById('console');
-            //     console.textContent += data;
-            //     console.scrollTop = console.scrollHeight;
+    const [username, setUsername] = useState<string>('');
+    // setup username updates
+    useEffect(() => {
+        if (session.data && session.data.user && session.data.user.name) {
+            setUsername(session.data.user.name);
         }
-    };
+    }, [session]);
 
-    return (
-        <Layout page={'Home'} props={props} serverList={serverList}>
-            <List id="server-list"
-                  variant="outlined"
-                  sx={{
-                      // weird width but seems to work
-                      // width: '95.5%',
-                      width: '100%',
-                      height: 'auto',
-                      // mx: 4, // margin left & right
-                      // my: 4, // margin top & bottom
-                      py: 1, // padding top & bottom
-                      px: 1, // padding left & right
-                      borderRadius: 'sm',
-                      boxShadow: 'sm',
-                      flexGrow: 0,
-                      display: 'inline-flex',
-                      // justifyContent: 'space-between',
-                      '--ListItemDecorator-size': '48px',
-                      '--ListItem-paddingY': '1rem',
-                }}>
-                {serverList.map((game, index) => (
-                    <Sheet key={game} sx={{ width: '100%' }}>
-                        <ServerListItem game={game} ws={ws} running={runningList[game]} />
-                        {index !== serverList.length - 1 && <ListDivider inset="gutter" />}
-                    </Sheet>
-                ))}
-            </List>
-            <Console ws={ws} game={undefined} />
+    const [ws, setWs] = useState<WebSocket>(new WebSocket('ws://localhost:443'));
+    // initialize websocket
+    useEffect(() => {
+        const newWebSocket = new WebSocket('ws://localhost:443');
+        setWs(newWebSocket);
+
+        return () => {
+            newWebSocket.close();
+        };
+    }, []);
+
+    // open websocket connection when the username changes
+    useEffect(() => {
+        if (ws) {
+            ws.onopen = () => {
+                ws.send(JSON.stringify({ type: 'username', username: username }));
+            };
+        }
+    }, [ws, username]);
+
+    const [serverList, setServerList] = useState<string[]>([]);
+    let retrievedServers = getServerList(ws);
+    // get server list
+    useEffect(() => {
+        setServerList(retrievedServers);
+    }, [retrievedServers]);
+
+    const [runningList, setRunningList] = useState({});
+    // initialize server statuses
+    useEffect(() => {
+        if (serverList) {
+            let temp = {};
+            serverList.forEach(function (game) {
+                temp[game] = 'pinging';
+            });
+            setRunningList(temp);
+        }
+    }, [serverList]);
+
+    useEffect(() => {
+        if (ws) {
+            // receive messages from server
+            ws.onmessage = function (event) {
+                // get data from message
+                const data = JSON.parse(event.data);
+                // if message is about server status, update relevant status
+                if (data.type === 'serverState') {
+                    let temp = {...runningList};
+                    temp[data.game] = data.running;
+                    setRunningList(temp);
+                }
+            };
+        }
+    }, [ws]);
+
+    // // receive messages from server
+    // ws.onmessage = function (event) {
+    //     console.log('message received');
+    //     // get data from message
+    //     const data = JSON.parse(event.data);
+    //     // if message is about server status, update relevant status
+    //     if (data.type === 'serverState') {
+    //         console.log(`${data.game} : ${data.running}`);
+    //         let temp = {...runningList};
+    //         console.log(temp);
+    //         temp[data.game] = data.running;
+    //         console.log(temp);
+    //         setRunningList(temp);
+    //     }
+    // };
+
+    const [page, setPage] = useState<JSX.Element>((
+        <Layout username={username} page={'Home'} props={props} serverList={serverList}>
+            <Typography level="h3">Loading...</Typography>
         </Layout>
-    );
+    ));
+
+    useEffect(() => {
+        setPage ((
+            <Layout username={username} page={'Home'} props={props} serverList={serverList}>
+                <Sheet sx={{
+                    display: 'grid',
+                    gridTemplateColumns: 'auto',
+                    gridTemplateRows: 'auto 1fr',
+                    minHeight: '100%', // set min-height to ensure the layout takes up the full height of the viewport
+                    minWidth: 'fit-content',
+                }}>
+                    <List id="server-list"
+                          variant="outlined"
+                          sx={{
+                              // weird width but seems to work
+                              // width: '95.5%',
+                              width: '100%',
+                              height: 'auto',
+                              // mx: 4, // margin left & right
+                              // my: 4, // margin top & bottom
+                              py: 1, // padding top & bottom
+                              px: 1, // padding left & right
+                              borderRadius: 'sm',
+                              boxShadow: 'sm',
+                              flexGrow: 0,
+                              display: 'inline-flex',
+                              // justifyContent: 'space-between',
+                              '--ListItemDecorator-size': '48px',
+                              '--ListItem-paddingY': '1rem',
+                          }}>
+                        {serverList.map((game, index) => (
+                            <Sheet key={game} sx={{ width: '100%' }}>
+                                <ServerListItem game={game} ws={ws} running={runningList[game]} />
+                                {index !== serverList.length - 1 && <ListDivider inset="gutter" />}
+                            </Sheet>
+                        ))}
+                    </List>
+                    {/*<Console ws={ws} game={undefined} />*/}
+                </Sheet>
+            </Layout>
+        ));
+    }, [ws, serverList, runningList]);
+    // return (
+    //     <Layout username={username} page={'Home'} props={props} serverList={serverList}>
+    //         <Sheet sx={{
+    //             display: 'grid',
+    //             gridTemplateColumns: 'auto',
+    //             gridTemplateRows: 'auto 1fr',
+    //             minHeight: '100%', // set min-height to ensure the layout takes up the full height of the viewport
+    //             minWidth: 'fit-content',
+    //         }}>
+    //             <List id="server-list"
+    //                   variant="outlined"
+    //                   sx={{
+    //                       // weird width but seems to work
+    //                       // width: '95.5%',
+    //                       width: '100%',
+    //                       height: 'auto',
+    //                       // mx: 4, // margin left & right
+    //                       // my: 4, // margin top & bottom
+    //                       py: 1, // padding top & bottom
+    //                       px: 1, // padding left & right
+    //                       borderRadius: 'sm',
+    //                       boxShadow: 'sm',
+    //                       flexGrow: 0,
+    //                       display: 'inline-flex',
+    //                       // justifyContent: 'space-between',
+    //                       '--ListItemDecorator-size': '48px',
+    //                       '--ListItem-paddingY': '1rem',
+    //                 }}>
+    //                 {serverList.map((game, index) => (
+    //                     <Sheet key={game} sx={{ width: '100%' }}>
+    //                         <ServerListItem game={game} ws={ws} running={runningList[game]} />
+    //                         {index !== serverList.length - 1 && <ListDivider inset="gutter" />}
+    //                     </Sheet>
+    //                 ))}
+    //             </List>
+    //             {/*<Console ws={ws} game={undefined} />*/}
+    //         </Sheet>
+    //     </Layout>
+    // );
+
+    return page;
 }

@@ -7,7 +7,7 @@ export default function Console({ ws, game }) {
     useEffect(() => {
         // scroll to bottom of console when a new log is added
         const consoleDiv = document.getElementById('console');
-        consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        if (consoleDiv) consoleDiv.scrollTop = consoleDiv.scrollHeight;
     }, [logs]);
 
     // receive messages from server

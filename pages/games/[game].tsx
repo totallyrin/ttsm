@@ -5,13 +5,26 @@ import Head from "next/head";
 import {List} from "@mui/joy";
 import {useEffect, useState} from "react";
 import getServerList from "../../utils/serverlist";
+import {getSession, useSession} from "next-auth/react";
 
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//     const { game } = context.params;
-//     // fetch configuration data for the game server with ID `game`
-//     // const serverConfig = await fetchServerConfig(game);
-//     return { props: { serverConfig } };
-// };
+export async function getServerSideProps(context) {
+    const session = await getSession(context);
+
+    if (!session) {
+        return {
+            redirect: {
+                destination: '/login',
+                permanent: false,
+            },
+        };
+    }
+
+    return {
+        props: {
+            user: session?.user?.name,
+        },
+    };
+}
 
 export default function Game({ page, props }) {
     const router = useRouter();
@@ -19,10 +32,19 @@ export default function Game({ page, props }) {
     const ws = new WebSocket('ws://localhost:443');
     const serverList = getServerList(ws);
 
+    const session = useSession();
+    const [username, setUsername] = useState<string>('');
+    // setup username updates
+    useEffect(() => {
+        if (session.data && session.data.user && session.data.user.name) {
+            setUsername(session.data.user.name);
+        }
+    }, [session]);
+
 
     // render the page with the configuration data for the game server
     return (
-        <Layout page={page} props={props} serverList={serverList}>
+        <Layout username={username} page={page} props={props} serverList={serverList}>
             <List id="server-list"
                   variant="outlined"
                   sx={{
