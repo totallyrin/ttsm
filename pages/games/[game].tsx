@@ -44,7 +44,7 @@ export default function Game({ page, props }) {
 
     // render the page with the configuration data for the game server
     return (
-        <Layout username={username} page={page} props={props} serverList={serverList}>
+        <Layout username={username} page={page} serverList={serverList}>
             <List id="server-list"
                   variant="outlined"
                   sx={{

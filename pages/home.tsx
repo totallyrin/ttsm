@@ -29,6 +29,7 @@ export async function getServerSideProps(context) {
 }
 
 function ServerListItem({ url, game, running }: { url: string, game: string, running: 'pinging' | boolean }) {
+    const [loading, setLoading] = useState(false);
     const gameName = game === 'pz' ? 'Project Zomboid' : game.charAt(0).toUpperCase() + game.slice(1);
 
     return (
@@ -62,8 +63,9 @@ function ServerListItem({ url, game, running }: { url: string, game: string, run
                 }}>
                     <Button
                         id={`${game}-button`}
-                        loading={running === 'pinging'}
+                        loading={running === 'pinging' || loading}
                         onClick={() => {
+                            setLoading(true);
                             const ws = new WebSocket(url);
                             ws.onopen = async () => {
                                 await ws.send(JSON.stringify({ type: 'startStop', game: game }));
@@ -132,7 +134,13 @@ export default function Home({ username }) {
 
     const [page, setPage] = useState<JSX.Element>((
         <Layout username={username} page={'Home'} serverList={serverList}>
-            <Sheet variant="outlined">
+            <Sheet sx={{
+                display: 'grid',
+                gridTemplateColumns: 'auto',
+                gridTemplateRows: 'auto',
+                minHeight: '100%', // set min-height to ensure the layout takes up the full height of the viewport
+                minWidth: 'fit-content',
+            }}>
                 <Typography level="h3">Loading...</Typography>
             </Sheet>
         </Layout>

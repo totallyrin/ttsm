@@ -67,12 +67,12 @@ export default function Sidebar({ serverList }) {
                 </Link>
             </ListItem>
             <ListItem>
-                <Link href="/" sx={{ width: '100%' }}>
+                <Link href="/system" sx={{ width: '100%' }}>
                     <Button variant="plain" startDecorator={<SportsEsportsRounded />} sx={{ width: '100%', justifyContent: 'flex-start' }}>
                         <Typography
                             level="body3"
                             sx={{ textTransform: 'uppercase' }}>
-                            Servers
+                            System
                         </Typography>
                     </Button>
                 </Link>

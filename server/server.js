@@ -8,6 +8,9 @@ const WebSocket = require('ws');
 const wss = new WebSocket.Server({port: 443});
 global.WebSocket = require('ws');
 
+const osu = require('node-os-utils');
+const cpu = osu.cpu;
+
 const os = require('os');
 const pty = require('node-pty');
 const shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
@@ -503,6 +506,13 @@ wss.on('connection', async (ws) => {
         updateAll(ws);
     }, 5 * 1000);
 
+    // send cpu stats
+    const interval = setInterval(() => {
+        cpu.usage().then((usage) => {
+            ws.send(JSON.stringify({ type: 'cpu', usage: usage }));
+        });
+    }, 1 * 1000);
+
     // when message is received from client:
     ws.on('message', async (message) => {
         // get message data
@@ -556,5 +566,6 @@ wss.on('connection', async (ws) => {
         else {
             console.log('unknown client disconnected');
         }
+        clearInterval(interval);
     });
 });
