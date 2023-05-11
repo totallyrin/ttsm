@@ -25,7 +25,7 @@ export async function getServerSideProps(context) {
     };
 }
 
-export default function Layout({ username, props, page, serverList, children }) {
+export default function Layout({ username, page, serverList, children }) {
     const colors = ['primary', 'info', 'danger', 'success'] as const;
     const title = `TTSM - ${page}`;
 

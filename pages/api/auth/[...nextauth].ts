@@ -1,8 +1,9 @@
 import NextAuth, {NextAuthOptions} from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { url } from '../../../utils/utils';
 
 async function attempt_login(username, password): Promise<{ id: string, username: string } | boolean> {
-    const ws = new WebSocket('ws://localhost:443');
+    const ws = new WebSocket(url);
 
     return await new Promise((resolve, reject) => {
         let result, user, loginPromise;

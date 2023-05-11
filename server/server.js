@@ -305,6 +305,7 @@ async function startServer(ws, game, cmd, args, stop, online, offline) {
 
         exports.servers[game].server.stdout.on('data', (data) => {
             if (typeof data !== "string") return;
+            console.log(`${game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.toString().trim()}`);
             if (data !== ('\n' || '\r')) {
                 console.log(`${game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.toString().trim()}`);
                 if (data.includes(online))
@@ -427,23 +428,40 @@ function updateStatus(ws, game, status) {
 
 function sendAll(data) {
     for (const client of clients) {
-        client.send(JSON.stringify(data));
+        const ws = client.ws;
+        ws.send(JSON.stringify(data));
     }
 }
 
 function sendServerList(ws) {
     // send server list to client
     for (const game in exports.servers) {
-        console.log(`sending ${game.toString()}`);
         ws.send(JSON.stringify({type: 'serverList', name: game.toString()}));
     }
-    // ws.send(JSON.stringify({type: 'END'}));
 }
+
+function closeUnknownConnection(ws, secs) {
+    setTimeout(async () => {
+        console.log('attempting to close unknown connection');
+        const client = getClient(ws);
+        if (client && (!client.username || client.username === '')) {
+            await ws.send(JSON.stringify({type: 'debug', msg: 'connection closing'}));
+            console.log(`closing connection with client ${client.username}`);
+            client.ws.close(1000, 'Empty username');
+            clients.delete(client);
+            console.log('unknown client disconnected');
+        }
+        // sendAll({type: 'debug', msg: 'pinging connection'});
+    }, secs * 1000);
+}
+
 
 // main code below
 console.log('starting discord bot');
 deploy();
 startBot();
+const secs = 10;
+console.log(`unknown clients will be removed after ${secs} seconds`);
 
 /**
  * code to run on new client connection
@@ -456,11 +474,9 @@ wss.on('connection', async (ws) => {
     ])
         .then(user => {
             username = user;
-            // console.log(`client ${username} connected`);
         })
         .catch(error => {
-            // console.log('unknown client connected');
-            username = 'unknown';
+            username = '';
         });
 
     // const username = await getUsername(ws);
@@ -469,6 +485,7 @@ wss.on('connection', async (ws) => {
     }
     else {
         console.log('unknown client connected');
+        // closeUnknownConnection(ws, secs);
     }
     clients.add({ws, username});
     const client = getClient(ws);
@@ -479,6 +496,7 @@ wss.on('connection', async (ws) => {
     // send server status to webpage
     updateAll(ws);
 
+    // TODO: REMOVE WHEN ALL IS WELL TO REDUCE SERVER LOAD: DEBUG ONLY
     // start loop so that webpage status is updated
     setInterval(() => {
         // console.log(`updating client ${username}`);
@@ -488,9 +506,14 @@ wss.on('connection', async (ws) => {
     // when message is received from client:
     ws.on('message', async (message) => {
         // get message data
-        console.log('message received from client');
         const data = JSON.parse(message);
 
+        if (data.type === 'username') {
+            console.log(`client ${getClient(ws).username} authenticated as user ${data.username}`);
+            const temp = getClient(ws);
+            clients.delete(temp);
+            clients.add({ws: ws, username: data.username});
+        }
         if (data.type === 'startStop') {
             switch (data.game) {
                 case 'minecraft':
@@ -525,8 +548,9 @@ wss.on('connection', async (ws) => {
     });
 
     ws.on('close', () => {
-        if (username) {
-            clients.delete(client);
+        let temp = getClient(ws);
+        clients.delete(temp);
+        if (username && username !== '') {
             console.log(`client ${username} disconnected`);
         }
         else {

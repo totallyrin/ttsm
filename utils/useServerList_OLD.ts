@@ -1,6 +1,6 @@
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 
-export default function getServerList(ws: WebSocket) {
+export default function useServerList_OLD(ws: WebSocket) {
     const [serverList, setServerList] = useState<string[]>([]);
 
     ws.onopen = function () {
@@ -18,5 +18,6 @@ export default function getServerList(ws: WebSocket) {
             });
         }
     };
+
     return serverList;
 }

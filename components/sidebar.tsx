@@ -1,10 +1,11 @@
 import {useEffect, useState} from 'react';
 import {Sheet, List, ListItem, Typography, Link, Button, IconButton, ListItemButton} from '@mui/joy';
 import {
-    Code,
+    ArrowRightAlt, ArrowRightRounded,
+    Code, EastRounded,
     HomeRounded,
     KeyboardArrowDown,
-    SportsEsportsRounded
+    SportsEsportsRounded, SubdirectoryArrowRightRounded
 } from '@mui/icons-material';
 import * as React from "react";
 
@@ -14,7 +15,7 @@ function ServerListItem({ game }) {
     return (
         <ListItem nested>
             <Link href="/" sx={{ width: '100%' }}>
-                <Button variant="plain" sx={{ width: '100%', justifyContent: 'flex-start' }}>
+                <Button variant="plain" startDecorator={<EastRounded />} sx={{ width: '100%', justifyContent: 'flex-start' }}>
                     <Typography
                         level="body3"
                         sx={{ textTransform: 'uppercase' }}>
@@ -47,7 +48,6 @@ export default function Sidebar({ serverList }) {
                 flexDirection: 'column',
                 // justifyContent: 'space-between',
                 '--ListItemDecorator-size': '48px',
-                // '--ListItem-paddingY': '1rem',
         }}>
             <ListItem>
                 <Typography
@@ -98,29 +98,19 @@ export default function Sidebar({ serverList }) {
                         Servers
                     </Typography>
                 </Button>
-
-                {serversOpen && (
+            </ListItem>
+            {serversOpen && (
+                <ListItem>
                     <List
                         sx={{
-                            width: 'auto',
-                            height: '100%',
-                            mx: 4, // margin left & right
-                            my: 4, // margin top & bottom
-                            // py: 1, // padding top & bottom
-                            px: 1, // padding left & right
-                            flexGrow: 0,
-                            display: 'block',
-                            // flexDirection: 'column',
-                            // justifyContent: 'space-between',
-                            '--ListItemDecorator-size': '48px',
-                            '--ListItem-paddingY': '1rem',
+                            py: 0,
                         }}>
                         {serverList.map((game) => (
                             <ServerListItem game={game} />
                         ))}
                     </List>
-                )}
-            </ListItem>
+                </ListItem>
+            )}
         </List>
     );
 }
