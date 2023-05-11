@@ -1,5 +1,5 @@
-import {useState, useEffect, useCallback} from 'react';
-import {Chart, Line} from 'react-chartjs-2';
+import {useState, useEffect} from 'react';
+import {Chart} from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
 import {
     Chart as ChartJS,
