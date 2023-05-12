@@ -235,7 +235,7 @@ export default function Game({ username }) {
 
     useEffect(() => {
         setPage ((
-            <Layout username={username} page={'Home'} serverList={serverList}>
+            <Layout username={username} page={`Config`} serverList={serverList}>
                 <Sheet sx={{
                     display: 'grid',
                     gridTemplateColumns: '1fr',
