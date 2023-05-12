@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import {getSession, useSession} from 'next-auth/react';
 import Head from 'next/head';
-import {Link, List, ListItem, Sheet, Typography, Button, ListDivider} from '@mui/joy';
+import {Link, List, ListItem, Sheet, Typography, Button, ListDivider, useTheme, Box} from '@mui/joy';
 import Layout from '../components/layout';
 import useServerList from "../utils/useServerList";
 import Console from "../components/console";
 import { url } from '../utils/utils';
 import CPU from "../components/cpu";
+import Memory from "../components/memory";
 
 export async function getServerSideProps(context) {
     const session = await getSession(context);
@@ -94,18 +95,23 @@ export default function System({ username }) {
         </Layout>
     ));
 
+    const theme = useTheme();
+
     useEffect(() => {
         setPage ((
             <Layout username={username} page={'Home'} serverList={serverList}>
                 <Sheet sx={{
                     display: 'grid',
                     gridTemplateColumns: 'auto',
-                    gridTemplateRows: 'auto 1fr',
+                    gridTemplateRows: 'auto 1fr auto',
+                    gridRowGap: theme.spacing(4),
                     minHeight: '100%', // set min-height to ensure the layout takes up the full height of the viewport
                     minWidth: 'fit-content',
                 }}>
                     {/*  components go here  */}
-                    <CPU url={url}/>
+                    <CPU url={url} />
+                    <Box />
+                    <Memory url={url} />
                 </Sheet>
             </Layout>
         ));

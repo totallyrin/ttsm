@@ -27,7 +27,7 @@ ChartJS.register(
 
 import {Sheet, Typography} from "@mui/joy";
 
-export default function CPU({ url }) {
+export default function Memory({ url }) {
     useEffect(() => {
         const ws = new WebSocket(url);
 
@@ -35,7 +35,8 @@ export default function CPU({ url }) {
             // get data from message
             const data = JSON.parse(message.data);
             // if message is about server status, update relevant status
-            if (data.type === 'cpu') {
+            if (data.type === 'memory') {
+                console.log(`memory data received: ${data.usage}`);
                 const usage = data.usage;
                 setChartData((prevData) => [
                     ...prevData,
@@ -59,7 +60,7 @@ export default function CPU({ url }) {
         labels: chartData ? chartData.map((item) => item.time) : [],
         datasets: [
             {
-                label: 'CPU Usage',
+                label: 'Memory Usage',
                 data: chartData ? chartData.map((item) => item.usage) : [],
                 fill: true,
                 backgroundColor: 'rgba(9, 107, 222, 0.2)',
@@ -100,7 +101,7 @@ export default function CPU({ url }) {
             y: {
                 title: {
                     display: true,
-                    text: 'CPU Usage (%)'
+                    text: 'Memory Usage (%)'
                 },
                 min: 0,
                 max: 100
@@ -119,7 +120,7 @@ export default function CPU({ url }) {
                         return tooltipItem[0].time;
                     },
                     label: function(context) {
-                        return `CPU Usage: ${context.parsed.y}%`;
+                        return `Memory Usage: ${context.parsed.y}%`;
                     }
                 }
             },
@@ -148,7 +149,7 @@ export default function CPU({ url }) {
             <Typography level="h3" sx={{
                 alignSelf: 'center',
                 p: 2,
-            }}>CPU Usage</Typography>
+            }}>Memory Usage</Typography>
             <Chart type="line" data={dataset} options={options} />
         </Sheet>
     );

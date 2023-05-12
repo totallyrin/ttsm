@@ -86,9 +86,9 @@ ws.onmessage = function (event) {
         case 'serverList':
             addServer(data.name);
             break;
-        default:
+        case 'console':
             let console = document.getElementById('console');
-            console.textContent += data;
+            console.textContent += data.data;
             console.scrollTop = console.scrollHeight;
     }
 };

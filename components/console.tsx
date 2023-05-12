@@ -1,15 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {Sheet, Typography} from "@mui/joy";
 import { url } from '../utils/utils';
 
 export default function Console({ username, game }) {
     const [logs, setLogs] = useState<string[]>([]);
+    const sheetRef = useRef(null);
 
     useEffect(() => {
         // scroll to bottom of console when a new log is added
-        const consoleDiv = document.getElementById('console');
-        if (consoleDiv) consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        if (sheetRef.current) {
+            sheetRef.current.scrollTop = sheetRef.current.scrollHeight;
+        }
     }, [logs]);
+
+    // useEffect(() => {
+    //     // scroll to bottom of console when a new log is added
+    //     const consoleDiv = document.getElementById('console');
+    //     if (consoleDiv) consoleDiv.scrollTop = consoleDiv.scrollHeight;
+    // }, [logs]);
 
     // open single websocket
     useEffect(() => {
@@ -19,13 +27,26 @@ export default function Console({ username, game }) {
             // get data from message
             const data = JSON.parse(event.data);
             // if message doesn't have a type
-            if (typeof data === "string") {
-                // append to console
-                setLogs(prevLogs => {
-                    let temp = {...prevLogs};
-                    temp.push(data);
-                    return temp;
-                });
+            if (data.type === 'console') {
+                if (game) {
+                    game = game === 'pz' ? 'PZ' : game.charAt(0).toUpperCase() + game.slice(1);
+                    if (data.data.startsWith(`${game} server:`)) {
+                        // append to console
+                        setLogs(prevLogs => {
+                            let temp = [...prevLogs];
+                            temp.push(data.data);
+                            return temp;
+                        });
+                    }
+                }
+                else {
+                    // append to console
+                    setLogs(prevLogs => {
+                        let temp = [...prevLogs];
+                        temp.push(data.data);
+                        return temp;
+                    });
+                }
             }
         };
     }, [username]);
@@ -33,15 +54,15 @@ export default function Console({ username, game }) {
     return (
         <Sheet variant="outlined" sx={{
             mt: 4,
+            p: 2,
             borderRadius: 'sm',
             boxShadow: 'sm',
-            height: '100%'
+            height: '100%',
+            overflowY: 'scroll',
         }}>
-            <div id="console" style={{ height: '100%', overflowY: 'scroll' }}>
-                {logs.map((log, index) => (
-                    <Typography key={index} level="body1">{log}</Typography>
-                ))}
-            </div>
+            {logs.map((log, index) => (
+                <Typography key={index} level="body3">{log}</Typography>
+            ))}
         </Sheet>
     );
 }

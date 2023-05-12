@@ -10,6 +10,7 @@ global.WebSocket = require('ws');
 
 const osu = require('node-os-utils');
 const cpu = osu.cpu;
+const memory = osu.mem;
 
 const os = require('os');
 const pty = require('node-pty');
@@ -309,14 +310,14 @@ async function startServer(ws, game, cmd, args, stop, online, offline) {
         exports.servers[game].server.stdout.on('data', (data) => {
             if (typeof data !== "string") return;
             console.log(`${game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.toString().trim()}`);
-            if (data !== ('\n' || '\r')) {
+            if (data !== ('' || '\n' || '\r')) {
                 console.log(`${game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.toString().trim()}`);
                 if (data.includes(online))
                     updateStatus(ws, game, true);
                 if (data.includes(offline))
                     updateStatus(ws, game, 'pinging');
                 // ws.send(JSON.stringify(`${game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.toString().trim()}\n`));
-                sendAll(`${game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.toString().trim()}\n`);
+                sendAll({type: 'console', data:`${game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.toString().trim()}\n`});
             }
         });
 
@@ -328,6 +329,7 @@ async function startServer(ws, game, cmd, args, stop, online, offline) {
 
         exports.servers[game].server.on('close', (code) => {
             console.log(`${game.charAt(0).toUpperCase() + game.slice(1)} server exited with code ${code}`);
+            sendAll({type: 'console', data: `${game.charAt(0).toUpperCase() + game.slice(1)} server exited with code ${code}`});
             updateStatus(ws, game, false);
         });
     }
@@ -381,7 +383,7 @@ async function startServerPTY(ws, game, args, stop, online, offline) {
         exports.servers[game].server.onData((data) => {
             if (typeof data !== "string") return;
             if (!data.includes('[K')) {
-                if (data.charAt(0) !== ('\n' || '\r' || '\\\n' || ' ')) {
+                if (data !== ('' || '\n' || '\r')) {
                     console.log(`${game === 'pz' ? 'PZ' : game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.trim()}`);
                     if (data.includes(online))
                         updateStatus(ws, game, true);
@@ -394,12 +396,13 @@ async function startServerPTY(ws, game, args, stop, online, offline) {
                     }
                 }
                 // ws.send(JSON.stringify(`${game === 'pz' ? 'PZ' : game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.trim()}\n`));
-                sendAll(`${game === 'pz' ? 'PZ' : game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.trim()}\n`);
+                sendAll({type: 'console', data: `${game === 'pz' ? 'PZ' : game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.trim()}\n`});
             }
         });
 
         exports.servers[game].server.onExit((data) => {
             console.log(`${game.charAt(0).toUpperCase() + game.slice(1)} server exited with code ${data.exitCode}`);
+            sendAll({type: 'console', data: `${game.charAt(0).toUpperCase() + game.slice(1)} server exited with code ${data.exitCode}`});
             updateStatus(ws, game, false);
         });
     }
@@ -506,12 +509,16 @@ wss.on('connection', async (ws) => {
         updateAll(ws);
     }, 5 * 1000);
 
-    // send cpu stats
+    // send cpu/memory stats
     const interval = setInterval(() => {
         cpu.usage().then((usage) => {
-            ws.send(JSON.stringify({ type: 'cpu', usage: usage }));
+            ws.send(JSON.stringify({ type: 'cpu', usage: usage.toFixed(2) }));
         });
-    }, 1 * 1000);
+        memory.info().then((info) => {
+            const usage = ((info.usedMemMb / info.totalMemMb) * 100).toFixed(2);
+            ws.send(JSON.stringify({ type: 'memory', usage: usage }));
+        });
+    }, 1000); // 1 second = 1 * 1000ms
 
     // when message is received from client:
     ws.on('message', async (message) => {
@@ -527,7 +534,8 @@ wss.on('connection', async (ws) => {
         if (data.type === 'startStop') {
             switch (data.game) {
                 case 'minecraft':
-                    await startServer(ws, data.game, 'java', ['-Xmx1024M', '-Xms1024M', '-jar', 'server.jar', 'nogui'], '/stop\n', 'Done', 'Stopping the server');
+                    // await startServer(ws, data.game, 'java', ['-Xmx1024M', '-Xms1024M', '-jar', 'server.jar', 'nogui'], '/stop\n', 'Done', 'Stopping the server');
+                    await startServerPTY(ws, data.game, ['.\\start-server.bat'],  'stop\r', 'Done', 'Stopping the server');
                     break;
                 case 'terraria':
                     await startServerPTY(ws, data.game, ['.\\start-server.bat'], 'exit\r', 'Server started', 'Saving before exit...');

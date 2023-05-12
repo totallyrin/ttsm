@@ -32,6 +32,10 @@ function ServerListItem({ url, game, running }: { url: string, game: string, run
     const [loading, setLoading] = useState(false);
     const gameName = game === 'pz' ? 'Project Zomboid' : game.charAt(0).toUpperCase() + game.slice(1);
 
+    useEffect(() => {
+        setLoading(false);
+    }, [running]);
+
     return (
         <ListItem sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <List orientation="horizontal" id={game} sx={{
@@ -52,10 +56,10 @@ function ServerListItem({ url, game, running }: { url: string, game: string, run
                         id={`${game}-status`}
                         className={`status ${running === 'pinging' ? '' : running ? 'online' : 'offline'}`}
                         sx={{
-                            color: running === 'pinging' ? '#eeb132' : (running ? '#6bb700' : '#ed3e42')
+                            color: running === 'pinging' || loading ? '#eeb132' : (running ? '#6bb700' : '#ed3e42')
                         }}
                     >
-                        {running === 'pinging' ? 'pinging' : running ? 'online' : 'offline'}
+                        {running === 'pinging' || loading ? 'pinging' : running ? 'online' : 'offline'}
                     </Typography>
                 </ListItem>
                 <ListItem sx={{
