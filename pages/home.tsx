@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import {getSession, useSession} from 'next-auth/react';
 import Head from 'next/head';
-import {Link, List, ListItem, Sheet, Typography, Button, ListDivider} from '@mui/joy';
+import {useTheme, Link, List, ListItem, Sheet, Typography, Button, ListDivider} from '@mui/joy';
 import Layout from '../components/layout';
 import useServerList from "../utils/useServerList";
 import Console from "../components/console";
@@ -150,6 +150,8 @@ export default function Home({ username }) {
         </Layout>
     ));
 
+    const theme = useTheme();
+
     useEffect(() => {
         setPage ((
             <Layout username={username} page={'Home'} serverList={serverList}>
@@ -157,6 +159,7 @@ export default function Home({ username }) {
                     display: 'grid',
                     gridTemplateColumns: 'auto',
                     gridTemplateRows: 'auto 1fr',
+                    gridRowGap: theme.spacing(4),
                     minHeight: '100%', // set min-height to ensure the layout takes up the full height of the viewport
                     minWidth: 'fit-content',
                 }}>

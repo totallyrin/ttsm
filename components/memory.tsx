@@ -145,6 +145,8 @@ export default function Memory({ url }) {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
+            height: '100%',
+            width: '100%'
         }}>
             <Typography level="h3" sx={{
                 alignSelf: 'center',

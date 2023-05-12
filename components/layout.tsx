@@ -51,7 +51,7 @@ export default function Layout({ username, page, serverList, children }) {
                         px: 4,
                     }}>
                         <Sidebar serverList={serverList} />
-                        <Sheet sx={{ height: 'fit-content', minWidth: 'fit-content' }}>{children}</Sheet>
+                        {children}
                     </Sheet>
                     <Footer />
                 </Sheet>

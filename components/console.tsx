@@ -53,7 +53,6 @@ export default function Console({ username, game }) {
 
     return (
         <Sheet variant="outlined" sx={{
-            mt: 4,
             p: 2,
             borderRadius: 'sm',
             boxShadow: 'sm',

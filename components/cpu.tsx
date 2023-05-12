@@ -69,7 +69,7 @@ export default function CPU({ url }) {
     }
 
     const options = {
-        // maintainAspectRatio: true,
+        maintainAspectRatio: true,
         scales: {
             x: {
                 type: 'time',
@@ -137,13 +137,13 @@ export default function CPU({ url }) {
 
     return (
         <Sheet variant="outlined" sx={{
-            px: 1,
-            py: 1,
+            p: 1,
             borderRadius: 'sm',
             boxShadow: 'sm',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
+            height: '100%',
         }}>
             <Typography level="h3" sx={{
                 alignSelf: 'center',
