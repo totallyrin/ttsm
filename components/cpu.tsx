@@ -69,7 +69,6 @@ export default function CPU({ url }) {
     }
 
     const options = {
-        maintainAspectRatio: true,
         scales: {
             x: {
                 type: 'time',
@@ -137,7 +136,7 @@ export default function CPU({ url }) {
 
     return (
         <Sheet variant="outlined" sx={{
-            p: 1,
+            p: 2,
             borderRadius: 'sm',
             boxShadow: 'sm',
             display: 'flex',

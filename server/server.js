@@ -504,12 +504,11 @@ wss.on('connection', async (ws) => {
     // send server status to webpage
     updateAll(ws);
 
-    // TODO: REMOVE WHEN ALL IS WELL TO REDUCE SERVER LOAD: DEBUG ONLY
     // start loop so that webpage status is updated
     setInterval(() => {
         // console.log(`updating client ${username}`);
         updateAll(ws);
-    }, 5 * 1000);
+    }, 1000); // 1s = 1 * 1000ms
 
     // send cpu/memory stats
     const interval = setInterval(() => {
@@ -554,6 +553,7 @@ wss.on('connection', async (ws) => {
         if (data.type === 'command') {
             if (exports.servers[data.game].server) {
                 exports.servers[data.game].server.write(data.command);
+                exports.servers[data.game].server.write('\r');
             }
         }
         if (data.type === 'login') {

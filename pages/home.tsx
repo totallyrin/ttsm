@@ -6,6 +6,7 @@ import Layout from '../components/layout';
 import useServerList from "../utils/useServerList";
 import Console from "../components/console";
 import { url } from '../utils/utils';
+import * as React from "react";
 
 export async function getServerSideProps(context) {
     const session = await getSession(context);
@@ -43,7 +44,7 @@ function ServerListItem({ url, game, running }: { url: string, game: string, run
                 width: '100%',
                 justifyContent: 'space-between'
             }}>
-                <ListItem><img src={`../img/${game}.png`} alt={game}/></ListItem>
+                <ListItem><img src={`../img/${game}.png`} alt={game} style={{width: '64px', height: '64px'}} /></ListItem>
                 <ListItem sx={{
                     justifyContent: 'center',
                     width: '30%'
@@ -157,11 +158,9 @@ export default function Home({ username }) {
             <Layout username={username} page={'Home'} serverList={serverList}>
                 <Sheet sx={{
                     display: 'grid',
-                    gridTemplateColumns: 'auto',
+                    gridTemplateColumns: '1fr',
                     gridTemplateRows: 'auto 1fr',
                     gridRowGap: theme.spacing(4),
-                    minHeight: '100%', // set min-height to ensure the layout takes up the full height of the viewport
-                    minWidth: 'fit-content',
                 }}>
                     <List id="server-list"
                           variant="outlined"
@@ -187,7 +186,7 @@ export default function Home({ username }) {
                             </Sheet>
                         ))}
                     </List>
-                    <Console username={username} game={undefined} />
+                    <Sheet><Console username={username} game={undefined} /></Sheet>
                 </Sheet>
             </Layout>
         ));

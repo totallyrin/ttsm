@@ -70,7 +70,6 @@ export default function Memory({ url }) {
     }
 
     const options = {
-        // maintainAspectRatio: true,
         scales: {
             x: {
                 type: 'time',
@@ -138,8 +137,7 @@ export default function Memory({ url }) {
 
     return (
         <Sheet variant="outlined" sx={{
-            px: 1,
-            py: 1,
+            p: 2,
             borderRadius: 'sm',
             boxShadow: 'sm',
             display: 'flex',

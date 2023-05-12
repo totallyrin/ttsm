@@ -102,12 +102,10 @@ export default function System({ username }) {
             <Layout username={username} page={'System'} serverList={serverList}>
                 <Sheet sx={{
                     display: 'grid',
-                    gridTemplateColumns: 'auto',
+                    gridTemplateColumns: '1fr',
                     gridTemplateRows: '1fr 1fr',
                     gridRowGap: theme.spacing(4),
                     alignItems: 'stretch',
-                    minHeight: '100%', // set min-height to ensure the layout takes up the full height of the viewport
-                    minWidth: 'fit-content',
                 }}>
                     <CPU url={url} />
                     <Memory url={url} />

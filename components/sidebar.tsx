@@ -14,11 +14,11 @@ function ServerListItem({ game }) {
 
     return (
         <ListItem nested>
-            <Link href={`/config/${game}`} sx={{ width: '100%' }}>
-                <Button variant="plain" startDecorator={<EastRounded />} sx={{ width: '100%', justifyContent: 'flex-start' }}>
-                    <Typography
+            <Link href={`/servers/${game}`} sx={{ width: '100%' }}>
+                <Button variant="plain" startDecorator={<img src={`../img/${game}.png`} alt={game} style={{width: '24px', height: '24px'}} />} sx={{ width: '100%', justifyContent: 'flex-start' }}>
+                <Typography
                         level="body3"
-                        sx={{ textTransform: 'uppercase' }}>
+                        sx={{ textTransform: 'uppercase', textAlign: 'left' }}>
                         {gameName}
                     </Typography>
                 </Button>
@@ -92,7 +92,7 @@ export default function Sidebar({ serverList }) {
                         sx={{
                             textTransform: 'uppercase',
                             fontWeight: serversOpen ? 'bold' : undefined,
-                            // color: serversOpen ? 'text.primary' : 'inherit',
+                            color: serversOpen ? 'inherit' : '',
                         }}
                     >
                         Servers

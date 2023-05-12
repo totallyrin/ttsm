@@ -6,6 +6,7 @@ import Layout from "../../components/layout";
 import {Button, List, ListDivider, ListItem, Sheet, Typography, useTheme} from "@mui/joy";
 import Console from "../../components/console";
 import {getSession} from "next-auth/react";
+import * as React from "react";
 
 export async function getServerSideProps(context) {
     const session = await getSession(context);
@@ -43,7 +44,7 @@ function ServerListItem({ url, game, running }: { url: string, game: string, run
                 width: '100%',
                 justifyContent: 'space-between'
             }}>
-                <ListItem><img src={`../img/${game}.png`} alt={game}/></ListItem>
+                <ListItem><img src={`../img/${game}.png`} alt={game} style={{width: '64px', height: '64px'}} /></ListItem>
                 <ListItem sx={{
                     justifyContent: 'center',
                     width: '30%'
@@ -85,7 +86,7 @@ function ServerListItem({ url, game, running }: { url: string, game: string, run
     );
 }
 
-export default function Config({ username }) {
+export default function Game({ username }) {
     const router = useRouter()
     const { game } = router.query
 
@@ -160,11 +161,9 @@ export default function Config({ username }) {
             <Layout username={username} page={'Home'} serverList={serverList}>
                 <Sheet sx={{
                     display: 'grid',
-                    gridTemplateColumns: 'auto',
-                    gridTemplateRows: 'auto 1fr',
+                    gridTemplateColumns: '1fr',
+                    gridTemplateRows: 'auto 1fr 1fr',
                     gridRowGap: theme.spacing(4),
-                    minHeight: '100%', // set min-height to ensure the layout takes up the full height of the viewport
-                    minWidth: 'fit-content',
                 }}>
                     <List id="server-list"
                         variant="outlined"
@@ -182,7 +181,7 @@ export default function Config({ username }) {
                           '--ListItemDecorator-size': '48px',
                           '--ListItem-paddingY': '1rem',
                         }}>
-                        {/*<ServerListItem game={game} url={url} running={runningList[game]} />*/}
+                        <ServerListItem game={game} url={url} running={runningList[game]} />
                     </List>
                     <Console username={username} game={game} />
                 </Sheet>
