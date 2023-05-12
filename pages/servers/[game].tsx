@@ -169,9 +169,6 @@ export default function Game({ username }) {
                         variant="outlined"
                         sx={{
                           width: '100%',
-                          height: 'auto',
-                          // mx: 4, // margin left & right
-                          // my: 4, // margin top & bottom
                           py: 1, // padding top & bottom
                           px: 1, // padding left & right
                           borderRadius: 'sm',

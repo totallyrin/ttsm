@@ -34,10 +34,6 @@ export default function Sidebar({ serverList }) {
         <List
             variant="outlined"
             sx={{
-                width: 'auto',
-                // height: 'auto',
-                // mx: 4, // margin left & right
-                // my: 4, // margin top & bottom
                 mr: 4,
                 py: 1, // padding top & bottom
                 px: 1, // padding left & right
@@ -46,7 +42,6 @@ export default function Sidebar({ serverList }) {
                 flexGrow: 0,
                 display: 'inline-flex',
                 flexDirection: 'column',
-                // justifyContent: 'space-between',
                 '--ListItemDecorator-size': '48px',
         }}>
             <ListItem>

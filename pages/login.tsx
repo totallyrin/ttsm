@@ -31,7 +31,6 @@ export default function LoginPage() {
                         sx={{
                             width: 'auto',
                             mx: 4, // margin left & right
-                            // my: 4, // margin top & bottom
                             mt: 4,
                             py: 3, // padding top & bottom
                             px: 3, // padding left & right

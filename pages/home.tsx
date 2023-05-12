@@ -166,16 +166,12 @@ export default function Home({ username }) {
                           variant="outlined"
                           sx={{
                               width: '100%',
-                              height: 'auto',
-                              // mx: 4, // margin left & right
-                              // my: 4, // margin top & bottom
                               py: 1, // padding top & bottom
                               px: 1, // padding left & right
                               borderRadius: 'sm',
                               boxShadow: 'sm',
                               flexGrow: 0,
                               display: 'inline-flex',
-                              // justifyContent: 'space-between',
                               '--ListItemDecorator-size': '48px',
                               '--ListItem-paddingY': '1rem',
                           }}>
