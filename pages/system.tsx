@@ -103,14 +103,13 @@ export default function System({ username }) {
                 <Sheet sx={{
                     display: 'grid',
                     gridTemplateColumns: 'auto',
-                    gridTemplateRows: 'auto 1fr auto',
+                    gridTemplateRows: '1fr 1fr',
                     gridRowGap: theme.spacing(4),
+                    alignItems: 'stretch',
                     minHeight: '100%', // set min-height to ensure the layout takes up the full height of the viewport
                     minWidth: 'fit-content',
                 }}>
-                    {/*  components go here  */}
                     <CPU url={url} />
-                    <Box />
                     <Memory url={url} />
                 </Sheet>
             </Layout>
