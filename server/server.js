@@ -22,26 +22,34 @@ const { deploy } = require("../discord/deploy-commands");
 const clients = new Set();
 
 const crypto = require('crypto');
+const {readFile, writeFile} = require("fs");
+const {join} = require("path");
 const sqlite3 = require('sqlite3').verbose();
 
 let minecraft = {
     server: undefined,
-    running: false
+    running: false,
+    config: 'server.properties'
 };
 
 let terraria = {
     server: undefined,
-    running: false
+    running: false,
+    config: 'serverconfig.txt'
 };
 
 let valheim = {
     server: undefined,
-    running: false
+    running: false,
+    // TODO: update config file path
+    config: 'test.txt'
 };
 
 let pz = {
     server: undefined,
-    running: false
+    running: false,
+    // TODO: update config file path
+    config: 'test.txt'
 };
 
 exports.servers = {
@@ -398,7 +406,7 @@ async function startServerPTY(ws, game, args, stop, online, offline) {
                     }
                 }
                 // ws.send(JSON.stringify(`${game === 'pz' ? 'PZ' : game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.trim()}\n`));
-                sendAll({type: 'console', data: `${game === 'pz' ? 'PZ' : game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.trim()}\n`});
+                sendAll({type: 'console', data: `${game === 'pz' ? 'PZ' : game.charAt(0).toUpperCase() + game.slice(1)} server: ${data.trim()}`});
             }
         });
 
@@ -463,6 +471,20 @@ function closeUnknownConnection(ws, secs) {
     }, secs * 1000);
 }
 
+function sendConfig(ws) {
+    // send configs to client
+    for (const game in exports.servers) {
+        const config = exports.servers[game].config;
+        const filePath = join(__dirname, `../game_servers/${game.toString()}/${config}`);
+        readFile(filePath, 'utf8', (err, data) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            ws.send(JSON.stringify({type: 'config', game: game.toString(), content: data}));
+        });
+    }
+}
 
 // main code below
 console.log('starting discord bot');
@@ -501,6 +523,9 @@ wss.on('connection', async (ws) => {
     // send server list to client
     sendServerList(ws);
 
+    // send config files
+    sendConfig(ws);
+
     // send server status to webpage
     updateAll(ws);
 
@@ -526,49 +551,63 @@ wss.on('connection', async (ws) => {
         // get message data
         const data = JSON.parse(message);
 
-        if (data.type === 'username') {
-            console.log(`client ${getClient(ws).username} authenticated as user ${data.username}`);
-            const temp = getClient(ws);
-            clients.delete(temp);
-            clients.add({ws: ws, username: data.username});
-        }
-        if (data.type === 'startStop') {
-            switch (data.game) {
-                case 'minecraft':
-                    // await startServer(ws, data.game, 'java', ['-Xmx1024M', '-Xms1024M', '-jar', 'server.jar', 'nogui'], '/stop\n', 'Done', 'Stopping the server');
-                    await startServerPTY(ws, data.game, ['.\\start-server.bat'],  'stop\r', 'Done', 'Stopping the server');
-                    break;
-                case 'terraria':
-                    await startServerPTY(ws, data.game, ['.\\start-server.bat'], 'exit\r', 'Server started', 'Saving before exit...');
-                    break;
-                case 'valheim':
-                    await startServerPTY(ws, data.game, ['.\\start-server.bat'], '\x03', 'Game server connected', 'World save writing');
-                    break;
-                case 'pz':
-                    await startServerPTY(ws, data.game, ['.\\start-server.bat'], 'quit\r', 'Server Steam ID', 'QuitCommand');
-                    break;
-            }
-            updateAll(ws);
-        }
-        if (data.type === 'command') {
-            if (exports.servers[data.game].server) {
-                exports.servers[data.game].server.write(data.command);
-                exports.servers[data.game].server.write('\r');
-            }
-        }
-        if (data.type === 'login') {
-            // if username and password not given, throw error
-            if (!(data.username && data.password)) {
-                ws.send(JSON.stringify({type: 'login', success: false, error: 'Invalid username or password'}));
-            } else {
-                await login(ws, data.username, data.password);
-            }
-        }
-        if (data.type === 'addUser') {
-            await addUser(data.username, data.password);
-        }
-        if (data.type === 'serverList') {
-            sendServerList(ws);
+        switch (data.type) {
+            case 'username':
+                console.log(`client ${getClient(ws).username} authenticated as user ${data.username}`);
+                const temp = getClient(ws);
+                clients.delete(temp);
+                clients.add({ws: ws, username: data.username});
+                break;
+            case 'startStop':
+                switch (data.game) {
+                    case 'minecraft':
+                        // await startServer(ws, data.game, 'java', ['-Xmx1024M', '-Xms1024M', '-jar', 'server.jar', 'nogui'], '/stop\n', 'Done', 'Stopping the server');
+                        await startServerPTY(ws, data.game, ['.\\start-server.bat'], 'stop\r', 'Done', 'Stopping the server');
+                        break;
+                    case 'terraria':
+                        await startServerPTY(ws, data.game, ['.\\start-server.bat'], 'exit\r', 'Server started', 'Saving before exit...');
+                        break;
+                    case 'valheim':
+                        await startServerPTY(ws, data.game, ['.\\start-server.bat'], '\x03', 'Game server connected', 'World save writing');
+                        break;
+                    case 'pz':
+                        await startServerPTY(ws, data.game, ['.\\start-server.bat'], 'quit\r', 'Server Steam ID', 'QuitCommand');
+                        break;
+                }
+                updateAll(ws);
+                break;
+            case 'command':
+                if (exports.servers[data.game].server) {
+                    exports.servers[data.game].server.write(data.command);
+                    exports.servers[data.game].server.write('\r');
+                }
+                break;
+            case 'config':
+                // handle saving
+                const config = exports.servers[data.game].config;
+                const filePath = join(__dirname, `../game_servers/${data.game}/${config}`);
+                writeFile(filePath, data.content, 'utf8', (err) => {
+                    if (err) {
+                        console.error(err);
+                        return;
+                    }
+                    console.log(`${data.game} config saved`);
+                });
+                break;
+            case 'login':
+                // if username and password not given, throw error
+                if (!(data.username && data.password)) {
+                    ws.send(JSON.stringify({type: 'login', success: false, error: 'Invalid username or password'}));
+                } else {
+                    await login(ws, data.username, data.password);
+                }
+                break;
+            case 'addUser':
+                await addUser(data.username, data.password);
+                break;
+            case 'serverList':
+                sendServerList(ws);
+                break;
         }
     });
 

@@ -4,7 +4,9 @@ import { url } from '../utils/utils';
 import * as React from "react";
 
 export default function Console({ username, game }) {
-    const [logs, setLogs] = useState<string[]>([]);
+    const [logs, setLogs] = useState<string[]>([
+        // 'TTSM: Console loaded',
+    ]);
     const sheetRef = useRef(null);
 
     useEffect(() => {
@@ -88,6 +90,7 @@ export default function Console({ username, game }) {
                 <form onSubmit={sendCommand}>
                     <Input value={command} onChange={sendConsoleCommand} sx={{
                         mt: 2,
+                        typography: 'body3',
                     }} />
                 </form>
             )}

@@ -3,9 +3,9 @@ import {useEffect, useState} from "react";
 import {url} from "../../utils/utils";
 import useServerList from "../../utils/useServerList";
 import Layout from "../../components/layout";
-import {Button, List, ListDivider, ListItem, Sheet, Typography, useTheme} from "@mui/joy";
+import {Button, Input, List, ListDivider, ListItem, Sheet, Textarea, Typography, useTheme} from "@mui/joy";
 import Console from "../../components/console";
-import {getSession} from "next-auth/react";
+import {getSession, signIn} from "next-auth/react";
 import * as React from "react";
 
 export async function getServerSideProps(context) {
@@ -83,6 +83,83 @@ function ServerListItem({ url, game, running }: { url: string, game: string, run
                 </ListItem>
             </List>
         </ListItem>
+    );
+}
+
+function Config({ username, game }) {
+    const [config, setConfig] = useState('');
+    const [ws, setWs] = useState<WebSocket | null>(null);
+
+    // open single websocket
+    useEffect(() => {
+        const ws = new WebSocket(url);
+        setWs(ws);
+        // receive messages from server
+        ws.onmessage = function (event) {
+            // get data from message
+            const data = JSON.parse(event.data);
+            if (data.type === 'config') {
+                if (data.game === game) {
+                    setConfig(data.content);
+                }
+            }
+        };
+    }, [username]);
+
+    const handleSave = (event) => {
+        event.preventDefault();
+        // send command to server
+        if (ws) {
+            ws.send(JSON.stringify({ type: 'config', game: game, content: config }));
+        }
+    };
+
+    const handleInputChange = (event) => {
+        setConfig(event.target.value);
+    };
+
+    const theme = useTheme();
+
+    return (
+        <Sheet variant="outlined" sx={{
+            p: 2,
+            borderRadius: 'sm',
+            boxShadow: 'sm',
+            overflowY: 'auto',
+            display: 'grid',
+            gridTemplateColumns: 'auto',
+            gridTemplateRows: '1fr auto',
+            gridRowGap: theme.spacing(2),
+            height: '100%',
+        }}>
+            <Sheet sx={{
+                overflowY: 'auto',
+                height: '100%',
+            }}>
+                <Sheet
+                    sx={{
+                        maxHeight: '10px',
+                    }}>
+                    <Textarea
+                        variant="plain"
+                        name="config"
+                        value={config}
+                        onChange={handleInputChange}
+                        sx={{
+                            typography: 'body3',
+                            height: '100%'
+                        }}
+                    />
+                </Sheet>
+            </Sheet>
+            <Button
+                type="submit"
+                sx={{ width: '100%' }}
+                onClick={(e) => {
+                    handleSave(e);
+                }}
+            >Save</Button>
+        </Sheet>
     );
 }
 
@@ -181,6 +258,7 @@ export default function Game({ username }) {
                         <ServerListItem game={game} url={url} running={runningList[game]} />
                     </List>
                     <Console username={username} game={game} />
+                    <Config username={username} game={game} />
                 </Sheet>
             </Layout>
         ));
