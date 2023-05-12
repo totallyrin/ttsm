@@ -150,7 +150,7 @@ export default function Memory({ url }) {
         }}>
             <Typography level="h3" sx={{
                 alignSelf: 'center',
-                p: 2,
+                mb: 4,
             }}>Memory Usage</Typography>
             <Chart type="line" data={dataset} options={options} />
         </Sheet>

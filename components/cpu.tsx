@@ -147,7 +147,7 @@ export default function CPU({ url }) {
         }}>
             <Typography level="h3" sx={{
                 alignSelf: 'center',
-                p: 2,
+                mb: 4,
             }}>CPU Usage</Typography>
             <Chart type="line" data={dataset} options={options} />
         </Sheet>
