@@ -119,7 +119,7 @@ export default function LoginPage() {
                         </form>
                         <Typography
                              // TODO: implement sign-up page and functionality
-                            endDecorator={<Link href="/sign-up">Sign up</Link>}
+                            endDecorator={<Link href="/sign-up">{/* Sign up */}</Link>}
                             fontSize="sm"
                             sx={{ alignSelf: 'center' }}
                         />
