@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import {Input, Sheet, TextField, Typography, useTheme} from "@mui/joy";
+import {Input, ListDivider, Sheet, TextField, Typography, useTheme} from "@mui/joy";
 import { url } from '../utils/utils';
+import * as React from "react";
 
 export default function Console({ username, game }) {
     const [logs, setLogs] = useState<string[]>([]);
@@ -55,14 +56,12 @@ export default function Console({ username, game }) {
     const sendCommand = (event) => {
         event.preventDefault();
         // send command to server
-        // ...
         if (ws) {
             ws.send(JSON.stringify({ type: 'command', game: game, command: command }));
         }
         setCommand('');
     };
 
-    // TODO: figure out why console grows infinitely, and doesn't scroll
     return (
         <Sheet variant="outlined" sx={{
             p: 2,
@@ -72,12 +71,18 @@ export default function Console({ username, game }) {
             display: 'grid',
             gridTemplateColumns: 'auto',
             gridTemplateRows: '1fr auto',
-            height: 'calc(100%)',
+            height: '100%',
         }}>
-            <Sheet sx={{ height: '100%', overflow: 'auto' }}>
-                {logs.map((log, index) => (
-                    <Typography key={index} level="body3">{log}</Typography>
-                ))}
+            <Sheet ref={sheetRef} sx={{
+                px: 1,
+                overflowY: 'auto',
+                height: '100%',
+            }}>
+                <Sheet sx={{ maxHeight: '10px', pb: 4 }}>
+                    {logs.map((log, index) => (
+                        <Typography key={index} level="body3">{log}</Typography>
+                    ))}
+                </Sheet>
             </Sheet>
             {game && (
                 <form onSubmit={sendCommand}>

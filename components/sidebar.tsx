@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {Sheet, List, ListItem, Typography, Link, Button, IconButton, ListItemButton} from '@mui/joy';
 import {
     ArrowRightAlt, ArrowRightRounded,
-    Code, EastRounded,
+    Code, DnsRounded, EastRounded,
     HomeRounded,
     KeyboardArrowDown,
     SportsEsportsRounded, SubdirectoryArrowRightRounded
@@ -68,7 +68,8 @@ export default function Sidebar({ serverList }) {
             </ListItem>
             <ListItem>
                 <Link href="/system" sx={{ width: '100%' }}>
-                    <Button variant="plain" startDecorator={<SportsEsportsRounded />} sx={{ width: '100%', justifyContent: 'flex-start' }}>
+                    <Button variant="plain" startDecorator={<DnsRounded />} sx={{ width: '100%', justifyContent: 'flex-start' }}>
+                    {/*<Button variant="plain" startDecorator={<SportsEsportsRounded />} sx={{ width: '100%', justifyContent: 'flex-start' }}>*/}
                         <Typography
                             level="body3"
                             sx={{ textTransform: 'uppercase' }}>
