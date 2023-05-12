@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import {getSession, useSession} from 'next-auth/react';
-import Head from 'next/head';
-import {useTheme, Link, List, ListItem, Sheet, Typography, Button, ListDivider} from '@mui/joy';
-import Layout from '../components/layout';
-import useServerList from "../utils/useServerList";
-import Console from "../components/console";
-import { url } from '../utils/utils';
+import { useRouter } from 'next/router'
+import {useEffect, useState} from "react";
+import {url} from "../../utils/utils";
+import useServerList from "../../utils/useServerList";
+import Layout from "../../components/layout";
+import {Button, List, ListDivider, ListItem, Sheet, Typography, useTheme} from "@mui/joy";
+import Console from "../../components/console";
+import {getSession} from "next-auth/react";
 
 export async function getServerSideProps(context) {
     const session = await getSession(context);
@@ -47,7 +47,7 @@ function ServerListItem({ url, game, running }: { url: string, game: string, run
                 <ListItem sx={{
                     justifyContent: 'center',
                     width: '30%'
-                }}><Typography level="h6" sx={{ textAlign: 'center' }}>{gameName}</Typography></ListItem>
+                }}><Typography level="h6">{gameName}</Typography></ListItem>
                 <ListItem sx={{
                     justifyContent: 'center',
                 }}>
@@ -85,7 +85,10 @@ function ServerListItem({ url, game, running }: { url: string, game: string, run
     );
 }
 
-export default function Home({ username }) {
+export default function Config({ username }) {
+    const router = useRouter()
+    const { game } = router.query
+
     const [ws, setWs] = useState<WebSocket | null>(null);
 
     // open single websocket
@@ -164,30 +167,24 @@ export default function Home({ username }) {
                     minWidth: 'fit-content',
                 }}>
                     <List id="server-list"
-                          variant="outlined"
-                          sx={{
-                              width: '100%',
-                              height: 'auto',
-                              // mx: 4, // margin left & right
-                              // my: 4, // margin top & bottom
-                              py: 1, // padding top & bottom
-                              px: 1, // padding left & right
-                              borderRadius: 'sm',
-                              boxShadow: 'sm',
-                              flexGrow: 0,
-                              display: 'inline-flex',
-                              // justifyContent: 'space-between',
-                              '--ListItemDecorator-size': '48px',
-                              '--ListItem-paddingY': '1rem',
-                          }}>
-                        {serverList.map((game, index) => (
-                            <Sheet key={game} sx={{ width: '100%' }}>
-                                <ServerListItem game={game} url={url} running={runningList[game]} />
-                                {index !== serverList.length - 1 && <ListDivider inset="gutter" />}
-                            </Sheet>
-                        ))}
+                        variant="outlined"
+                        sx={{
+                          width: '100%',
+                          height: 'auto',
+                          // mx: 4, // margin left & right
+                          // my: 4, // margin top & bottom
+                          py: 1, // padding top & bottom
+                          px: 1, // padding left & right
+                          borderRadius: 'sm',
+                          boxShadow: 'sm',
+                          flexGrow: 0,
+                          display: 'inline-flex',
+                          '--ListItemDecorator-size': '48px',
+                          '--ListItem-paddingY': '1rem',
+                        }}>
+                        {/*<ServerListItem game={game} url={url} running={runningList[game]} />*/}
                     </List>
-                    <Console username={username} game={undefined} />
+                    <Console username={username} game={game} />
                 </Sheet>
             </Layout>
         ));

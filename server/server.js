@@ -5,7 +5,7 @@ const { spawn } = require('child_process');
 const { exec } = require('child_process');
 
 const WebSocket = require('ws');
-const wss = new WebSocket.Server({port: 443});
+const wss = new WebSocket.Server({port: 2911});
 global.WebSocket = require('ws');
 
 const osu = require('node-os-utils');
@@ -50,6 +50,8 @@ exports.servers = {
     valheim: valheim,
     pz: pz
 };
+
+exports.url = 'ws://localhost:2911';
 
 /**
  * password hashing function
@@ -548,6 +550,11 @@ wss.on('connection', async (ws) => {
                     break;
             }
             updateAll(ws);
+        }
+        if (data.type === 'command') {
+            if (exports.servers[data.game].server) {
+                exports.servers[data.game].server.write(data.command);
+            }
         }
         if (data.type === 'login') {
             // if username and password not given, throw error

@@ -51,12 +51,14 @@ export default function Console({ username, game }) {
         };
     }, [username]);
 
+    // TODO: figure out why console grows infinitely, and doesn't scroll
     return (
         <Sheet variant="outlined" sx={{
             p: 2,
             borderRadius: 'sm',
             boxShadow: 'sm',
             height: '100%',
+            maxHeight: '100%',
             overflowY: 'scroll',
         }}>
             {logs.map((log, index) => (

@@ -43,89 +43,87 @@ export default function LoginPage() {
                         }}
                     >
 
-                        <div>
+                        <Sheet>
                             <Typography level="h4" component="h1">
                                 Welcome!
                             </Typography>
                             <Typography level="body2">Sign in to continue.</Typography>
-                        </div>
+                        </Sheet>
 
                         {isError && (<Alert color="danger" variant="solid">
                             Please enter a valid username and password.
                         </Alert>)}
 
-                        {isSuccess && (<Alert color="success" variant="solid" invertedColors>
-                            Correct username and password!
-                        </Alert>)}
-
-                        <FormControl>
-                            <FormLabel>Username</FormLabel>
-                            <Input
-                                required
-                                // html input attribute
-                                name="username"
-                                type="username"
-                                placeholder="username"
-                                onChange={(event) => {
-                                    username.current = event.target.value;
-                                }}
-                                onSubmit={(event) => {
-                                    event.preventDefault();
-                                }}
-                            />
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel>Password</FormLabel>
-                            <Input
-                                required
-                                name="password"
-                                type="password"
-                                placeholder="password"
-                                onChange={(event) => {
-                                    password.current = event.target.value;
-                                }}
-                                onSubmit={(event) => {
-                                    event.preventDefault();
-                                }}
-                            />
-                        </FormControl>
+                        <form onSubmit={e => e.preventDefault()}>
+                            <FormControl>
+                                <FormLabel sx={{ pl: 1 }}>Username</FormLabel>
+                                <Input
+                                    required
+                                    // html input attribute
+                                    name="username"
+                                    type="username"
+                                    placeholder="username"
+                                    onChange={(event) => {
+                                        username.current = event.target.value;
+                                    }}
+                                    onSubmit={(event) => {
+                                        event.preventDefault();
+                                    }}
+                                />
+                            </FormControl>
+                            <FormControl sx={{ mt: 2 }}>
+                                <FormLabel sx={{ pl: 1 }}>Password</FormLabel>
+                                <Input
+                                    required
+                                    name="password"
+                                    type="password"
+                                    placeholder="password"
+                                    onChange={(event) => {
+                                        password.current = event.target.value;
+                                    }}
+                                    onSubmit={(event) => {
+                                        event.preventDefault();
+                                    }}
+                                />
+                            </FormControl>
 
 
-                        <Button
-                            disabled={isClicked}
-                            sx={{ mt: 1 /* margin top */ }}
-                            onClick={async (e) => {
-                                setClicked(true);
-                                if (username.current !== '' && password.current !== '') {
-                                    e.preventDefault()
+                            <Button
+                                type="submit"
+                                disabled={isClicked}
+                                sx={{ width: '100%', mt: 4 /* margin top */ }}
+                                onClick={async (e) => {
+                                    setClicked(true);
+                                    if (username.current !== '' && password.current !== '') {
+                                        e.preventDefault()
 
-                                    const result = await signIn('credentials', {
-                                        username: username.current,
-                                        password: password.current,
-                                        // redirect: false,
-                                        callbackUrl: '/home'
-                                    });
+                                        const result = await signIn('credentials', {
+                                            username: username.current,
+                                            password: password.current,
+                                            // redirect: false,
+                                            callbackUrl: '/home'
+                                        });
 
-                                    await result;
+                                        await result;
 
-                                    if (result?.ok) {
-                                        const session = await getSession();
-                                        console.log(session?.user?.name);
-                                        setSuccess(true);
+                                        if (result?.ok) {
+                                            const session = await getSession();
+                                            console.log(session?.user?.name);
+                                            setSuccess(true);
+                                        }
+
                                     }
-
-                                }
-                                else setError(true);
-                                setClicked(false);
-                            }}
-                        >{isClicked ? 'Logging in...' : 'Log in'}</Button>
+                                    else setError(true);
+                                    setClicked(false);
+                                }}
+                            >{isClicked ? 'Logging in...' : 'Log in'}</Button>
+                        </form>
                         <Typography
                              // TODO: implement sign-up page and functionality
                             endDecorator={<Link href="/sign-up">Sign up</Link>}
                             fontSize="sm"
                             sx={{ alignSelf: 'center' }}
                         />
-
                     </Sheet>
                     {/* Box component below is an empty placeholder to force footer to bottom of page */}
                     <Box />

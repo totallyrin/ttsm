@@ -14,7 +14,7 @@ function ServerListItem({ game }) {
 
     return (
         <ListItem nested>
-            <Link href="/" sx={{ width: '100%' }}>
+            <Link href={`/config/${game}`} sx={{ width: '100%' }}>
                 <Button variant="plain" startDecorator={<EastRounded />} sx={{ width: '100%', justifyContent: 'flex-start' }}>
                     <Typography
                         level="body3"

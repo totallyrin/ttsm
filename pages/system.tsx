@@ -99,7 +99,7 @@ export default function System({ username }) {
 
     useEffect(() => {
         setPage ((
-            <Layout username={username} page={'Home'} serverList={serverList}>
+            <Layout username={username} page={'System'} serverList={serverList}>
                 <Sheet sx={{
                     display: 'grid',
                     gridTemplateColumns: 'auto',
