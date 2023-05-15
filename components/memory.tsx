@@ -136,7 +136,6 @@ export default function Memory({ url }) {
         },
     };
 
-    // @ts-ignore
     return (
         <Sheet variant="outlined" sx={{
             p: 2,
@@ -153,7 +152,10 @@ export default function Memory({ url }) {
             }}>Memory Usage</Typography>
             <Sheet sx={{
                 height: '90%',
-            }}><Chart type="line" data={dataset} options={options} /></Sheet>
+            }}>
+                {/*// @ts-ignore*/}
+                <Chart type="line" data={dataset} options={options} />
+            </Sheet>
         </Sheet>
     );
 };

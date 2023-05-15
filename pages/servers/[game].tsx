@@ -234,6 +234,7 @@ export default function Game({ username }) {
     const theme = useTheme();
 
     useEffect(() => {
+        // @ts-ignore
         setPage ((
             <Layout username={username} page={`Config`} serverList={serverList}>
                 <Sheet sx={{
@@ -255,6 +256,7 @@ export default function Game({ username }) {
                           '--ListItemDecorator-size': '48px',
                           '--ListItem-paddingY': '1rem',
                         }}>
+                        {/*// @ts-ignore*/}
                         <ServerListItem game={game} url={url} running={runningList[game]} />
                     </List>
                     <Console username={username} game={game} />
