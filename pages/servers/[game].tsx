@@ -3,9 +3,9 @@ import {useEffect, useState} from "react";
 import {url} from "../../utils/utils";
 import useServerList from "../../utils/useServerList";
 import Layout from "../../components/layout";
-import {Button, Input, List, ListDivider, ListItem, Sheet, Textarea, Typography, useTheme} from "@mui/joy";
+import {Button, List, ListItem, Sheet, Textarea, Typography, useTheme} from "@mui/joy";
 import Console from "../../components/console";
-import {getSession, signIn} from "next-auth/react";
+import {getSession} from "next-auth/react";
 import * as React from "react";
 
 export async function getServerSideProps(context) {

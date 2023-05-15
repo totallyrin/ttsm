@@ -52,7 +52,7 @@ export default function Navbar(props: NavbarProps) {
                 </ListItem>
             </ListItem>
             <ListItem>
-                <Link href="https://github.com/totallyrin/servercontroller">
+                <Link href={`/account/${props.username}`}>
                     <Button variant="soft">
                         Account
                     </Button>
