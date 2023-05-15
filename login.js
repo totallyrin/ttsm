@@ -2,7 +2,8 @@
  * login code
  */
 
-const ws = new WebSocket('ws://localhost:443');
+const ws = new WebSocket('ws://localhost:2911');
+// const ws = new WebSocket('ws://totallyrin.ddns.net:2911');
 
 const loginForm = document.getElementById('login-form');
 const loginButton = document.getElementById('login-button');

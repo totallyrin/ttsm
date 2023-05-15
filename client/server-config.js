@@ -1,7 +1,8 @@
 
 
 
-const ws = new WebSocket('ws://localhost:443');
+const ws = new WebSocket('ws://localhost:2911');
+// const ws = new WebSocket('ws://totallyrin.ddns.net:2911');
 
 // Read the "game" query parameter from the URL
 const urlParams = new URLSearchParams(window.location.search);

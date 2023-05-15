@@ -2,7 +2,8 @@
  * client code
  */
 
-const ws = new WebSocket('ws://localhost:443');
+const ws = new WebSocket('ws://localhost:2911');
+// const ws = new WebSocket('ws://totallyrin.ddns.net:2911');
 
 /**
  * add server to webpage
