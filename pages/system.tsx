@@ -102,10 +102,9 @@ export default function System({ username }) {
             <Layout username={username} page={'System'} serverList={serverList}>
                 <Sheet sx={{
                     display: 'grid',
-                    gridTemplateColumns: '1fr',
+                    gridTemplateColumns: 'auto',
                     gridTemplateRows: '1fr 1fr',
                     gridRowGap: theme.spacing(4),
-                    alignItems: 'stretch',
                 }}>
                     <CPU url={url} />
                     <Memory url={url} />

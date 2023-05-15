@@ -7,7 +7,7 @@ export default function Console({ username, game }) {
     const [logs, setLogs] = useState<string[]>([
         // 'TTSM: Console loaded',
     ]);
-    const sheetRef = useRef(null);
+    const sheetRef = useRef<null | any>(null);
 
     useEffect(() => {
         // scroll to bottom of console when a new log is added

@@ -70,6 +70,7 @@ export default function Memory({ url }) {
     }
 
     const options = {
+        maintainAspectRatio: false,
         scales: {
             x: {
                 type: 'time',
@@ -144,13 +145,14 @@ export default function Memory({ url }) {
             flexDirection: 'column',
             justifyContent: 'center',
             height: '100%',
-            width: '100%'
         }}>
             <Typography level="h3" sx={{
                 alignSelf: 'center',
-                mb: 4,
+                mb: 1,
             }}>Memory Usage</Typography>
-            <Chart type="line" data={dataset} options={options} />
+            <Sheet sx={{
+                height: '90%',
+            }}><Chart type="line" data={dataset} options={options} /></Sheet>
         </Sheet>
     );
 };

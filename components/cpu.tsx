@@ -69,6 +69,7 @@ export default function CPU({ url }) {
     }
 
     const options = {
+        maintainAspectRatio: false,
         scales: {
             x: {
                 type: 'time',
@@ -146,9 +147,11 @@ export default function CPU({ url }) {
         }}>
             <Typography level="h3" sx={{
                 alignSelf: 'center',
-                mb: 4,
+                mb: 1,
             }}>CPU Usage</Typography>
-            <Chart type="line" data={dataset} options={options} />
+            <Sheet sx={{
+                height: '90%',
+            }}><Chart type="line" data={dataset} options={options} /></Sheet>
         </Sheet>
     );
 };
