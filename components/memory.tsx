@@ -136,6 +136,7 @@ export default function Memory({ url }) {
         },
     };
 
+    // @ts-ignore
     return (
         <Sheet variant="outlined" sx={{
             p: 2,

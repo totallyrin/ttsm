@@ -135,6 +135,7 @@ export default function CPU({ url }) {
         },
     };
 
+    // @ts-ignore
     return (
         <Sheet variant="outlined" sx={{
             p: 2,
