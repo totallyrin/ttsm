@@ -1,6 +1,6 @@
 import {Button, Link, List, ListItem, Typography} from "@mui/joy";
-import {useEffect} from "react";
 import * as React from "react";
+import {useEffect} from "react";
 
 function LogoutButton() {
     useEffect(() => {
@@ -42,7 +42,7 @@ export default function Navbar(props: NavbarProps) {
             }}
         >
             <ListItem>
-                <LogoutButton />
+                <LogoutButton/>
             </ListItem>
             <ListItem>
                 <ListItem>

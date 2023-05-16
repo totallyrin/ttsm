@@ -1,11 +1,9 @@
-import { useEffect, useState } from 'react';
-import {getSession, useSession} from 'next-auth/react';
-import Head from 'next/head';
-import {Link, List, ListItem, Sheet, Typography, Button, ListDivider, useTheme, Box} from '@mui/joy';
+import {useEffect, useState} from 'react';
+import {getSession} from 'next-auth/react';
+import {Sheet, Typography, useTheme} from '@mui/joy';
 import Layout from '../components/layout';
 import useServerList from "../utils/useServerList";
-import Console from "../components/console";
-import { url } from '../utils/utils';
+import {url} from '../utils/utils';
 import CPU from "../components/cpu";
 import Memory from "../components/memory";
 
@@ -22,15 +20,18 @@ export async function getServerSideProps(context) {
     }
 
     const username = session.user?.name ? session.user.name : '';
+    // @ts-ignore
+    const role = session.role;
 
     return {
         props: {
             username: username,
+            role: role
         },
     };
 }
 
-export default function System({ username }) {
+export default function System({username, role}) {
     const [ws, setWs] = useState<WebSocket | null>(null);
 
     // open single websocket
@@ -39,7 +40,7 @@ export default function System({ username }) {
         setWs(websocket);
 
         websocket.onopen = () => {
-            websocket.send(JSON.stringify({ type: 'username', username: username }));
+            websocket.send(JSON.stringify({type: 'username', username: username}));
         };
         // receive messages from server
         websocket.onmessage = function (message) {
@@ -82,7 +83,7 @@ export default function System({ username }) {
     }, [serverList]);
 
     const [page, setPage] = useState<JSX.Element>((
-        <Layout username={username} page={'Home'} serverList={serverList}>
+        <Layout username={username} role={role} page={'Home'} serverList={serverList}>
             <Sheet sx={{
                 display: 'grid',
                 gridTemplateColumns: 'auto',
@@ -98,16 +99,16 @@ export default function System({ username }) {
     const theme = useTheme();
 
     useEffect(() => {
-        setPage ((
-            <Layout username={username} page={'System'} serverList={serverList}>
+        setPage((
+            <Layout username={username} role={role} page={'System'} serverList={serverList}>
                 <Sheet sx={{
                     display: 'grid',
                     gridTemplateColumns: 'auto',
                     gridTemplateRows: '1fr 1fr',
                     gridRowGap: theme.spacing(4),
                 }}>
-                    <CPU url={url} />
-                    <Memory url={url} />
+                    <CPU url={url}/>
+                    <Memory url={url}/>
                 </Sheet>
             </Layout>
         ));

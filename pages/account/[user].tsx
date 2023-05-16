@@ -1,11 +1,10 @@
-import { useRouter } from 'next/router'
+import * as React from "react";
 import {useEffect, useState} from "react";
 import {url} from "../../utils/utils";
 import useServerList from "../../utils/useServerList";
 import Layout from "../../components/layout";
 import {Alert, Button, FormControl, FormLabel, Input, Sheet, Typography, useTheme} from "@mui/joy";
 import {getSession, useSession} from "next-auth/react";
-import * as React from "react";
 
 export async function getServerSideProps(context) {
     const session = await getSession(context);
@@ -20,23 +19,26 @@ export async function getServerSideProps(context) {
     }
 
     const username = session.user?.name ? session.user.name : '';
+    // @ts-ignore
+    const role = session.role;
 
     return {
         props: {
             username: username,
+            role: role
         },
     };
 }
 
-function EditLogin({ username, property, onChange }) {
-    const { data: session, update } = useSession();
-    const [ oldProperty, setOldProperty ] = useState(username);
-    const [ newProperty, setNewProperty ] = useState(username);
-    const [ isClicked, setClicked ] = useState(false);
-    const [ isError, setError ] = useState(false);
-    const [ isSuccess, setSuccess ] = useState(false);
+function EditLogin({username, property, onChange}) {
+    const {update} = useSession();
+    const [oldProperty, setOldProperty] = useState(username);
+    const [newProperty, setNewProperty] = useState(username);
+    const [isClicked, setClicked] = useState(false);
+    const [isError, setError] = useState(false);
+    const [isSuccess, setSuccess] = useState(false);
     const [ws, setWs] = useState<WebSocket | null>(null);
-    const [ user, setUser ] = useState(username);
+    const [user, setUser] = useState(username);
 
     // open single websocket
     useEffect(() => {
@@ -67,7 +69,13 @@ function EditLogin({ username, property, onChange }) {
         if (ws) {
             setUser(newProperty);
             onChange(newProperty);
-            ws.send(JSON.stringify({ type: 'change', property: property, username: user, password: oldProperty, new: newProperty }));
+            ws.send(JSON.stringify({
+                type: 'change',
+                property: property,
+                username: user,
+                password: oldProperty,
+                new: newProperty
+            }));
         }
     };
 
@@ -88,17 +96,22 @@ function EditLogin({ username, property, onChange }) {
                     gridRowGap: theme.spacing(2),
                     alignItems: 'center',
                 }}>
+                    <Typography level="h4" sx={{
+                        alignSelf: 'center',
+                        mb: 1,
+                    }}>Change {`${property}`}</Typography>
+
                     {isError && (<Alert color="danger" variant="solid">
                         An error occurred; cannot change {`${property}`}.
                     </Alert>)}
 
                     {isSuccess && (<Alert color="success" variant="solid">
-                        {`${property}`} changed successfully!
+                        {`${property.charAt(0).toUpperCase + property.slice(1)}`} changed successfully!
                     </Alert>)}
 
                     <Sheet>
                         <FormControl>
-                            <FormLabel sx={{ pl: 1 }}>Current password</FormLabel>
+                            <FormLabel sx={{pl: 1}}>Current password</FormLabel>
                             <Input
                                 name="curr-prop"
                                 type={"password"}
@@ -115,8 +128,8 @@ function EditLogin({ username, property, onChange }) {
                                 }}
                             />
                         </FormControl>
-                        <FormControl sx={{ mt: 2 }}>
-                            <FormLabel sx={{ pl: 1 }}>New {`${property}`}</FormLabel>
+                        <FormControl sx={{mt: 2}}>
+                            <FormLabel sx={{pl: 1}}>New {`${property}`}</FormLabel>
                             <Input
                                 name="new-prop"
                                 type={property === 'username' ? "username" : "password"}
@@ -139,7 +152,7 @@ function EditLogin({ username, property, onChange }) {
                     <Button
                         type="submit"
                         disabled={isClicked}
-                        sx={{ width: '100%', mt: 6 /* margin top */ }}
+                        sx={{width: '100%', mt: 6 /* margin top */}}
                         onClick={async (e) => {
                             setClicked(true);
                             setError(false);
@@ -156,17 +169,14 @@ function EditLogin({ username, property, onChange }) {
     );
 }
 
-export default function User({ username }) {
-    const router = useRouter();
-    const { user } = router.query;
-
-    const [ storedUsername, setStoredUsername ] = useState(username);
+export default function User({username, role}) {
+    const [storedUsername, setStoredUsername] = useState(username);
 
     const handleUsernameChange = (newUsername) => {
         setStoredUsername(newUsername);
     }
 
-    const [ serverList, setServerList] = useState<string[]>([]);
+    const [serverList, setServerList] = useState<string[]>([]);
     const retrievedServers = useServerList();
 
     // get server list
@@ -174,20 +184,8 @@ export default function User({ username }) {
         if (retrievedServers) setServerList(retrievedServers);
     }, [retrievedServers]);
 
-    const [runningList, setRunningList] = useState({});
-    // initialize server statuses
-    useEffect(() => {
-        if (serverList) {
-            let temp = {};
-            serverList.forEach(function (game) {
-                temp[game] = 'pinging';
-            });
-            setRunningList(temp);
-        }
-    }, [serverList]);
-
     const [page, setPage] = useState<JSX.Element>((
-        <Layout username={username} page={'Home'} serverList={serverList}>
+        <Layout username={username} role={role} page={'Home'} serverList={serverList}>
             <Sheet sx={{
                 display: 'grid',
                 gridTemplateColumns: 'auto',
@@ -204,8 +202,8 @@ export default function User({ username }) {
 
     useEffect(() => {
         // @ts-ignore
-        setPage ((
-            <Layout username={storedUsername} page={`Account`} serverList={serverList}>
+        setPage((
+            <Layout username={storedUsername} role={role} page={`Account`} serverList={serverList}>
                 <Sheet sx={{
                     display: 'grid',
                     gridTemplateColumns: '1fr',

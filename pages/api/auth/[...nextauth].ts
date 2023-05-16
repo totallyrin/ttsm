@@ -1,8 +1,8 @@
 import NextAuth, {NextAuthOptions} from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { url } from '../../../utils/utils';
+import {url} from '../../../utils/utils';
 
-async function attempt_login(username, password): Promise<{ id: string, username: string } | boolean> {
+async function attempt_login(username, password): Promise<{ id: string, username: string, role: string } | boolean> {
     const ws = new WebSocket(url);
 
     return await new Promise((resolve, reject) => {
@@ -21,7 +21,8 @@ async function attempt_login(username, password): Promise<{ id: string, username
                             // User exists and password is correct
                             user = {
                                 id: data.id,
-                                username: data.username
+                                username: data.username,
+                                role: data.role
                             };
                             resolve(user);
                         }
@@ -55,7 +56,7 @@ const authOptions: NextAuthOptions = {
         CredentialsProvider({
             type: 'credentials',
             credentials: {},
-            async authorize(credentials, req) {
+            async authorize(credentials) {
                 const {username, password} = credentials as {
                     username: string;
                     password: string;
@@ -68,7 +69,8 @@ const authOptions: NextAuthOptions = {
                     // login successful
                     return {
                         id: success.id,
-                        name: success.username
+                        name: success.username,
+                        role: success.role
                     };
                 } else {
                     // login failed
@@ -79,6 +81,22 @@ const authOptions: NextAuthOptions = {
     ],
     pages: {
         signIn: '/login',
+    },
+    callbacks: {
+        async jwt({token, user}) {
+            // Set role property on token object
+            if (user) {
+                // @ts-ignore
+                token.role = user.role;
+            }
+            return token;
+        },
+        async session({ session, token }) {
+            // Add role property to session object
+            // @ts-ignore
+            session.role = token.role;
+            return session;
+        }
     }
 }
 

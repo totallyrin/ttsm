@@ -1,18 +1,20 @@
-import {useState, useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {Chart} from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
 import {
-    Chart as ChartJS,
-    TimeScale,
     CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
+    Chart as ChartJS,
+    Filler,
     Legend,
-    Filler
+    LinearScale,
+    LineElement,
+    PointElement,
+    TimeScale,
+    Title,
+    Tooltip
 } from 'chart.js';
+import {Sheet, Typography} from "@mui/joy";
+
 ChartJS.register(
     TimeScale,
     CategoryScale,
@@ -25,9 +27,7 @@ ChartJS.register(
     Filler
 );
 
-import {Sheet, Typography} from "@mui/joy";
-
-export default function Memory({ url }) {
+export default function Memory({url}) {
     useEffect(() => {
         const ws = new WebSocket(url);
 
@@ -40,7 +40,7 @@ export default function Memory({ url }) {
                 const usage = data.usage;
                 setChartData((prevData) => [
                     ...prevData,
-                    { time: Date.now(), usage },
+                    {time: Date.now(), usage},
                 ]);
             }
         };
@@ -49,7 +49,7 @@ export default function Memory({ url }) {
         return () => ws.close();
     }, [url]);
 
-    const [chartData, setChartData] = useState<{time: number, usage: number | StorageEstimate}[]>([
+    const [chartData, setChartData] = useState<{ time: number, usage: number | StorageEstimate }[]>([
         {
             time: Date.now(),
             usage: 0
@@ -87,7 +87,7 @@ export default function Memory({ url }) {
                     text: 'Time'
                 },
                 ticks: {
-                    callback: function(value, index) {
+                    callback: function (value, index) {
                         if (index % 10 === 0) {
                             return new Date(value).toLocaleTimeString();
                         } else {
@@ -108,7 +108,7 @@ export default function Memory({ url }) {
             }
         },
         elements: {
-            point:{
+            point: {
                 radius: 0
             }
         },
@@ -116,10 +116,10 @@ export default function Memory({ url }) {
             tooltip: {
                 displayColors: false,
                 callbacks: {
-                    title: function(tooltipItem) {
+                    title: function (tooltipItem) {
                         return tooltipItem[0].time;
                     },
-                    label: function(context) {
+                    label: function (context) {
                         return `Memory Usage: ${context.parsed.y}%`;
                     }
                 }
@@ -154,7 +154,7 @@ export default function Memory({ url }) {
                 height: '90%',
             }}>
                 {/*// @ts-ignore*/}
-                <Chart type="line" data={dataset} options={options} />
+                <Chart type="line" data={dataset} options={options}/>
             </Sheet>
         </Sheet>
     );

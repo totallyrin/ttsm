@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react';
-import {getSession, useSession} from 'next-auth/react';
-import Head from 'next/head';
-import {useTheme, Link, List, ListItem, Sheet, Typography, Button, ListDivider} from '@mui/joy';
+import * as React from 'react';
+import {useEffect, useState} from 'react';
+import {getSession} from 'next-auth/react';
+import {Button, List, ListDivider, ListItem, Sheet, Typography, useTheme} from '@mui/joy';
 import Layout from '../components/layout';
 import useServerList from "../utils/useServerList";
 import Console from "../components/console";
-import { url } from '../utils/utils';
-import * as React from "react";
+import {url} from '../utils/utils';
 
 export async function getServerSideProps(context) {
     const session = await getSession(context);
@@ -21,15 +20,18 @@ export async function getServerSideProps(context) {
     }
 
     const username = session.user?.name ? session.user.name : '';
+    // @ts-ignore
+    const role = session.role;
 
     return {
         props: {
             username: username,
+            role: role
         },
     };
 }
 
-function ServerListItem({ url, game, running }: { url: string, game: string, running: 'pinging' | boolean }) {
+function ServerListItem({url, game, running}: { url: string, game: string, running: 'pinging' | boolean }) {
     const [loading, setLoading] = useState(false);
     const gameName = game === 'pz' ? 'Project Zomboid' : game.charAt(0).toUpperCase() + game.slice(1);
 
@@ -38,17 +40,18 @@ function ServerListItem({ url, game, running }: { url: string, game: string, run
     }, [running]);
 
     return (
-        <ListItem sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <ListItem sx={{display: 'flex', justifyContent: 'space-between'}}>
             <List orientation="horizontal" id={game} sx={{
                 flex: 1,
                 width: '100%',
                 justifyContent: 'space-between'
             }}>
-                <ListItem><img src={`../img/${game}.png`} alt={game} style={{width: '64px', height: '64px'}} /></ListItem>
+                <ListItem><img src={`../img/${game}.png`} alt={game}
+                               style={{width: '64px', height: '64px'}}/></ListItem>
                 <ListItem sx={{
                     justifyContent: 'center',
                     width: '30%'
-                }}><Typography level="h6" sx={{ textAlign: 'center' }}>{gameName}</Typography></ListItem>
+                }}><Typography level="h6" sx={{textAlign: 'center'}}>{gameName}</Typography></ListItem>
                 <ListItem sx={{
                     justifyContent: 'center',
                 }}>
@@ -73,7 +76,7 @@ function ServerListItem({ url, game, running }: { url: string, game: string, run
                             setLoading(true);
                             const ws = new WebSocket(url);
                             ws.onopen = async () => {
-                                await ws.send(JSON.stringify({ type: 'startStop', game: game }));
+                                await ws.send(JSON.stringify({type: 'startStop', game: game}));
                                 ws.close();
                             };
                         }}
@@ -86,7 +89,7 @@ function ServerListItem({ url, game, running }: { url: string, game: string, run
     );
 }
 
-export default function Home({ username }) {
+export default function Home({username, role}) {
     const [ws, setWs] = useState<WebSocket | null>(null);
 
     // open single websocket
@@ -95,7 +98,7 @@ export default function Home({ username }) {
         setWs(websocket);
 
         websocket.onopen = () => {
-            websocket.send(JSON.stringify({ type: 'username', username: username }));
+            websocket.send(JSON.stringify({type: 'username', username: username}));
         };
         // receive messages from server
         websocket.onmessage = function (message) {
@@ -138,7 +141,7 @@ export default function Home({ username }) {
     }, [serverList]);
 
     const [page, setPage] = useState<JSX.Element>((
-        <Layout username={username} page={'Home'} serverList={serverList}>
+        <Layout username={username} role={role} page={'Home'} serverList={serverList}>
             <Sheet sx={{
                 display: 'grid',
                 gridTemplateColumns: 'auto',
@@ -154,8 +157,8 @@ export default function Home({ username }) {
     const theme = useTheme();
 
     useEffect(() => {
-        setPage ((
-            <Layout username={username} page={'Home'} serverList={serverList}>
+        setPage((
+            <Layout username={username} role={role} page={'Home'} serverList={serverList}>
                 <Sheet sx={{
                     display: 'grid',
                     gridTemplateColumns: '1fr',
@@ -176,13 +179,13 @@ export default function Home({ username }) {
                               '--ListItem-paddingY': '1rem',
                           }}>
                         {serverList.map((game, index) => (
-                            <Sheet key={game} sx={{ width: '100%' }}>
-                                <ServerListItem game={game} url={url} running={runningList[game]} />
-                                {index !== serverList.length - 1 && <ListDivider inset="gutter" />}
+                            <Sheet key={game} sx={{width: '100%'}}>
+                                <ServerListItem game={game} url={url} running={runningList[game]}/>
+                                {index !== serverList.length - 1 && <ListDivider inset="gutter"/>}
                             </Sheet>
                         ))}
                     </List>
-                    <Sheet><Console username={username} game={undefined} /></Sheet>
+                    <Sheet><Console username={username} game={undefined}/></Sheet>
                 </Sheet>
             </Layout>
         ));

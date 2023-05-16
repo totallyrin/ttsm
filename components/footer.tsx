@@ -1,11 +1,11 @@
-import { Button, Link, List, ListItem, Typography } from '@mui/joy';
-import { useColorScheme } from '@mui/joy/styles';
+import {Button, Link, List, ListItem, Typography} from '@mui/joy';
+import {useColorScheme} from '@mui/joy/styles';
 import * as React from 'react';
 import {KeyboardArrowLeft, KeyboardArrowRight} from "@mui/icons-material";
 
 
 function ModeToggle() {
-    const { mode, setMode } = useColorScheme();
+    const {mode, setMode} = useColorScheme();
     const [mounted, setMounted] = React.useState(false);
 
     // necessary for server-side rendering
@@ -51,20 +51,20 @@ export default function footer() {
             }}
         >
             <ListItem>
-                <ModeToggle />
+                <ModeToggle/>
             </ListItem>
-            <ListItem sx={{ alignSelf: 'center' }}>
+            <ListItem sx={{alignSelf: 'center'}}>
                 <Typography level="body2"
                             fontSize="sm"
-                            sx={{ alignSelf: 'center' }}>
+                            sx={{alignSelf: 'center'}}>
                     Made by Lucy Woloszczuk
                 </Typography>
             </ListItem>
             <ListItem>
                 <Link href="https://github.com/totallyrin/servercontroller">
                     <Button variant="soft"
-                            startDecorator={<KeyboardArrowLeft />}
-                            endDecorator={<KeyboardArrowRight />}>
+                            startDecorator={<KeyboardArrowLeft/>}
+                            endDecorator={<KeyboardArrowRight/>}>
                         Github
                     </Button>
                 </Link>

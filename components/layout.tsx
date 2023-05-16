@@ -1,8 +1,7 @@
 import Navbar from './navbar';
 import Footer from './footer';
-import { useState } from 'react';
-import { getSession } from 'next-auth/react';
-import {CssBaseline, CssVarsProvider, Box, Tabs, TabList, Tab, TabPanel, tabClasses, Sheet} from '@mui/joy';
+import {getSession} from 'next-auth/react';
+import {CssBaseline, CssVarsProvider, Sheet} from '@mui/joy';
 import Sidebar from "./sidebar";
 import Head from "next/head";
 
@@ -25,7 +24,7 @@ export async function getServerSideProps(context) {
     };
 }
 
-export default function Layout({ username, page, serverList, children }) {
+export default function Layout({username, role, page, serverList, children}) {
     const colors = ['primary', 'info', 'danger', 'success'] as const;
     const title = `TTSM - ${page}`;
 
@@ -33,7 +32,7 @@ export default function Layout({ username, page, serverList, children }) {
         <CssBaseline>
             <CssVarsProvider defaultMode="system">
                 <Head>
-                    <meta charSet="UTF-8" />
+                    <meta charSet="UTF-8"/>
                     <title>{title}</title>
                 </Head>
                 <Sheet sx={{
@@ -43,17 +42,17 @@ export default function Layout({ username, page, serverList, children }) {
                     minHeight: '100vh', // set min-height to ensure the layout takes up the full height of the viewport
                     minWidth: 'fit-content',
                 }}>
-                    <Navbar username={username} />
+                    <Navbar username={username}/>
                     <Sheet sx={{
                         display: 'grid',
                         gridTemplateColumns: 'auto 1fr',
                         minWidth: 'fit-content',
                         px: 4,
                     }}>
-                        <Sidebar serverList={serverList} />
+                        <Sidebar role={role} serverList={serverList}/>
                         {children}
                     </Sheet>
-                    <Footer />
+                    <Footer/>
                 </Sheet>
             </CssVarsProvider>
         </CssBaseline>

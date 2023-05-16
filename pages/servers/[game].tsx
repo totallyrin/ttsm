@@ -1,4 +1,5 @@
-import { useRouter } from 'next/router'
+import {useRouter} from 'next/router'
+import * as React from "react";
 import {useEffect, useState} from "react";
 import {url} from "../../utils/utils";
 import useServerList from "../../utils/useServerList";
@@ -6,7 +7,6 @@ import Layout from "../../components/layout";
 import {Alert, Button, List, ListItem, Sheet, Textarea, Typography, useTheme} from "@mui/joy";
 import Console from "../../components/console";
 import {getSession} from "next-auth/react";
-import * as React from "react";
 
 export async function getServerSideProps(context) {
     const session = await getSession(context);
@@ -21,15 +21,18 @@ export async function getServerSideProps(context) {
     }
 
     const username = session.user?.name ? session.user.name : '';
+    // @ts-ignore
+    const role = session.role;
 
     return {
         props: {
             username: username,
+            role: role
         },
     };
 }
 
-function ServerListItem({ url, game, running }: { url: string, game: string, running: 'pinging' | boolean }) {
+function ServerListItem({url, game, running}: { url: string, game: string, running: 'pinging' | boolean }) {
     const [loading, setLoading] = useState(false);
     const gameName = game === 'pz' ? 'Project Zomboid' : game.charAt(0).toUpperCase() + game.slice(1);
 
@@ -38,13 +41,14 @@ function ServerListItem({ url, game, running }: { url: string, game: string, run
     }, [running]);
 
     return (
-        <ListItem sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <ListItem sx={{display: 'flex', justifyContent: 'space-between'}}>
             <List orientation="horizontal" id={game} sx={{
                 flex: 1,
                 width: '100%',
                 justifyContent: 'space-between'
             }}>
-                <ListItem><img src={`../img/${game}.png`} alt={game} style={{width: '64px', height: '64px'}} /></ListItem>
+                <ListItem><img src={`../img/${game}.png`} alt={game}
+                               style={{width: '64px', height: '64px'}}/></ListItem>
                 <ListItem sx={{
                     justifyContent: 'center',
                     width: '30%'
@@ -73,7 +77,7 @@ function ServerListItem({ url, game, running }: { url: string, game: string, run
                             setLoading(true);
                             const ws = new WebSocket(url);
                             ws.onopen = async () => {
-                                await ws.send(JSON.stringify({ type: 'startStop', game: game }));
+                                await ws.send(JSON.stringify({type: 'startStop', game: game}));
                                 ws.close();
                             };
                         }}
@@ -86,11 +90,11 @@ function ServerListItem({ url, game, running }: { url: string, game: string, run
     );
 }
 
-function Config({ username, game }) {
+function Config({username, game}) {
     const [config, setConfig] = useState('');
     const [ws, setWs] = useState<WebSocket | null>(null);
-    const [ isError, setError ] = useState(false);
-    const [ isSuccess, setSuccess ] = useState(false);
+    const [isError, setError] = useState(false);
+    const [isSuccess, setSuccess] = useState(false);
 
     // open single websocket
     useEffect(() => {
@@ -108,8 +112,7 @@ function Config({ username, game }) {
             if (data.type === 'saveConfig') {
                 if (data.success) {
                     setSuccess(true);
-                }
-                else {
+                } else {
                     setError(true);
                 }
             }
@@ -120,7 +123,7 @@ function Config({ username, game }) {
         event.preventDefault();
         // send command to server
         if (ws) {
-            ws.send(JSON.stringify({ type: 'config', game: game, content: config }));
+            ws.send(JSON.stringify({type: 'config', game: game, content: config}));
         }
     };
 
@@ -174,7 +177,7 @@ function Config({ username, game }) {
             </Sheet>
             <Button
                 type="submit"
-                sx={{ width: '100%' }}
+                sx={{width: '100%'}}
                 onClick={(e) => {
                     setError(false);
                     setSuccess(false);
@@ -185,9 +188,9 @@ function Config({ username, game }) {
     );
 }
 
-export default function Game({ username }) {
+export default function Game({username, role}) {
     const router = useRouter()
-    const { game } = router.query
+    const {game} = router.query
 
     const [ws, setWs] = useState<WebSocket | null>(null);
 
@@ -197,7 +200,7 @@ export default function Game({ username }) {
         setWs(websocket);
 
         websocket.onopen = () => {
-            websocket.send(JSON.stringify({ type: 'username', username: username }));
+            websocket.send(JSON.stringify({type: 'username', username: username}));
         };
         // receive messages from server
         websocket.onmessage = function (message) {
@@ -240,7 +243,7 @@ export default function Game({ username }) {
     }, [serverList]);
 
     const [page, setPage] = useState<JSX.Element>((
-        <Layout username={username} page={'Home'} serverList={serverList}>
+        <Layout username={username} role={role} page={'Home'} serverList={serverList}>
             <Sheet sx={{
                 display: 'grid',
                 gridTemplateColumns: 'auto',
@@ -257,8 +260,8 @@ export default function Game({ username }) {
 
     useEffect(() => {
         // @ts-ignore
-        setPage ((
-            <Layout username={username} page={`Config`} serverList={serverList}>
+        setPage((
+            <Layout username={username} role={role} page={`Config`} serverList={serverList}>
                 <Sheet sx={{
                     display: 'grid',
                     gridTemplateColumns: '1fr',
@@ -266,23 +269,23 @@ export default function Game({ username }) {
                     gridRowGap: theme.spacing(4),
                 }}>
                     <List id="server-list"
-                        variant="outlined"
-                        sx={{
-                          width: '100%',
-                          py: 1, // padding top & bottom
-                          px: 1, // padding left & right
-                          borderRadius: 'sm',
-                          boxShadow: 'sm',
-                          flexGrow: 0,
-                          display: 'inline-flex',
-                          '--ListItemDecorator-size': '48px',
-                          '--ListItem-paddingY': '1rem',
-                        }}>
+                          variant="outlined"
+                          sx={{
+                              width: '100%',
+                              py: 1, // padding top & bottom
+                              px: 1, // padding left & right
+                              borderRadius: 'sm',
+                              boxShadow: 'sm',
+                              flexGrow: 0,
+                              display: 'inline-flex',
+                              '--ListItemDecorator-size': '48px',
+                              '--ListItem-paddingY': '1rem',
+                          }}>
                         {/*// @ts-ignore*/}
-                        <ServerListItem game={game} url={url} running={runningList[game]} />
+                        <ServerListItem game={game} url={url} running={runningList[game]}/>
                     </List>
-                    <Console username={username} game={game} />
-                    <Config username={username} game={game} />
+                    <Console username={username} game={game}/>
+                    <Config username={username} game={game}/>
                 </Sheet>
             </Layout>
         ));

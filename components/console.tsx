@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
-import {Input, ListDivider, Sheet, TextField, Typography, useTheme} from "@mui/joy";
-import { url } from '../utils/utils';
-import * as React from "react";
+import * as React from 'react';
+import {useEffect, useRef, useState} from 'react';
+import {Input, Sheet, Typography} from "@mui/joy";
+import {url} from '../utils/utils';
 
-export default function Console({ username, game }) {
+export default function Console({username, game}) {
     const [logs, setLogs] = useState<string[]>([
         // 'TTSM: Console loaded',
     ]);
@@ -38,8 +38,7 @@ export default function Console({ username, game }) {
                             return temp;
                         });
                     }
-                }
-                else {
+                } else {
                     // append to console
                     setLogs(prevLogs => {
                         let temp = [...prevLogs];
@@ -59,7 +58,7 @@ export default function Console({ username, game }) {
         event.preventDefault();
         // send command to server
         if (ws) {
-            ws.send(JSON.stringify({ type: 'command', game: game, command: command }));
+            ws.send(JSON.stringify({type: 'command', game: game, command: command}));
         }
         setCommand('');
     };
@@ -80,7 +79,7 @@ export default function Console({ username, game }) {
                 overflowY: 'auto',
                 height: '100%',
             }}>
-                <Sheet sx={{ maxHeight: '10px', pb: 4 }}>
+                <Sheet sx={{maxHeight: '10px', pb: 4}}>
                     {logs.map((log, index) => (
                         <Typography key={index} level="body3">{log}</Typography>
                     ))}
@@ -91,7 +90,7 @@ export default function Console({ username, game }) {
                     <Input value={command} onChange={sendConsoleCommand} sx={{
                         mt: 2,
                         typography: 'body3',
-                    }} />
+                    }}/>
                 </form>
             )}
         </Sheet>
