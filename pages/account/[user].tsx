@@ -3,9 +3,8 @@ import {useEffect, useState} from "react";
 import {url} from "../../utils/utils";
 import useServerList from "../../utils/useServerList";
 import Layout from "../../components/layout";
-import {Button, List, ListItem, Sheet, Textarea, Typography, useTheme} from "@mui/joy";
-import Console from "../../components/console";
-import {getSession} from "next-auth/react";
+import {Alert, Button, FormControl, FormLabel, Input, Sheet, Typography, useTheme} from "@mui/joy";
+import {getSession, useSession} from "next-auth/react";
 import * as React from "react";
 
 export async function getServerSideProps(context) {
@@ -29,41 +28,145 @@ export async function getServerSideProps(context) {
     };
 }
 
-export default function User({ username }) {
-    const router = useRouter()
-    const { game } = router.query
-
+function EditLogin({ username, property, onChange }) {
+    const { data: session, update } = useSession();
+    const [ oldProperty, setOldProperty ] = useState(username);
+    const [ newProperty, setNewProperty ] = useState(username);
+    const [ isClicked, setClicked ] = useState(false);
+    const [ isError, setError ] = useState(false);
+    const [ isSuccess, setSuccess ] = useState(false);
     const [ws, setWs] = useState<WebSocket | null>(null);
+    const [ user, setUser ] = useState(username);
 
     // open single websocket
     useEffect(() => {
-        const websocket = (new WebSocket(url));
-        setWs(websocket);
-
-        websocket.onopen = () => {
-            websocket.send(JSON.stringify({ type: 'username', username: username }));
-        };
+        const ws = new WebSocket(url);
+        setWs(ws);
         // receive messages from server
-        websocket.onmessage = function (message) {
+        ws.onmessage = async function (event) {
             // get data from message
-            const data = JSON.parse(message.data);
-            // if message is about server status, update relevant status
-            if (data.type === 'serverState') {
-                setRunningList(prevRunningList => {
-                    let temp = {...prevRunningList};
-                    temp[data.game] = data.running;
-                    return temp;
-                });
+            const data = JSON.parse(event.data);
+            if (data.type === 'saveUser') {
+                if (data.success) {
+                    setSuccess(true);
+                    if (property === 'username') {
+                        await update({username: newProperty});
+                        setUser(newProperty);
+                        onChange(newProperty);
+                    }
+                } else {
+                    setError(true);
+                }
             }
-            if (data.type === 'debug') console.log(data.msg);
         };
+    }, [username, newProperty]);
 
-        websocket.onclose = () => {
-            console.log('websocket was closed');
+    const changeProperty = (event) => {
+        event.preventDefault();
+        // send command to server
+        if (ws) {
+            setUser(newProperty);
+            onChange(newProperty);
+            ws.send(JSON.stringify({ type: 'change', property: property, username: user, password: oldProperty, new: newProperty }));
         }
-    }, []);
+    };
 
-    const [serverList, setServerList] = useState<string[]>([]);
+    const theme = useTheme();
+
+    return (
+        <Sheet variant="outlined" sx={{
+            p: 4,
+            borderRadius: 'sm',
+            boxShadow: 'sm',
+        }}>
+            <form onSubmit={e => e.preventDefault()}>
+                <Sheet sx={{
+                    overflowY: 'auto',
+                    display: 'grid',
+                    gridTemplateColumns: 'auto',
+                    gridTemplateRows: (isError || isSuccess ? 'auto 1fr auto' : '1fr auto'),
+                    gridRowGap: theme.spacing(2),
+                    alignItems: 'center',
+                }}>
+                    {isError && (<Alert color="danger" variant="solid">
+                        An error occurred; cannot change {`${property}`}.
+                    </Alert>)}
+
+                    {isSuccess && (<Alert color="success" variant="solid">
+                        {`${property}`} changed successfully!
+                    </Alert>)}
+
+                    <Sheet>
+                        <FormControl>
+                            <FormLabel sx={{ pl: 1 }}>Current password</FormLabel>
+                            <Input
+                                name="curr-prop"
+                                type={"password"}
+                                placeholder={`Current password`}
+                                onChange={(event) => {
+                                    setError(false);
+                                    setSuccess(false);
+                                    setOldProperty(event.target.value);
+                                }}
+                                onSubmit={(event) => {
+                                    event.preventDefault();
+                                    setError(false);
+                                    setSuccess(false);
+                                }}
+                            />
+                        </FormControl>
+                        <FormControl sx={{ mt: 2 }}>
+                            <FormLabel sx={{ pl: 1 }}>New {`${property}`}</FormLabel>
+                            <Input
+                                name="new-prop"
+                                type={property === 'username' ? "username" : "password"}
+                                placeholder={`New ${property}`}
+                                onChange={(event) => {
+                                    setNewProperty(event.target.value);
+                                    setError(false);
+                                    setSuccess(false);
+                                }}
+                                onSubmit={(event) => {
+                                    event.preventDefault();
+                                    setError(false);
+                                    setSuccess(false);
+                                }}
+                            />
+                        </FormControl>
+                    </Sheet>
+
+
+                    <Button
+                        type="submit"
+                        disabled={isClicked}
+                        sx={{ width: '100%', mt: 6 /* margin top */ }}
+                        onClick={async (e) => {
+                            setClicked(true);
+                            setError(false);
+                            setSuccess(false);
+                            if (oldProperty.current !== '' && newProperty.current !== '') {
+                                changeProperty(e);
+                            }
+                            setClicked(false);
+                        }}
+                    >Change {`${property}`}</Button>
+                </Sheet>
+            </form>
+        </Sheet>
+    );
+}
+
+export default function User({ username }) {
+    const router = useRouter();
+    const { user } = router.query;
+
+    const [ storedUsername, setStoredUsername ] = useState(username);
+
+    const handleUsernameChange = (newUsername) => {
+        setStoredUsername(newUsername);
+    }
+
+    const [ serverList, setServerList] = useState<string[]>([]);
     const retrievedServers = useServerList();
 
     // get server list
@@ -102,18 +205,28 @@ export default function User({ username }) {
     useEffect(() => {
         // @ts-ignore
         setPage ((
-            <Layout username={username} page={`Account`} serverList={serverList}>
+            <Layout username={storedUsername} page={`Account`} serverList={serverList}>
                 <Sheet sx={{
                     display: 'grid',
                     gridTemplateColumns: '1fr',
                     gridTemplateRows: 'auto 1fr 1fr',
                     gridRowGap: theme.spacing(4),
                 }}>
-                    {/*// TODO: display username, add components to change username and password */}
+                    <Sheet variant="outlined" sx={{
+                        p: 4,
+                        borderRadius: 'sm',
+                        boxShadow: 'sm',
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }}>
+                        <Typography level="h3">{`${storedUsername}`}</Typography>
+                    </Sheet>
+                    <EditLogin username={storedUsername} property="username" onChange={handleUsernameChange}/>
+                    <EditLogin username={storedUsername} property="password" onChange={handleUsernameChange}/>
                 </Sheet>
             </Layout>
         ));
-    }, [ws, serverList, runningList]);
+    }, [serverList, storedUsername]);
 
     return page;
 }

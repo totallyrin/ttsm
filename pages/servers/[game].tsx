@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {url} from "../../utils/utils";
 import useServerList from "../../utils/useServerList";
 import Layout from "../../components/layout";
-import {Button, List, ListItem, Sheet, Textarea, Typography, useTheme} from "@mui/joy";
+import {Alert, Button, List, ListItem, Sheet, Textarea, Typography, useTheme} from "@mui/joy";
 import Console from "../../components/console";
 import {getSession} from "next-auth/react";
 import * as React from "react";
@@ -89,6 +89,8 @@ function ServerListItem({ url, game, running }: { url: string, game: string, run
 function Config({ username, game }) {
     const [config, setConfig] = useState('');
     const [ws, setWs] = useState<WebSocket | null>(null);
+    const [ isError, setError ] = useState(false);
+    const [ isSuccess, setSuccess ] = useState(false);
 
     // open single websocket
     useEffect(() => {
@@ -101,6 +103,14 @@ function Config({ username, game }) {
             if (data.type === 'config') {
                 if (data.game === game) {
                     setConfig(data.content);
+                }
+            }
+            if (data.type === 'saveConfig') {
+                if (data.success) {
+                    setSuccess(true);
+                }
+                else {
+                    setError(true);
                 }
             }
         };
@@ -116,6 +126,8 @@ function Config({ username, game }) {
 
     const handleInputChange = (event) => {
         setConfig(event.target.value);
+        setError(false);
+        setSuccess(false);
     };
 
     const theme = useTheme();
@@ -128,10 +140,18 @@ function Config({ username, game }) {
             overflowY: 'auto',
             display: 'grid',
             gridTemplateColumns: 'auto',
-            gridTemplateRows: '1fr auto',
+            gridTemplateRows: (isError || isSuccess ? 'auto 1fr auto' : '1fr auto'),
             gridRowGap: theme.spacing(2),
             height: '100%',
         }}>
+            {isError && (<Alert color="danger" variant="solid">
+                An error occurred; server config not saved.
+            </Alert>)}
+
+            {isSuccess && (<Alert color="success" variant="solid">
+                Server config saved!
+            </Alert>)}
+
             <Sheet sx={{
                 overflowY: 'auto',
                 height: '100%',
@@ -156,6 +176,8 @@ function Config({ username, game }) {
                 type="submit"
                 sx={{ width: '100%' }}
                 onClick={(e) => {
+                    setError(false);
+                    setSuccess(false);
                     handleSave(e);
                 }}
             >Save</Button>
