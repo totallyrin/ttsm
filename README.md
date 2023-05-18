@@ -59,17 +59,11 @@ changes.
 Before submitting a pull request, please ensure that you have run the tests and that your code follows the project's
 coding style guidelines.
 
-## License
-
-TTSM is open source software licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
-
 ## Acknowledgements
 
-TTSM is built using [Node.js](https://nodejs.org) and [React](https://reactjs.org) frameworks. It makes use of various
+TTSM is built using [Node.js](https://nodejs.org) and [Next.js](https://nextjs.org) frameworks. It makes use of various
 libraries and tools, which are listed in the project's `package.json` file.
 
 ---
-
-[//]: # (For detailed documentation, please refer to the [Wiki]&#40;https://github.com/totallyrin/ttsm/wiki&#41;.)
 
 If you have any questions or need further assistance, feel free to reach out.
