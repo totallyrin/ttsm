@@ -19,7 +19,6 @@ import Head from "next/head";
 export default function LoginPage() {
   const [isClicked, setClicked] = useState(false);
   const [isError, setError] = useState(false);
-  const [isSuccess, setSuccess] = useState(false);
   const username = useRef("");
   const password = useRef("");
 
@@ -121,7 +120,6 @@ export default function LoginPage() {
                     if (result?.ok) {
                       const session = await getSession();
                       console.log(session?.user?.name);
-                      setSuccess(true);
                     }
                   } else setError(true);
                   setClicked(false);

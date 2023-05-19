@@ -1,3 +1,5 @@
+// noinspection JSUnusedGlobalSymbols
+
 import { useEffect, useState } from "react";
 import { Chart } from "react-chartjs-2";
 import "chartjs-adapter-date-fns";
@@ -165,4 +167,4 @@ export default function CPU({ url }) {
       </Sheet>
     </Sheet>
   );
-};
+}
