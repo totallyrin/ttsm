@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { url } from "../../utils/utils";
 import useServerList from "../../utils/useServerList";
 import Layout from "../../components/layout";
@@ -41,13 +41,19 @@ export async function getServerSideProps(context) {
 
 function EditLogin({ username, property, onChange }) {
   const { update } = useSession();
-  const [oldProperty, setOldProperty] = useState(username);
-  const [newProperty, setNewProperty] = useState(username);
+  const [oldProperty, setOldProperty] = useState("");
+  const [newProperty, setNewProperty] = useState("");
   const [isClicked, setClicked] = useState(false);
   const [isError, setError] = useState(false);
   const [isSuccess, setSuccess] = useState(false);
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [user, setUser] = useState(username);
+
+  const newPropertyRef = useRef(newProperty);
+
+  useEffect(() => {
+    newPropertyRef.current = newProperty;
+  }, [newProperty]);
 
   // open single websocket
   useEffect(() => {
@@ -61,23 +67,23 @@ function EditLogin({ username, property, onChange }) {
         if (data.success) {
           setSuccess(true);
           if (property === "username") {
-            await update({ username: newProperty });
-            setUser(newProperty);
-            onChange(newProperty);
+            await update({ username: newPropertyRef.current });
+            setUser(newPropertyRef.current);
+            onChange(newPropertyRef.current);
           }
+          setOldProperty("");
+          setNewProperty("");
         } else {
           setError(true);
         }
       }
     };
-  }, [username, newProperty]);
+  }, []);
 
   const changeProperty = (event) => {
     event.preventDefault();
     // send command to server
     if (ws) {
-      setUser(newProperty);
-      onChange(newProperty);
       ws.send(
         JSON.stringify({
           type: "change",
@@ -131,8 +137,8 @@ function EditLogin({ username, property, onChange }) {
 
           {isSuccess && (
             <Alert color="success" variant="solid">
-              {`${property.charAt(0).toUpperCase + property.slice(1)}`} changed
-              successfully!
+              {`${property.charAt(0).toUpperCase() + property.slice(1)}`}{" "}
+              changed successfully!
             </Alert>
           )}
 
@@ -143,6 +149,7 @@ function EditLogin({ username, property, onChange }) {
                 name="curr-prop"
                 type={"password"}
                 placeholder={`Current password`}
+                value={oldProperty}
                 onChange={(event) => {
                   setError(false);
                   setSuccess(false);
@@ -161,6 +168,7 @@ function EditLogin({ username, property, onChange }) {
                 name="new-prop"
                 type={property === "username" ? "username" : "password"}
                 placeholder={`New ${property}`}
+                value={newProperty}
                 onChange={(event) => {
                   setNewProperty(event.target.value);
                   setError(false);
@@ -183,7 +191,7 @@ function EditLogin({ username, property, onChange }) {
               setClicked(true);
               setError(false);
               setSuccess(false);
-              if (oldProperty.current !== "" && newProperty.current !== "") {
+              if (oldProperty !== "" && newProperty !== "") {
                 changeProperty(e);
               }
               setClicked(false);
