@@ -35,7 +35,7 @@ To install and run the TTSM locally, follow these steps:
 
 4. Start the server:
    ```bash
-   npm start
+   npm run dev
    ```
    This will start the TTSM site and make it accessible at [http://localhost:3000](http://localhost:3000).
 
