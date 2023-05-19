@@ -33,7 +33,7 @@ export async function getServerSideProps(context) {
   if (role !== "admin") {
     return {
       redirect: {
-        destination: "/login",
+        destination: "/home",
         permanent: false,
       },
     };
