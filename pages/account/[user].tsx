@@ -254,34 +254,50 @@ export default function User({ username, role }) {
       >
         <Sheet
           sx={{
+            overflowY: "auto",
             display: "grid",
-            gridTemplateColumns: "1fr",
-            gridTemplateRows: "auto 1fr 1fr",
-            gridRowGap: theme.spacing(4),
+            gridTemplateColumns: "auto",
+            gridTemplateRows: "1fr auto",
+            height: "100%",
           }}
         >
           <Sheet
-            variant="outlined"
             sx={{
-              p: 4,
-              borderRadius: "sm",
-              boxShadow: "sm",
-              display: "flex",
-              justifyContent: "center",
+              maxHeight: "10px",
             }}
           >
-            <Typography level="h3">{`${storedUsername}`}</Typography>
+            <Sheet
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "1fr",
+                gridTemplateRows: "auto 1fr 1fr",
+                gridRowGap: theme.spacing(4),
+              }}
+            >
+              <Sheet
+                variant="outlined"
+                sx={{
+                  p: 4,
+                  borderRadius: "sm",
+                  boxShadow: "sm",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography level="h3">{`${storedUsername}`}</Typography>
+              </Sheet>
+              <EditLogin
+                username={storedUsername}
+                property="username"
+                onChange={handleUsernameChange}
+              />
+              <EditLogin
+                username={storedUsername}
+                property="password"
+                onChange={handleUsernameChange}
+              />
+            </Sheet>
           </Sheet>
-          <EditLogin
-            username={storedUsername}
-            property="username"
-            onChange={handleUsernameChange}
-          />
-          <EditLogin
-            username={storedUsername}
-            property="password"
-            onChange={handleUsernameChange}
-          />
         </Sheet>
       </Layout>
     );

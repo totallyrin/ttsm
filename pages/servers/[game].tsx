@@ -16,6 +16,7 @@ import {
 } from "@mui/joy";
 import Console from "../../components/console";
 import { getSession } from "next-auth/react";
+import { PlayArrowRounded, StopRounded } from "@mui/icons-material";
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
@@ -121,6 +122,7 @@ function ServerListItem({
           <Button
             id={`${game}-button`}
             loading={running === "pinging" || loading}
+            startDecorator={running ? <StopRounded /> : <PlayArrowRounded />}
             onClick={() => {
               setLoading(true);
               const ws = new WebSocket(url);

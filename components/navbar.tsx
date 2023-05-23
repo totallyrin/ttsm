@@ -1,6 +1,7 @@
 import { Button, Link, List, ListItem, Typography } from "@mui/joy";
 import * as React from "react";
 import { useEffect } from "react";
+import { AccountCircleRounded, LogoutRounded } from "@mui/icons-material";
 
 function LogoutButton() {
   useEffect(() => {
@@ -10,7 +11,9 @@ function LogoutButton() {
 
   return (
     <Link href="/login">
-      <Button variant="soft">Log out</Button>
+      <Button variant="soft" startDecorator={<LogoutRounded />}>
+        Log out
+      </Button>
     </Link>
   );
 }
@@ -51,10 +54,11 @@ export default function Navbar(props: NavbarProps) {
       </ListItem>
       <ListItem>
         <Link href={`/account/${props.username}`}>
-          <Button variant="soft">Account</Button>
+          <Button variant="soft" startDecorator={<AccountCircleRounded />}>
+            Account
+          </Button>
         </Link>
       </ListItem>
     </List>
   );
 }
-

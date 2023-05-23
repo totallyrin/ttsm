@@ -124,351 +124,367 @@ export default function Admin({ username, role }) {
     >
       <Sheet
         sx={{
+          overflowY: "auto",
           display: "grid",
-          gridTemplateColumns: "1fr",
-          gridTemplateRows: "auto 1fr 1fr",
-          gridRowGap: theme.spacing(4),
+          gridTemplateColumns: "auto",
+          gridTemplateRows: "1fr auto",
+          height: "100%",
         }}
       >
-        {/* add user */}
         <Sheet
-          variant="outlined"
           sx={{
-            p: 4,
-            borderRadius: "sm",
-            boxShadow: "sm",
-            display: "grid",
+            maxHeight: "10px",
           }}
         >
-          <Typography
-            level="h4"
+          <Sheet
             sx={{
-              alignSelf: "center",
-              mb: 1,
+              display: "grid",
+              gridTemplateColumns: "1fr",
+              gridTemplateRows: "auto 1fr 1fr",
+              gridRowGap: theme.spacing(4),
             }}
           >
-            Add user
-          </Typography>
-
-          {addError && (
-            <Alert color="danger" variant="solid">
-              An error occurred; cannot add user {addDisp}.
-            </Alert>
-          )}
-
-          {addSuccess && (
-            <Alert color="success" variant="solid">
-              User {addDisp} added successfully!
-            </Alert>
-          )}
-
-          <form onSubmit={(e) => e.preventDefault()}>
-            <FormControl sx={{ mt: 2 }}>
-              <FormLabel sx={{ pl: 1 }}>Username</FormLabel>
-              <Input
-                name="username"
-                type="username"
-                placeholder="username"
-                value={addUsername}
-                onChange={(event) => {
-                  setAddUsername(event.target.value);
-                  setAddError(false);
-                  setAddSuccess(false);
-                }}
-              />
-            </FormControl>
-
-            <FormControl sx={{ mt: 2 }}>
-              <FormLabel sx={{ pl: 1 }}>Password</FormLabel>
-              <Input
-                name="password"
-                type="password"
-                placeholder="password"
-                value={addPassword}
-                onChange={(event) => {
-                  setAddPassword(event.target.value);
-                  setAddError(false);
-                  setAddSuccess(false);
-                }}
-              />
-            </FormControl>
-
-            <FormControl sx={{ mt: 2 }}>
-              <FormLabel sx={{ pl: 1 }}>Role</FormLabel>
-              <Input
-                name="role"
-                type="role"
-                placeholder="user"
-                value={addRole}
-                onChange={(event) => {
-                  setAddRole(event.target.value);
-                  setAddError(false);
-                  setAddSuccess(false);
-                }}
-              />
-            </FormControl>
-
-            <Button
-              type="submit"
-              disabled={addIsClicked}
-              sx={{ width: "100%", mt: 6 /* margin top */ }}
-              onClick={(e) => {
-                console.log(addUsername);
-                setAddIsClicked(true);
-                setAddError(false);
-                setAddSuccess(false);
-                if (addUsername !== "") {
-                  e.preventDefault();
-                  // send command to server
-                  if (ws) {
-                    ws.send(
-                      JSON.stringify({
-                        type: "addUser",
-                        username: addUsername,
-                        password: addPassword,
-                        role: addRole,
-                      })
-                    );
-                  } else {
-                    const websocket = new WebSocket(url);
-
-                    websocket.onopen = () => {
-                      websocket.send(
-                        JSON.stringify({
-                          type: "addUser",
-                          username: addUsername,
-                          password: addPassword,
-                          role: addRole,
-                        })
-                      );
-
-                      websocket.close();
-                    };
-                  }
-                }
-                setAddUsername("");
-                setAddPassword("");
-                setAddRole("");
-                setAddIsClicked(false);
+            {/* add user */}
+            <Sheet
+              variant="outlined"
+              sx={{
+                p: 4,
+                borderRadius: "sm",
+                boxShadow: "sm",
+                display: "grid",
               }}
             >
-              Add user
-            </Button>
-          </form>
-        </Sheet>
-
-        {/* edit user */}
-        <Sheet
-          variant="outlined"
-          sx={{
-            p: 4,
-            borderRadius: "sm",
-            boxShadow: "sm",
-            display: "grid",
-          }}
-        >
-          <Typography
-            level="h4"
-            sx={{
-              alignSelf: "center",
-              mb: 1,
-            }}
-          >
-            Edit user
-          </Typography>
-
-          {editError && (
-            <Alert color="danger" variant="solid">
-              An error occurred; cannot edit user {editDisp}.
-            </Alert>
-          )}
-
-          {editSuccess && (
-            <Alert color="success" variant="solid">
-              User {editDisp} edited successfully!
-            </Alert>
-          )}
-
-          <form onSubmit={(e) => e.preventDefault()}>
-            <FormControl sx={{ mt: 2 }}>
-              <FormLabel sx={{ pl: 1 }}>Username</FormLabel>
-              <Input
-                name="username"
-                type="username"
-                placeholder="username"
-                value={editUsername}
-                onChange={(event) => {
-                  setEditUsername(event.target.value);
-                  setEditError(false);
-                  setEditSuccess(false);
+              <Typography
+                level="h4"
+                sx={{
+                  alignSelf: "center",
+                  mb: 1,
                 }}
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  setEditError(false);
-                  setEditSuccess(false);
-                }}
-              />
-            </FormControl>
+              >
+                Add user
+              </Typography>
 
-            <FormControl sx={{ mt: 2 }}>
-              <FormLabel sx={{ pl: 1 }}>Role</FormLabel>
-              <Input
-                name="role"
-                type="role"
-                placeholder="user"
-                value={editRole}
-                onChange={(event) => {
-                  setEditRole(event.target.value);
-                  setEditError(false);
-                  setEditSuccess(false);
-                }}
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  setEditError(false);
-                  setEditSuccess(false);
-                }}
-              />
-            </FormControl>
+              {addError && (
+                <Alert color="danger" variant="solid">
+                  An error occurred; cannot add user {addDisp}.
+                </Alert>
+              )}
 
-            <Button
-              type="submit"
-              disabled={editIsClicked}
-              sx={{ width: "100%", mt: 6 /* margin top */ }}
-              onClick={async (e) => {
-                setEditIsClicked(true);
-                setEditError(false);
-                setEditSuccess(false);
-                if (editUsername !== "") {
-                  e.preventDefault();
-                  // send command to server
-                  if (ws) {
-                    console.log();
-                    ws.send(
-                      JSON.stringify({
-                        type: "editUser",
-                        username: editUsername,
-                        role: editRole,
-                      })
-                    );
-                  } else {
-                    const websocket = new WebSocket(url);
+              {addSuccess && (
+                <Alert color="success" variant="solid">
+                  User {addDisp} added successfully!
+                </Alert>
+              )}
 
-                    websocket.onopen = async () => {
-                      await websocket.send(
-                        JSON.stringify({
-                          type: "editUser",
-                          username: editUsername,
-                          role: editRole,
-                        })
-                      );
+              <form onSubmit={(e) => e.preventDefault()}>
+                <FormControl sx={{ mt: 2 }}>
+                  <FormLabel sx={{ pl: 1 }}>Username</FormLabel>
+                  <Input
+                    name="username"
+                    type="username"
+                    placeholder="username"
+                    value={addUsername}
+                    onChange={(event) => {
+                      setAddUsername(event.target.value);
+                      setAddError(false);
+                      setAddSuccess(false);
+                    }}
+                  />
+                </FormControl>
 
-                      websocket.close();
-                    };
-                  }
-                }
-                setEditUsername("");
-                setEditRole("");
-                setEditIsClicked(false);
+                <FormControl sx={{ mt: 2 }}>
+                  <FormLabel sx={{ pl: 1 }}>Password</FormLabel>
+                  <Input
+                    name="password"
+                    type="password"
+                    placeholder="password"
+                    value={addPassword}
+                    onChange={(event) => {
+                      setAddPassword(event.target.value);
+                      setAddError(false);
+                      setAddSuccess(false);
+                    }}
+                  />
+                </FormControl>
+
+                <FormControl sx={{ mt: 2 }}>
+                  <FormLabel sx={{ pl: 1 }}>Role</FormLabel>
+                  <Input
+                    name="role"
+                    type="role"
+                    placeholder="user"
+                    value={addRole}
+                    onChange={(event) => {
+                      setAddRole(event.target.value);
+                      setAddError(false);
+                      setAddSuccess(false);
+                    }}
+                  />
+                </FormControl>
+
+                <Button
+                  type="submit"
+                  disabled={addIsClicked}
+                  sx={{ width: "100%", mt: 6 /* margin top */ }}
+                  onClick={(e) => {
+                    console.log(addUsername);
+                    setAddIsClicked(true);
+                    setAddError(false);
+                    setAddSuccess(false);
+                    if (addUsername !== "") {
+                      e.preventDefault();
+                      // send command to server
+                      if (ws) {
+                        ws.send(
+                          JSON.stringify({
+                            type: "addUser",
+                            username: addUsername,
+                            password: addPassword,
+                            role: addRole,
+                          })
+                        );
+                      } else {
+                        const websocket = new WebSocket(url);
+
+                        websocket.onopen = () => {
+                          websocket.send(
+                            JSON.stringify({
+                              type: "addUser",
+                              username: addUsername,
+                              password: addPassword,
+                              role: addRole,
+                            })
+                          );
+
+                          websocket.close();
+                        };
+                      }
+                    }
+                    setAddUsername("");
+                    setAddPassword("");
+                    setAddRole("");
+                    setAddIsClicked(false);
+                  }}
+                >
+                  Add user
+                </Button>
+              </form>
+            </Sheet>
+
+            {/* edit user */}
+            <Sheet
+              variant="outlined"
+              sx={{
+                p: 4,
+                borderRadius: "sm",
+                boxShadow: "sm",
+                display: "grid",
               }}
             >
-              Edit user
-            </Button>
-          </form>
-        </Sheet>
-
-        {/* delete user */}
-        <Sheet
-          variant="outlined"
-          sx={{
-            p: 4,
-            borderRadius: "sm",
-            boxShadow: "sm",
-            display: "grid",
-          }}
-        >
-          <Typography
-            level="h4"
-            sx={{
-              alignSelf: "center",
-              mb: 1,
-            }}
-          >
-            Delete user
-          </Typography>
-
-          {delError && (
-            <Alert color="danger" variant="solid">
-              An error occurred; cannot delete user {delDisp}.
-            </Alert>
-          )}
-
-          {delSuccess && (
-            <Alert color="success" variant="solid">
-              User {delDisp} deleted successfully!
-            </Alert>
-          )}
-
-          <form onSubmit={(e) => e.preventDefault()}>
-            <FormControl sx={{ mt: 2 }}>
-              <FormLabel sx={{ pl: 1 }}>Username</FormLabel>
-              <Input
-                name="username"
-                type="username"
-                placeholder="username"
-                value={delUsername}
-                onChange={(event) => {
-                  setDelUsername(event.target.value);
-                  setDelError(false);
-                  setDelSuccess(false);
+              <Typography
+                level="h4"
+                sx={{
+                  alignSelf: "center",
+                  mb: 1,
                 }}
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  setDelError(false);
-                  setDelSuccess(false);
-                }}
-              />
-            </FormControl>
+              >
+                Edit user
+              </Typography>
 
-            <Button
-              type="submit"
-              disabled={delIsClicked}
-              sx={{ width: "100%", mt: 6 /* margin top */ }}
-              onClick={async (e) => {
-                setDelIsClicked(true);
-                setDelError(false);
-                setDelSuccess(false);
-                if (delUsername !== "") {
-                  e.preventDefault();
-                  // send command to server
-                  if (ws) {
-                    ws.send(
-                      JSON.stringify({
-                        type: "delUser",
-                        username: delUsername,
-                      })
-                    );
-                  } else {
-                    const websocket = new WebSocket(url);
+              {editError && (
+                <Alert color="danger" variant="solid">
+                  An error occurred; cannot edit user {editDisp}.
+                </Alert>
+              )}
 
-                    websocket.onopen = () => {
-                      websocket.send(
-                        JSON.stringify({
-                          type: "delUser",
-                          username: delUsername,
-                        })
-                      );
-                    };
+              {editSuccess && (
+                <Alert color="success" variant="solid">
+                  User {editDisp} edited successfully!
+                </Alert>
+              )}
 
-                    websocket.close();
-                  }
-                }
-                setDelUsername("");
-                setDelIsClicked(false);
+              <form onSubmit={(e) => e.preventDefault()}>
+                <FormControl sx={{ mt: 2 }}>
+                  <FormLabel sx={{ pl: 1 }}>Username</FormLabel>
+                  <Input
+                    name="username"
+                    type="username"
+                    placeholder="username"
+                    value={editUsername}
+                    onChange={(event) => {
+                      setEditUsername(event.target.value);
+                      setEditError(false);
+                      setEditSuccess(false);
+                    }}
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      setEditError(false);
+                      setEditSuccess(false);
+                    }}
+                  />
+                </FormControl>
+
+                <FormControl sx={{ mt: 2 }}>
+                  <FormLabel sx={{ pl: 1 }}>Role</FormLabel>
+                  <Input
+                    name="role"
+                    type="role"
+                    placeholder="user"
+                    value={editRole}
+                    onChange={(event) => {
+                      setEditRole(event.target.value);
+                      setEditError(false);
+                      setEditSuccess(false);
+                    }}
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      setEditError(false);
+                      setEditSuccess(false);
+                    }}
+                  />
+                </FormControl>
+
+                <Button
+                  type="submit"
+                  disabled={editIsClicked}
+                  sx={{ width: "100%", mt: 6 /* margin top */ }}
+                  onClick={async (e) => {
+                    setEditIsClicked(true);
+                    setEditError(false);
+                    setEditSuccess(false);
+                    if (editUsername !== "") {
+                      e.preventDefault();
+                      // send command to server
+                      if (ws) {
+                        console.log();
+                        ws.send(
+                          JSON.stringify({
+                            type: "editUser",
+                            username: editUsername,
+                            role: editRole,
+                          })
+                        );
+                      } else {
+                        const websocket = new WebSocket(url);
+
+                        websocket.onopen = async () => {
+                          await websocket.send(
+                            JSON.stringify({
+                              type: "editUser",
+                              username: editUsername,
+                              role: editRole,
+                            })
+                          );
+
+                          websocket.close();
+                        };
+                      }
+                    }
+                    setEditUsername("");
+                    setEditRole("");
+                    setEditIsClicked(false);
+                  }}
+                >
+                  Edit user
+                </Button>
+              </form>
+            </Sheet>
+
+            {/* delete user */}
+            <Sheet
+              variant="outlined"
+              sx={{
+                p: 4,
+                borderRadius: "sm",
+                boxShadow: "sm",
+                display: "grid",
               }}
             >
-              Delete user
-            </Button>
-          </form>
+              <Typography
+                level="h4"
+                sx={{
+                  alignSelf: "center",
+                  mb: 1,
+                }}
+              >
+                Delete user
+              </Typography>
+
+              {delError && (
+                <Alert color="danger" variant="solid">
+                  An error occurred; cannot delete user {delDisp}.
+                </Alert>
+              )}
+
+              {delSuccess && (
+                <Alert color="success" variant="solid">
+                  User {delDisp} deleted successfully!
+                </Alert>
+              )}
+
+              <form onSubmit={(e) => e.preventDefault()}>
+                <FormControl sx={{ mt: 2 }}>
+                  <FormLabel sx={{ pl: 1 }}>Username</FormLabel>
+                  <Input
+                    name="username"
+                    type="username"
+                    placeholder="username"
+                    value={delUsername}
+                    onChange={(event) => {
+                      setDelUsername(event.target.value);
+                      setDelError(false);
+                      setDelSuccess(false);
+                    }}
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      setDelError(false);
+                      setDelSuccess(false);
+                    }}
+                  />
+                </FormControl>
+
+                <Button
+                  type="submit"
+                  disabled={delIsClicked}
+                  sx={{ width: "100%", mt: 6 /* margin top */ }}
+                  onClick={async (e) => {
+                    setDelIsClicked(true);
+                    setDelError(false);
+                    setDelSuccess(false);
+                    if (delUsername !== "") {
+                      e.preventDefault();
+                      // send command to server
+                      if (ws) {
+                        ws.send(
+                          JSON.stringify({
+                            type: "delUser",
+                            username: delUsername,
+                          })
+                        );
+                      } else {
+                        const websocket = new WebSocket(url);
+
+                        websocket.onopen = () => {
+                          websocket.send(
+                            JSON.stringify({
+                              type: "delUser",
+                              username: delUsername,
+                            })
+                          );
+                        };
+
+                        websocket.close();
+                      }
+                    }
+                    setDelUsername("");
+                    setDelIsClicked(false);
+                  }}
+                >
+                  Delete user
+                </Button>
+              </form>
+            </Sheet>
+          </Sheet>
         </Sheet>
       </Sheet>
     </Layout>

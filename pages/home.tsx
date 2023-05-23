@@ -14,6 +14,7 @@ import Layout from "../components/layout";
 import useServerList from "../utils/useServerList";
 import Console from "../components/console";
 import { url } from "../utils/utils";
+import { PlayArrowRounded, StopRounded } from "@mui/icons-material";
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
@@ -121,6 +122,7 @@ function ServerListItem({
           <Button
             id={`${game}-button`}
             loading={running === "pinging" || loading}
+            startDecorator={running ? <StopRounded /> : <PlayArrowRounded />}
             onClick={() => {
               setLoading(true);
               const ws = new WebSocket(url);

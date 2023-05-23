@@ -1,7 +1,8 @@
 import { Button, Link, List, ListItem, Typography } from "@mui/joy";
 import { useColorScheme } from "@mui/joy/styles";
 import * as React from "react";
-import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import { DarkModeRounded, LightModeRounded } from "@mui/icons-material";
 
 function ModeToggle() {
   const { mode, setMode } = useColorScheme();
@@ -19,6 +20,9 @@ function ModeToggle() {
   return (
     <Button
       variant="soft"
+      startDecorator={
+        mode === "light" ? <DarkModeRounded /> : <LightModeRounded />
+      }
       onClick={() => {
         setMode(mode === "light" ? "dark" : "light");
       }}
@@ -62,8 +66,9 @@ export default function footer() {
         <Link href="https://github.com/totallyrin/servercontroller">
           <Button
             variant="soft"
-            startDecorator={<KeyboardArrowLeft />}
-            endDecorator={<KeyboardArrowRight />}
+            // startDecorator={<KeyboardArrowLeft />}
+            // endDecorator={<KeyboardArrowRight />}
+            startDecorator={<GitHubIcon />}
           >
             Github
           </Button>

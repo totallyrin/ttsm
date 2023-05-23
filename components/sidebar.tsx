@@ -3,9 +3,9 @@ import { useState } from "react";
 import { Button, Link, List, ListItem, Typography } from "@mui/joy";
 import {
   AdminPanelSettingsRounded,
-  DnsRounded,
   HomeRounded,
   KeyboardArrowDown,
+  StackedLineChartRounded,
 } from "@mui/icons-material";
 
 function ServerListItem({ game }) {
@@ -99,7 +99,9 @@ export default function Sidebar({ role, serverList }) {
         <Link href="/system" sx={{ width: "100%" }}>
           <Button
             variant="plain"
-            startDecorator={<DnsRounded />}
+            // startDecorator={<DnsRounded />}
+            // startDecorator={<ShowChartRounded />}
+            startDecorator={<StackedLineChartRounded />}
             sx={{ width: "100%", justifyContent: "flex-start" }}
           >
             <Typography level="body3" sx={{ textTransform: "uppercase" }}>
