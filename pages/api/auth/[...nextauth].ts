@@ -44,7 +44,8 @@ async function attempt_login(
       resolve(res);
     });
 
-    ws.addEventListener("error", () => {
+    ws.addEventListener("error", (event) => {
+      console.log(event);
       reject(new Error("There was an error connecting to the webSocketServer"));
     });
 
