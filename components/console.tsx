@@ -91,7 +91,8 @@ export default function Console({username, role, game}) {
                 <Sheet sx={{maxHeight: "10px", pb: 4}}>
                     {logs.map((log, index) => (
                         <Typography key={index} level="body3">
-                            {log}
+                            {role === 'no-auth' ? "Console disabled; user" +
+                                " not approved" : log}
                         </Typography>
                     ))}
                 </Sheet>

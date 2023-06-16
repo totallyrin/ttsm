@@ -13,21 +13,81 @@ import {
     Typography,
 } from "@mui/joy";
 import Footer from "../components/footer";
-import {getSession, signIn} from "next-auth/react";
 import Head from "next/head";
+import {url} from "../utils/utils";
+import {useRouter} from "next/router";
+
+async function attempt_signup(
+    username,
+    password
+): Promise<boolean> {
+    const ws = new WebSocket(url);
+
+    return await new Promise((resolve, reject) => {
+        let result, user, signupPromise;
+        const t0 = performance.now();
+        ws.addEventListener("open", async () => {
+            const t1 = performance.now();
+            console.log(`WebSocket connection opened in ${t1 - t0}ms`);
+            ws.send(
+                JSON.stringify({
+                    type: "addUser",
+                    username: username,
+                    password: password,
+                    role: "no-auth",
+                })
+            );
+
+            signupPromise = new Promise((resolve) => {
+                const t2 = performance.now();
+                ws.onmessage = function (event) {
+                    // get data from message
+                    const data = JSON.parse(event.data);
+                    // wait for signup success message
+                    if (data.type === "addUser") {
+                        const t3 = performance.now();
+                        console.log(`Server responded in ${t3 - t2}ms`);
+                        if (data.success) {
+                            // User created successfully
+                            resolve(true);
+                        } else {
+                            // User could not be created
+                            resolve(false);
+                        }
+                        result = data.success;
+                    }
+                };
+            });
+
+            const res = await signupPromise;
+            ws.close();
+            resolve(res);
+        });
+
+        ws.addEventListener("error", (event) => {
+            console.log(event);
+            reject(new Error("There was an error connecting to the webSocketServer"));
+        });
+
+        setTimeout(() => {
+            reject(new Error("The connection timed out"));
+        }, 5000);
+    });
+}
 
 export default function LoginPage() {
     const [isClicked, setClicked] = useState(false);
     const [isError, setError] = useState(false);
     const username = useRef("");
     const password = useRef("");
+    const router = useRouter();
 
     return (
         <CssBaseline>
             <CssVarsProvider defaultMode="system">
                 <Head>
                     <meta charSet="UTF-8"/>
-                    <title>TTSM - Login</title>
+                    <title>TTSM - Sign Up</title>
                 </Head>
                 <Sheet
                     sx={{
@@ -57,13 +117,14 @@ export default function LoginPage() {
                             <Typography level="h4" component="h1">
                                 Welcome!
                             </Typography>
-                            <Typography level="body2">Sign in to
+                            <Typography level="body2">Sign up to
                                 continue.</Typography>
                         </Sheet>
 
                         {isError && (
                             <Alert color="danger" variant="solid">
-                                Please enter a valid username and password.
+                                Could not create account. That username is
+                                already taken.
                             </Alert>
                         )}
 
@@ -110,32 +171,23 @@ export default function LoginPage() {
                                         e.preventDefault();
 
                                         const t0 = performance.now();
-                                        const result = await signIn("credentials", {
-                                            username: username.current,
-                                            password: password.current,
-                                            // redirect: false,
-                                            callbackUrl: "/home",
-                                        });
+                                        const result = await attempt_signup(username.current, password.current);
                                         const t1 = performance.now();
-                                        console.log(`Login in ${t1 - t0}ms`);
+                                        console.log(`User created in ${t1 - t0}ms`);
 
-                                        await result;
-
-                                        if (result?.ok) {
-                                            const session = await getSession();
-                                            console.log(session?.user?.name);
+                                        if (result) {
+                                            await router.push('/login');
                                         }
                                     } else setError(true);
                                     setClicked(false);
                                 }}
                             >
-                                {isClicked ? "Logging in..." : "Log in"}
+                                {isClicked ? "Creating account..." : "Sign up"}
                             </Button>
                         </form>
                         <Typography
-                            // TODO: implement sign-up page and functionality
                             endDecorator={<Link
-                                href="/sign-up">Sign up</Link>}
+                                href="/login">Login</Link>}
                             fontSize="sm"
                             sx={{alignSelf: "center"}}
                         />

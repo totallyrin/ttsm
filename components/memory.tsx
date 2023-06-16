@@ -2,16 +2,16 @@ import {useEffect, useState} from "react";
 import {Chart} from "react-chartjs-2";
 import "chartjs-adapter-date-fns";
 import {
-  CategoryScale,
-  Chart as ChartJS,
-  Filler,
-  Legend,
-  LinearScale,
-  LineElement,
-  PointElement,
-  TimeScale,
-  Title,
-  Tooltip,
+    CategoryScale,
+    Chart as ChartJS,
+    Filler,
+    Legend,
+    LinearScale,
+    LineElement,
+    PointElement,
+    TimeScale,
+    Title,
+    Tooltip,
 } from "chart.js";
 import {Sheet, Typography} from "@mui/joy";
 
@@ -36,11 +36,12 @@ export default function Memory({url}) {
             const data = JSON.parse(message.data);
             // if message is about server status, update relevant status
             if (data.type === "memory") {
-                const usage = data.usage;
-                setChartData((prevData) => [...prevData, {
-                    time: Date.now(),
-                    usage
-                }]);
+                let received = [];
+                for (const item of data.usage.items) {
+                    // @ts-ignore
+                    received.push(item);
+                }
+                setChartData(received);
             }
         };
 
