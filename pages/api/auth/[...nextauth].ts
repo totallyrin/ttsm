@@ -67,6 +67,8 @@ async function attempt_login(
 const authOptions: NextAuthOptions = {
     session: {
         strategy: "jwt",
+        maxAge: 60 * 60 * 24 * 30, // 30 days
+        updateAge: 60 * 60 * 24, // 24 hours
     },
     providers: [
         CredentialsProvider({
