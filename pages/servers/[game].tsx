@@ -375,8 +375,8 @@ export default function Game({ username, role }) {
               "--ListItem-paddingY": "1rem",
             }}
           >
-            {/*// @ts-ignore*/}
             <ServerListItem
+              // @ts-ignore
               game={game}
               url={url}
               // @ts-ignore
