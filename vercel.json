@@ -1,7 +1,7 @@
 {
   "functions": {
     "pages/api/auth/[...nextauth].ts": {
-      "maxDuration": 30
+      "maxDuration": 10
     }
   }
 }
