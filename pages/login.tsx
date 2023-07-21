@@ -121,10 +121,10 @@ export default function LoginPage() {
 
                                         await result;
 
-                                        if (result?.ok) {
-                                            const session = await getSession();
-                                            console.log(session?.user?.name);
-                                        }
+                                        // if (result?.ok) {
+                                        //     const session = await getSession();
+                                        //     console.log(session?.user?.name);
+                                        // }
                                     } else setError(true);
                                     setClicked(false);
                                 }}
