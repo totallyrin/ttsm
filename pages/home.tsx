@@ -6,6 +6,8 @@ import useServerList from "../utils/useServerList";
 import Console from "../components/console";
 import {url} from "../utils/utils";
 import {PlayArrowRounded, StopRounded} from "@mui/icons-material";
+import {useRouter} from "next/router";
+import {getSession} from "next-auth/react"; // export async function getServerSideProps(context) {
 
 // export async function getServerSideProps(context) {
 // const t0 = performance.now();
@@ -35,8 +37,6 @@ import {PlayArrowRounded, StopRounded} from "@mui/icons-material";
 //     },
 // };
 // }
-
-export async function getServerSideProps() {}
 
 function ServerListItem({
   url,
@@ -146,7 +146,32 @@ function ServerListItem({
   );
 }
 
-export default function Home({ username, role }) {
+export default function Home() {
+  const [session, setSession] = useState(null);
+  const router = useRouter();
+
+  async function checkSession() {
+    const session = await getSession();
+    setSession(session);
+
+    if (!session) {
+      router.push("/login");
+    }
+  }
+
+  checkSession();
+
+  // const username = session?.user?.name ?? "";
+  // const role = session?.role;
+
+  const [username, setUsername] = useState("");
+  const [role, setRole] = useState(null);
+
+  useEffect(() => {
+    setUsername(session?.user?.name ?? "");
+    setRole(session?.role);
+  }, [session]);
+
   const [ws, setWs] = useState<WebSocket | null>(null);
 
   // open single websocket
