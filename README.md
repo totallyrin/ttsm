@@ -20,11 +20,13 @@ view server logs and perform configuration changes.
 To install and run the TTSM locally, follow these steps:
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/totallyrin/ttsm.git
    ```
 
 2. Install dependencies:
+
    ```bash
    cd ttsm
    npm install

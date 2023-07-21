@@ -5,24 +5,35 @@ import { CssBaseline, CssVarsProvider, Sheet } from "@mui/joy";
 import Sidebar from "./sidebar";
 import Head from "next/head";
 
-// export async function getServerSideProps(context) {
-//   const session = await getSession(context);
-//
-//   if (!session) {
-//     return {
-//       redirect: {
-//         destination: "/login",
-//         permanent: false,
-//       },
-//     };
-//   }
-//
-//   return {
-//     props: {
-//       user: session?.user?.name,
-//     },
-//   };
-// }
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  // return {
+  //   props: {
+  //     user: session?.user?.name,
+  //   },
+  // };
+
+  const username = session.user?.name ? session.user.name : "";
+  // @ts-ignore
+  const role = session.role;
+
+  return {
+    props: {
+      username: username,
+      role: role,
+    },
+  };
+}
 
 export default function Layout({ username, role, page, serverList, children }) {
   const title = `TTSM - ${page}`;

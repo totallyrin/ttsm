@@ -241,7 +241,7 @@ export default function Admin({ username, role }) {
                             username: addUsername,
                             password: addPassword,
                             role: addRole,
-                          })
+                          }),
                         );
                       } else {
                         const websocket = new WebSocket(url);
@@ -253,7 +253,7 @@ export default function Admin({ username, role }) {
                               username: addUsername,
                               password: addPassword,
                               role: addRole,
-                            })
+                            }),
                           );
 
                           websocket.close();
@@ -362,7 +362,7 @@ export default function Admin({ username, role }) {
                             type: "editUser",
                             username: editUsername,
                             role: editRole,
-                          })
+                          }),
                         );
                       } else {
                         const websocket = new WebSocket(url);
@@ -373,7 +373,7 @@ export default function Admin({ username, role }) {
                               type: "editUser",
                               username: editUsername,
                               role: editRole,
-                            })
+                            }),
                           );
 
                           websocket.close();
@@ -459,7 +459,7 @@ export default function Admin({ username, role }) {
                           JSON.stringify({
                             type: "delUser",
                             username: delUsername,
-                          })
+                          }),
                         );
                       } else {
                         const websocket = new WebSocket(url);
@@ -469,7 +469,7 @@ export default function Admin({ username, role }) {
                             JSON.stringify({
                               type: "delUser",
                               username: delUsername,
-                            })
+                            }),
                           );
                         };
 
