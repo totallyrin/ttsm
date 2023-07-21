@@ -36,6 +36,8 @@ import {PlayArrowRounded, StopRounded} from "@mui/icons-material";
 // };
 // }
 
+export async function getServerSideProps() {}
+
 function ServerListItem({
   url,
   game,
