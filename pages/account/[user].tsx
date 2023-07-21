@@ -91,7 +91,7 @@ function EditLogin({ username, property, onChange }) {
           username: user,
           password: oldProperty,
           new: newProperty,
-        })
+        }),
       );
     }
   };
@@ -238,7 +238,7 @@ export default function User({ username, role }) {
       >
         <Typography level="h3">Loading...</Typography>
       </Sheet>
-    </Layout>
+    </Layout>,
   );
 
   const theme = useTheme();
@@ -299,7 +299,7 @@ export default function User({ username, role }) {
             </Sheet>
           </Sheet>
         </Sheet>
-      </Layout>
+      </Layout>,
     );
   }, [serverList, storedUsername]);
 
