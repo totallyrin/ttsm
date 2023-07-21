@@ -18,7 +18,7 @@ import {PlayArrowRounded, StopRounded} from "@mui/icons-material";
 
 export async function getServerSideProps(context) {
     const t0 = performance.now();
-    const session = await getSession(context);
+    const session = null // await getSession(context);
 
     if (!session) {
         const t1 = performance.now();
