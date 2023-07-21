@@ -16,34 +16,34 @@ import Console from "../components/console";
 import {url} from "../utils/utils";
 import {PlayArrowRounded, StopRounded} from "@mui/icons-material";
 
-export async function getServerSideProps(context) {
-    const t0 = performance.now();
-    const session = null // await getSession(context);
-
-    if (!session) {
-        const t1 = performance.now();
-        console.log(`redirected in ${t1 - t0}ms`);
-        return {
-            redirect: {
-                destination: "/login",
-                permanent: false,
-            },
-        };
-    }
-
-    // const username = session.user?.name ? session.user.name : "";
-    // // @ts-ignore
-    // const role = session.role;
-    //
-    // const t1 = performance.now();
-    // console.log(`serverSideProps retrieved in ${t1 - t0}ms`);
-    // return {
-    //     props: {
-    //         username: username,
-    //         role: role,
-    //     },
-    // };
-}
+// export async function getServerSideProps(context) {
+//     const t0 = performance.now();
+//     const session = await getSession(context);
+//
+//     if (!session) {
+//         const t1 = performance.now();
+//         console.log(`redirected in ${t1 - t0}ms`);
+//         return {
+//             redirect: {
+//                 destination: "/login",
+//                 permanent: false,
+//             },
+//         };
+//     }
+//
+//     const username = session.user?.name ? session.user.name : "";
+//     // @ts-ignore
+//     const role = session.role;
+//
+//     const t1 = performance.now();
+//     console.log(`serverSideProps retrieved in ${t1 - t0}ms`);
+//     return {
+//         props: {
+//             username: username,
+//             role: role,
+//         },
+//     };
+// }
 
 function ServerListItem({
                             url,
