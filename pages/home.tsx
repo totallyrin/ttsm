@@ -150,16 +150,18 @@ export default function Home() {
   const [session, setSession] = useState(null);
   const router = useRouter();
 
-  async function checkSession() {
-    const session = await getSession();
-    setSession(session);
+  useEffect(() => {
+    async function checkSession() {
+      const session = await getSession();
+      setSession(session);
 
-    if (!session) {
-      router.push("/login");
+      if (!session) {
+        router.push("/login");
+      }
     }
-  }
 
-  checkSession();
+    checkSession();
+  }, []);
 
   // const username = session?.user?.name ?? "";
   // const role = session?.role;
