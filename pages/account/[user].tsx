@@ -1,43 +1,34 @@
 import * as React from "react";
-import { useEffect, useRef, useState } from "react";
-import { url } from "../../utils/utils";
+import {useEffect, useRef, useState} from "react";
+import {url} from "../../utils/utils";
 import useServerList from "../../utils/useServerList";
 import Layout from "../../components/layout";
-import {
-  Alert,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  Sheet,
-  Typography,
-  useTheme,
-} from "@mui/joy";
-import { getSession, useSession } from "next-auth/react";
+import {Alert, Button, FormControl, FormLabel, Input, Sheet, Typography, useTheme,} from "@mui/joy";
+import {useSession} from "next-auth/react";
 
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
-
-  const username = session.user?.name ? session.user.name : "";
-  // @ts-ignore
-  const role = session.role;
-
-  return {
-    props: {
-      username: username,
-      role: role,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   const session = await getSession(context);
+//
+//   if (!session) {
+//     return {
+//       redirect: {
+//         destination: "/login",
+//         permanent: false,
+//       },
+//     };
+//   }
+//
+//   const username = session.user?.name ? session.user.name : "";
+//   // @ts-ignore
+//   const role = session.role;
+//
+//   return {
+//     props: {
+//       username: username,
+//       role: role,
+//     },
+//   };
+// }
 
 function EditLogin({ username, property, onChange }) {
   const { update } = useSession();

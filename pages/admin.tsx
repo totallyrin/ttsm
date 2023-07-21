@@ -1,53 +1,43 @@
-import { getSession } from "next-auth/react";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import useServerList from "../utils/useServerList";
 import Layout from "../components/layout";
-import { url } from "../utils/utils";
-import {
-  Alert,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  Sheet,
-  Typography,
-  useTheme,
-} from "@mui/joy";
+import {url} from "../utils/utils";
+import {Alert, Button, FormControl, FormLabel, Input, Sheet, Typography, useTheme,} from "@mui/joy";
 
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
-
-  // @ts-ignore
-  const role = session.role;
-
-  if (role !== "admin") {
-    return {
-      redirect: {
-        destination: "/home",
-        permanent: false,
-      },
-    };
-  }
-
-  const username = session.user?.name ? session.user.name : "";
-
-  return {
-    props: {
-      username: username,
-      role: role,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   const session = await getSession(context);
+//
+//   if (!session) {
+//     return {
+//       redirect: {
+//         destination: "/login",
+//         permanent: false,
+//       },
+//     };
+//   }
+//
+//   // @ts-ignore
+//   const role = session.role;
+//
+//   if (role !== "admin") {
+//     return {
+//       redirect: {
+//         destination: "/home",
+//         permanent: false,
+//       },
+//     };
+//   }
+//
+//   const username = session.user?.name ? session.user.name : "";
+//
+//   return {
+//     props: {
+//       username: username,
+//       role: role,
+//     },
+//   };
+// }
 
 export default function Admin({ username, role }) {
   const [ws, setWs] = useState<WebSocket | null>(null);

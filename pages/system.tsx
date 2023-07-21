@@ -1,35 +1,34 @@
-import { useEffect, useState } from "react";
-import { getSession } from "next-auth/react";
-import { Sheet, Typography, useTheme } from "@mui/joy";
+import {useEffect, useState} from "react";
+import {Sheet, Typography, useTheme} from "@mui/joy";
 import Layout from "../components/layout";
 import useServerList from "../utils/useServerList";
-import { url } from "../utils/utils";
+import {url} from "../utils/utils";
 import CPU from "../components/cpu";
 import Memory from "../components/memory";
 
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
-
-  const username = session.user?.name ? session.user.name : "";
-  // @ts-ignore
-  const role = session.role;
-
-  return {
-    props: {
-      username: username,
-      role: role,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   const session = await getSession(context);
+//
+//   if (!session) {
+//     return {
+//       redirect: {
+//         destination: "/login",
+//         permanent: false,
+//       },
+//     };
+//   }
+//
+//   const username = session.user?.name ? session.user.name : "";
+//   // @ts-ignore
+//   const role = session.role;
+//
+//   return {
+//     props: {
+//       username: username,
+//       role: role,
+//     },
+//   };
+// }
 
 export default function System({ username, role }) {
   const [serverList, setServerList] = useState<string[]>([]);
