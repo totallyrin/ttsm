@@ -17,7 +17,9 @@ import {url} from "../utils/utils";
 import {PlayArrowRounded, StopRounded} from "@mui/icons-material";
 
 export async function getServerSideProps(context) {
-    return await getSession(context);
+    // return await getSession(context);
+
+    return;
 
     // const t0 = performance.now();
     // const session = await getSession(context);
