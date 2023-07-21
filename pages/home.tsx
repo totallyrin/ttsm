@@ -1,20 +1,11 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
-import { getSession } from "next-auth/react";
-import {
-  Button,
-  List,
-  ListDivider,
-  ListItem,
-  Sheet,
-  Typography,
-  useTheme,
-} from "@mui/joy";
+import {useEffect, useState} from "react";
+import {Button, List, ListDivider, ListItem, Sheet, Typography, useTheme,} from "@mui/joy";
 import Layout from "../components/layout";
 import useServerList from "../utils/useServerList";
 import Console from "../components/console";
-import { url } from "../utils/utils";
-import { PlayArrowRounded, StopRounded } from "@mui/icons-material";
+import {url} from "../utils/utils";
+import {PlayArrowRounded, StopRounded} from "@mui/icons-material";
 
 // export async function getServerSideProps(context) {
 // const t0 = performance.now();
@@ -176,7 +167,7 @@ export default function Home({ username, role }) {
       // if message is about server status, update relevant status
       if (data.type === "serverState") {
         setRunningList((prevRunningList) => {
-          let temp = { ...prevRunningList };
+          const temp = { ...prevRunningList };
           temp[data.game] = data.running;
           return temp;
         });
@@ -201,7 +192,7 @@ export default function Home({ username, role }) {
   // initialize server statuses
   useEffect(() => {
     if (serverList) {
-      let temp = {};
+      const temp = {};
       serverList.forEach(function (game) {
         temp[game] = "pinging";
       });
