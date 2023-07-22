@@ -202,12 +202,13 @@ export default function User() {
   const [username, setUsername] = useState("");
   const [role, setRole] = useState(null);
 
+  const [storedUsername, setStoredUsername] = useState(username);
+
   useEffect(() => {
     setUsername(session?.user?.name ?? "");
     setRole(session?.role);
+    setStoredUsername(username);
   }, [session]);
-
-  const [storedUsername, setStoredUsername] = useState(username);
 
   const handleUsernameChange = (newUsername) => {
     setStoredUsername(newUsername);

@@ -14,7 +14,6 @@ import {
   Typography,
   useTheme,
 } from "@mui/joy";
-import Console from "../../components/console";
 import { PlayArrowRounded, StopRounded } from "@mui/icons-material";
 import { getSession } from "next-auth/react";
 
@@ -382,8 +381,8 @@ export default function Game() {
               running={runningList[game]}
             />
           </List>
-          <Console username={username} role={role} game={game} />
-          {role === "admin" && <Config username={username} game={game} />}
+          {/*<Console username={username} role={role} game={game} />*/}
+          {/*{role === "admin" && <Config username={username} game={game} />}*/}
         </Sheet>
       </Layout>,
     );
