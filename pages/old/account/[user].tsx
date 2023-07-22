@@ -1,11 +1,12 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
-import { url } from "../../utils/utils";
-import useServerList from "../../utils/useServerList";
-import Layout from "../../components/layout";
+import { url } from "../../../utils/utils";
+import useServerList from "../../../utils/useServerList";
+import Layout from "../../../components/Layout";
 import {
   Alert,
   Button,
+  CircularProgress,
   FormControl,
   FormLabel,
   Input,
@@ -223,24 +224,25 @@ export default function User() {
   }, [retrievedServers]);
 
   const [page, setPage] = useState<JSX.Element>(
-    <Layout
-      username={username}
-      role={role}
-      page={"Home"}
-      serverList={serverList}
-    >
-      <Sheet
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "auto",
-          gridTemplateRows: "auto",
-          minHeight: "100%", // set min-height to ensure the layout takes up the full height of the viewport
-          minWidth: "fit-content",
-        }}
-      >
-        <Typography level="h3">Loading...</Typography>
-      </Sheet>
-    </Layout>,
+    // <Layout
+    //   username={username}
+    //   role={role}
+    //   page={"Page"}
+    //   serverList={serverList}
+    // >
+    //   <Sheet
+    //     sx={{
+    //       display: "grid",
+    //       gridTemplateColumns: "auto",
+    //       gridTemplateRows: "auto",
+    //       minHeight: "100%", // set min-height to ensure the layout takes up the full height of the viewport
+    //       minWidth: "fit-content",
+    //     }}
+    //   >
+    //     <Typography level="h3">Loading...</Typography>
+    //   </Sheet>
+    // </Layout>,
+    <CircularProgress size="lg" />,
   );
 
   const theme = useTheme();

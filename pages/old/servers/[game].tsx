@@ -1,10 +1,10 @@
 import { useRouter } from "next/router";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { url } from "../../utils/utils";
-import useServerList from "../../utils/useServerList";
-import Layout from "../../components/layout";
-import Console from "../../components/console";
+import { url } from "../../../utils/utils";
+import useServerList from "../../../utils/useServerList";
+import Layout from "../../../components/Layout";
+import Console from "../../../components/Console";
 import {
   Alert,
   Button,
@@ -331,7 +331,7 @@ export default function Game() {
     <Layout
       username={username}
       role={role}
-      page={"Home"}
+      page={"Page"}
       serverList={serverList}
     >
       <Sheet

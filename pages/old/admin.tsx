@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import useServerList from "../utils/useServerList";
-import Layout from "../components/layout";
-import { url } from "../utils/utils";
+import useServerList from "../../utils/useServerList";
+import Layout from "../../components/Layout";
+import { url } from "../../utils/utils";
 import {
   Alert,
   Button,
@@ -108,7 +108,7 @@ export default function Admin() {
     <Layout
       username={username}
       role={role}
-      page={"Home"}
+      page={"Page"}
       serverList={serverList}
     >
       <Sheet

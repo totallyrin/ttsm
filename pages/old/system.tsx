@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Sheet, Typography, useTheme } from "@mui/joy";
-import Layout from "../components/layout";
-import useServerList from "../utils/useServerList";
-import { url } from "../utils/utils";
-import CPU from "../components/cpu";
-import Memory from "../components/memory";
+import Layout from "../../components/Layout";
+import useServerList from "../../utils/useServerList";
+import { url } from "../../utils/utils";
+import CPU from "../../components/CPU";
+import Memory from "../../components/Memory";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
 
@@ -45,7 +45,7 @@ export default function System() {
     <Layout
       username={username}
       role={role}
-      page={"Home"}
+      page={"Page"}
       serverList={serverList}
     >
       <Sheet
