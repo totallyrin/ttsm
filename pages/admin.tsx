@@ -1,45 +1,46 @@
 import * as React from "react";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import useServerList from "../utils/useServerList";
 import Layout from "../components/layout";
-import {url} from "../utils/utils";
-import {Alert, Button, FormControl, FormLabel, Input, Sheet, Typography, useTheme,} from "@mui/joy";
+import { url } from "../utils/utils";
+import {
+  Alert,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Sheet,
+  Typography,
+  useTheme,
+} from "@mui/joy";
+import { useRouter } from "next/router";
+import { getSession } from "next-auth/react";
 
-// export async function getServerSideProps(context) {
-//   const session = await getSession(context);
-//
-//   if (!session) {
-//     return {
-//       redirect: {
-//         destination: "/login",
-//         permanent: false,
-//       },
-//     };
-//   }
-//
-//   // @ts-ignore
-//   const role = session.role;
-//
-//   if (role !== "admin") {
-//     return {
-//       redirect: {
-//         destination: "/home",
-//         permanent: false,
-//       },
-//     };
-//   }
-//
-//   const username = session.user?.name ? session.user.name : "";
-//
-//   return {
-//     props: {
-//       username: username,
-//       role: role,
-//     },
-//   };
-// }
+export default function Admin() {
+  const [session, setSession] = useState(null);
+  const router = useRouter();
 
-export default function Admin({ username, role }) {
+  useEffect(() => {
+    async function checkSession() {
+      const session = await getSession();
+      setSession(session);
+
+      if (!session) {
+        router.push("/login");
+      }
+    }
+
+    checkSession();
+  }, []);
+
+  const [username, setUsername] = useState("");
+  const [role, setRole] = useState(null);
+
+  useEffect(() => {
+    setUsername(session?.user?.name ?? "");
+    setRole(session?.role);
+  }, [session]);
+
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [serverList, setServerList] = useState<string[]>([]);
   const retrievedServers = useServerList();

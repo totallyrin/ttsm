@@ -1,36 +1,22 @@
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import * as React from "react";
-import {useEffect, useState} from "react";
-import {url} from "../../utils/utils";
+import { useEffect, useState } from "react";
+import { url } from "../../utils/utils";
 import useServerList from "../../utils/useServerList";
 import Layout from "../../components/layout";
-import {Alert, Button, List, ListItem, Sheet, Textarea, Typography, useTheme,} from "@mui/joy";
+import {
+  Alert,
+  Button,
+  List,
+  ListItem,
+  Sheet,
+  Textarea,
+  Typography,
+  useTheme,
+} from "@mui/joy";
 import Console from "../../components/console";
-import {PlayArrowRounded, StopRounded} from "@mui/icons-material";
-
-// export async function getServerSideProps(context) {
-//   const session = await getSession(context);
-//
-//   if (!session) {
-//     return {
-//       redirect: {
-//         destination: "/login",
-//         permanent: false,
-//       },
-//     };
-//   }
-//
-//   const username = session.user?.name ? session.user.name : "";
-//   // @ts-ignore
-//   const role = session.role;
-//
-//   return {
-//     props: {
-//       username: username,
-//       role: role,
-//     },
-//   };
-// }
+import { PlayArrowRounded, StopRounded } from "@mui/icons-material";
+import { getSession } from "next-auth/react";
 
 function ServerListItem({
   url,
@@ -251,8 +237,31 @@ function Config({ username, game }) {
   );
 }
 
-export default function Game({ username, role }) {
+export default function Game() {
+  const [session, setSession] = useState(null);
   const router = useRouter();
+
+  useEffect(() => {
+    async function checkSession() {
+      const session = await getSession();
+      setSession(session);
+
+      if (!session) {
+        router.push("/login");
+      }
+    }
+
+    checkSession();
+  }, []);
+
+  const [username, setUsername] = useState("");
+  const [role, setRole] = useState(null);
+
+  useEffect(() => {
+    setUsername(session?.user?.name ?? "");
+    setRole(session?.role);
+  }, [session]);
+
   const { game } = router.query;
 
   const [ws, setWs] = useState<WebSocket | null>(null);

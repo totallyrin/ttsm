@@ -1,34 +1,20 @@
 import * as React from "react";
-import {useEffect, useRef, useState} from "react";
-import {url} from "../../utils/utils";
+import { useEffect, useRef, useState } from "react";
+import { url } from "../../utils/utils";
 import useServerList from "../../utils/useServerList";
 import Layout from "../../components/layout";
-import {Alert, Button, FormControl, FormLabel, Input, Sheet, Typography, useTheme,} from "@mui/joy";
-import {useSession} from "next-auth/react";
-
-// export async function getServerSideProps(context) {
-//   const session = await getSession(context);
-//
-//   if (!session) {
-//     return {
-//       redirect: {
-//         destination: "/login",
-//         permanent: false,
-//       },
-//     };
-//   }
-//
-//   const username = session.user?.name ? session.user.name : "";
-//   // @ts-ignore
-//   const role = session.role;
-//
-//   return {
-//     props: {
-//       username: username,
-//       role: role,
-//     },
-//   };
-// }
+import {
+  Alert,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Sheet,
+  Typography,
+  useTheme,
+} from "@mui/joy";
+import { getSession, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 function EditLogin({ username, property, onChange }) {
   const { update } = useSession();
@@ -196,7 +182,31 @@ function EditLogin({ username, property, onChange }) {
   );
 }
 
-export default function User({ username, role }) {
+export default function User() {
+  const [session, setSession] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    async function checkSession() {
+      const session = await getSession();
+      setSession(session);
+
+      if (!session) {
+        router.push("/login");
+      }
+    }
+
+    checkSession();
+  }, []);
+
+  const [username, setUsername] = useState("");
+  const [role, setRole] = useState(null);
+
+  useEffect(() => {
+    setUsername(session?.user?.name ?? "");
+    setRole(session?.role);
+  }, [session]);
+
   const [storedUsername, setStoredUsername] = useState(username);
 
   const handleUsernameChange = (newUsername) => {
