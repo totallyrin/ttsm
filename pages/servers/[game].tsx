@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { url } from "../../utils/utils";
 import useServerList from "../../utils/useServerList";
 import Layout from "../../components/layout";
+import Console from "../../components/console";
 import {
   Alert,
   Button,
@@ -381,12 +382,12 @@ export default function Game() {
               running={runningList[game]}
             />
           </List>
-          {/*<Console username={username} role={role} game={game} />*/}
-          {/*{role === "admin" && <Config username={username} game={game} />}*/}
+          <Console username={username} role={role} game={game} />
+          {role === "admin" && <Config username={username} game={game} />}
         </Sheet>
       </Layout>,
     );
-  }, [ws, serverList, runningList]);
+  }, [ws, serverList, runningList, username, role]);
 
   return page;
 }

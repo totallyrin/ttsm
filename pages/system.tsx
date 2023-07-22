@@ -85,7 +85,7 @@ export default function System() {
         </Sheet>
       </Layout>,
     );
-  }, [serverList]);
+  }, [serverList, username, role]);
 
   return page;
 }

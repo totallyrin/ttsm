@@ -303,7 +303,7 @@ export default function User() {
         </Sheet>
       </Layout>,
     );
-  }, [serverList, storedUsername]);
+  }, [serverList, storedUsername, role]);
 
   return page;
 }

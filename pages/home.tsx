@@ -279,7 +279,7 @@ export default function Home() {
         </Sheet>
       </Layout>,
     );
-  }, [ws, serverList, runningList]);
+  }, [ws, serverList, runningList, username, role]);
 
   return page;
 }
