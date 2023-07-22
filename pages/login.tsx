@@ -12,8 +12,8 @@ import {
   Sheet,
   Typography,
 } from "@mui/joy";
-import Footer from "../components/footer";
-import { getSession, signIn } from "next-auth/react";
+import Footer from "../components/Footer";
+import { signIn } from "next-auth/react";
 import Head from "next/head";
 
 export default function LoginPage() {

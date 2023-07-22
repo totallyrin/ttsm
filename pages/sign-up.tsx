@@ -12,7 +12,7 @@ import {
   Sheet,
   Typography,
 } from "@mui/joy";
-import Footer from "../components/footer";
+import Footer from "../components/Footer";
 import Head from "next/head";
 import { url } from "../utils/utils";
 import { useRouter } from "next/router";
