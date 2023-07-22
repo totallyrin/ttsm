@@ -32,7 +32,7 @@ async function attempt_login(
             const t3 = performance.now();
             console.log(`Server responded in ${t3 - t2}ms`);
             if (data.success) {
-              // User exists and password is correct
+              // Account exists and password is correct
               user = {
                 id: data.id,
                 username: data.username,
@@ -40,7 +40,7 @@ async function attempt_login(
               };
               resolve(user);
             } else {
-              // User exists but password is incorrect
+              // Account exists but password is incorrect
               resolve(false);
             }
             result = data.success;

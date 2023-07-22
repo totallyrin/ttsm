@@ -28,7 +28,7 @@ export default function Layout({
             minWidth: "fit-content",
           }}
         >
-          <Navbar username={username} />
+          <Navbar username={username} onPageChange={onPageChange} />
           <Sheet
             sx={{
               display: "grid",

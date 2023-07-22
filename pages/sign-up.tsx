@@ -45,10 +45,10 @@ async function attempt_signup(username, password): Promise<boolean> {
             const t3 = performance.now();
             console.log(`Server responded in ${t3 - t2}ms`);
             if (data.success) {
-              // User created successfully
+              // Account created successfully
               resolve(true);
             } else {
-              // User could not be created
+              // Account could not be created
               resolve(false);
             }
             result = data.success;

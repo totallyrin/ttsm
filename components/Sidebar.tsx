@@ -16,7 +16,6 @@ function ServerListItem({ game, onPageChange }) {
 
   return (
     <ListItem nested>
-      {/*<Link href={`/servers/${game}`} sx={{ width: "100%" }}>*/}
       <Button
         variant="plain"
         startDecorator={
@@ -36,7 +35,6 @@ function ServerListItem({ game, onPageChange }) {
           {gameName}
         </Typography>
       </Button>
-      {/*</Link>*/}
     </ListItem>
   );
 }
@@ -69,7 +67,6 @@ export default function Sidebar({ role, serverList, onPageChange }) {
         </Typography>
       </ListItem>
       <ListItem sx={{ width: "100%" }}>
-        {/*<Link href="/home" sx={{ width: "100%" }}>*/}
         <Button
           variant="plain"
           startDecorator={<HomeRounded />}
@@ -80,11 +77,9 @@ export default function Sidebar({ role, serverList, onPageChange }) {
             Home
           </Typography>
         </Button>
-        {/*</Link>*/}
       </ListItem>
       {role === "admin" && (
         <ListItem sx={{ width: "100%" }}>
-          {/*<Link href="/admin" sx={{ width: "100%" }}>*/}
           <Button
             variant="plain"
             startDecorator={<AdminPanelSettingsRounded />}
@@ -95,11 +90,9 @@ export default function Sidebar({ role, serverList, onPageChange }) {
               Admin
             </Typography>
           </Button>
-          {/*</Link>*/}
         </ListItem>
       )}
       <ListItem>
-        {/*<Link href="/system" sx={{ width: "100%" }}>*/}
         <Button
           variant="plain"
           startDecorator={<StackedLineChartRounded />}
@@ -110,7 +103,6 @@ export default function Sidebar({ role, serverList, onPageChange }) {
             System
           </Typography>
         </Button>
-        {/*</Link>*/}
       </ListItem>
       <ListItem>
         <Button

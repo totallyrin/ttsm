@@ -12,6 +12,7 @@ import Admin from "../components/pages/Admin";
 import BasicLayout from "../components/BasicLayout";
 import Game from "../components/pages/Game";
 import Loading from "../components/Loading";
+import Account from "../components/pages/Account";
 
 export default function Page() {
   const [session, setSession] = useState(null);
@@ -124,6 +125,9 @@ export default function Page() {
             serverList={serverList}
             onPageChange={handlePageChange}
           >
+            {dashboard === "account" && (
+              <Account theme={theme} username={username} />
+            )}
             {dashboard === "home" && (
               <HomePage
                 theme={theme}
