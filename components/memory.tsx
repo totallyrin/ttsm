@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-// import Chart from 'chart.js/auto';
+import { Chart } from "react-chartjs-2";
 import "chartjs-adapter-date-fns";
 import {
   CategoryScale,
-  Chart,
+  Chart as ChartJS,
   Filler,
   Legend,
   LinearScale,
@@ -15,7 +15,7 @@ import {
 } from "chart.js";
 import { Sheet, Typography } from "@mui/joy";
 
-Chart.register(
+ChartJS.register(
   TimeScale,
   CategoryScale,
   LinearScale,
