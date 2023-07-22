@@ -1,31 +1,19 @@
-import { useEffect, useState } from "react";
-import { Chart } from "react-chartjs-2";
+import {useEffect, useState} from "react";
+import Chart from "chart.js/auto";
 import "chartjs-adapter-date-fns";
-import {
-  CategoryScale,
-  Chart as ChartJS,
-  Filler,
-  Legend,
-  LinearScale,
-  LineElement,
-  PointElement,
-  TimeScale,
-  Title,
-  Tooltip,
-} from "chart.js";
-import { Sheet, Typography } from "@mui/joy";
+import {Sheet, Typography} from "@mui/joy";
 
-ChartJS.register(
-  TimeScale,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-);
+// ChartJS.register(
+//   TimeScale,
+//   CategoryScale,
+//   LinearScale,
+//   PointElement,
+//   LineElement,
+//   Title,
+//   Tooltip,
+//   Legend,
+//   Filler,
+// );
 
 export default function Memory({ url }) {
   useEffect(() => {
