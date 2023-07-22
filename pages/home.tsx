@@ -16,6 +16,7 @@ import { url } from "../utils/utils";
 import { PlayArrowRounded, StopRounded } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
+import BasicLayout from "../components/basic-layout";
 
 function ServerListItem({
   url,
@@ -127,6 +128,7 @@ function ServerListItem({
 
 export default function Home() {
   const [session, setSession] = useState(null);
+  const [auth, setAuth] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -136,6 +138,8 @@ export default function Home() {
 
       if (!session) {
         router.push("/login");
+      } else {
+        setAuth(true);
       }
     }
 
@@ -205,80 +209,63 @@ export default function Home() {
     }
   }, [serverList]);
 
-  const [page, setPage] = useState<JSX.Element>(
-    <Layout
-      username={username}
-      role={role}
-      page={"Home"}
-      serverList={serverList}
-    >
-      <Sheet
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "auto",
-          gridTemplateRows: "auto",
-          minHeight: "100%", // set min-height to ensure the layout takes up the full height of the viewport
-          minWidth: "fit-content",
-        }}
-      >
-        <Typography level="h3">Loading...</Typography>
-      </Sheet>
-    </Layout>,
-  );
+  const [page, setPage] = useState<JSX.Element>(<BasicLayout />);
 
   const theme = useTheme();
 
   useEffect(() => {
-    setPage(
-      <Layout
-        username={username}
-        role={role}
-        page={"Home"}
-        serverList={serverList}
-      >
-        <Sheet
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "1fr",
-            gridTemplateRows: "auto 1fr",
-            gridRowGap: theme.spacing(4),
-          }}
+    if (auth) {
+      setPage(
+        <Layout
+          username={username}
+          role={role}
+          page={"Home"}
+          serverList={serverList}
         >
-          <List
-            id="server-list"
-            variant="outlined"
+          <Sheet
             sx={{
-              width: "100%",
-              py: 1, // padding top & bottom
-              px: 1, // padding left & right
-              borderRadius: "sm",
-              boxShadow: "sm",
-              flexGrow: 0,
-              display: "inline-flex",
-              "--ListItemDecorator-size": "48px",
-              "--ListItem-paddingY": "1rem",
+              display: "grid",
+              gridTemplateColumns: "1fr",
+              gridTemplateRows: "auto 1fr",
+              gridRowGap: theme.spacing(4),
             }}
           >
-            {serverList.map((game, index) => (
-              <Sheet key={game} sx={{ width: "100%" }}>
-                <ServerListItem
-                  game={game}
-                  url={url}
-                  auth={role !== "no-auth"}
-                  running={runningList[game]}
-                />
-                {index !== serverList.length - 1 && (
-                  <ListDivider inset="gutter" />
-                )}
-              </Sheet>
-            ))}
-          </List>
-          <Sheet>
-            <Console username={username} role={role} game={undefined} />
+            <List
+              id="server-list"
+              variant="outlined"
+              sx={{
+                width: "100%",
+                py: 1, // padding top & bottom
+                px: 1, // padding left & right
+                borderRadius: "sm",
+                boxShadow: "sm",
+                flexGrow: 0,
+                display: "inline-flex",
+                "--ListItemDecorator-size": "48px",
+                "--ListItem-paddingY": "1rem",
+              }}
+            >
+              {serverList.map((game, index) => (
+                <Sheet key={game} sx={{ width: "100%" }}>
+                  <ServerListItem
+                    game={game}
+                    url={url}
+                    auth={role !== "no-auth"}
+                    running={runningList[game]}
+                  />
+                  {index !== serverList.length - 1 && (
+                    <ListDivider inset="gutter" />
+                  )}
+                </Sheet>
+              ))}
+            </List>
+            <Sheet>
+              <Console username={username} role={role} game={undefined} />
+            </Sheet>
           </Sheet>
-        </Sheet>
-      </Layout>,
-    );
+        </Layout>,
+      );
+    }
   }, [ws, serverList, runningList, username, role]);
 
   return page;
