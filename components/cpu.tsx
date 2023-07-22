@@ -96,8 +96,6 @@ export default function CPU({ url }) {
             }
           },
         },
-        max: Date.now(),
-        min: Date.now() - 60 * 1000,
       },
       y: {
         title: {

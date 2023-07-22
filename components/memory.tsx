@@ -7,6 +7,7 @@ import {
   Filler,
   Legend,
   LinearScale,
+  LineController,
   LineElement,
   PointElement,
   TimeScale,
@@ -21,6 +22,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  LineController,
   Title,
   Tooltip,
   Legend,
@@ -96,8 +98,6 @@ export default function Memory({ url }) {
             }
           },
         },
-        max: Date.now(),
-        min: Date.now() - 60 * 1000,
       },
       y: {
         title: {
