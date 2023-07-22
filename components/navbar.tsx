@@ -1,20 +1,21 @@
 import { Button, Link, List, ListItem, Typography } from "@mui/joy";
 import * as React from "react";
-import { useEffect } from "react";
 import { AccountCircleRounded, LogoutRounded } from "@mui/icons-material";
+import { signOut } from "next-auth/react";
 
 function LogoutButton() {
-  useEffect(() => {
-    // this code only runs on the client-side
-    localStorage.removeItem("isLoggedIn");
-  }, []);
+  const handleSignOut = () => {
+    signOut({ callbackUrl: "/login" });
+  };
 
   return (
-    <Link href="/login">
-      <Button variant="soft" startDecorator={<LogoutRounded />}>
-        Log out
-      </Button>
-    </Link>
+    <Button
+      variant="soft"
+      startDecorator={<LogoutRounded />}
+      onClick={handleSignOut}
+    >
+      Log out
+    </Button>
   );
 }
 
