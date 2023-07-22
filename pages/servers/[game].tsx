@@ -262,7 +262,15 @@ export default function Game() {
     setRole(session?.role);
   }, [session]);
 
-  const { game } = router.query;
+  const [game, setGame] = useState(router.query.game);
+  useEffect(() => {
+    if (!router.isReady) return;
+
+    // codes using router.query
+    console.log(router);
+    console.log(router.query);
+    setGame(router.query.game);
+  }, [router.isReady]);
 
   const [ws, setWs] = useState<WebSocket | null>(null);
 
@@ -374,20 +382,22 @@ export default function Game() {
               "--ListItem-paddingY": "1rem",
             }}
           >
-            <ServerListItem
-              // @ts-ignore
-              game={game}
-              url={url}
-              // @ts-ignore
-              running={runningList[game]}
-            />
+            {game && (
+              <ServerListItem
+                // @ts-ignore
+                game={game}
+                url={url}
+                // @ts-ignore
+                running={runningList[game]}
+              />
+            )}
           </List>
           <Console username={username} role={role} game={game} />
           {role === "admin" && <Config username={username} game={game} />}
         </Sheet>
       </Layout>,
     );
-  }, [ws, serverList, runningList, username, role]);
+  }, [ws, serverList, runningList, username, role, game]);
 
   return page;
 }
