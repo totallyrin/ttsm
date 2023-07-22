@@ -63,7 +63,7 @@ export default function footer() {
         </Typography>
       </ListItem>
       <ListItem>
-        <Link href="https://github.com/totallyrin/servercontroller">
+        <Link href="https://github.com/totallyrin/ttsm">
           <Button
             variant="soft"
             // startDecorator={<KeyboardArrowLeft />}

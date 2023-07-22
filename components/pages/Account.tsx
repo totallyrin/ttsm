@@ -1,8 +1,6 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { url } from "../../utils/utils";
-import useServerList from "../../utils/useServerList";
-import Layout from "../../components/layout";
 import {
   Alert,
   Button,
@@ -11,35 +9,10 @@ import {
   Input,
   Sheet,
   Typography,
-  useTheme,
 } from "@mui/joy";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
-
-  const username = session.user?.name ? session.user.name : "";
-  // @ts-ignore
-  const role = session.role;
-
-  return {
-    props: {
-      username: username,
-      role: role,
-    },
-  };
-}
-
-function EditLogin({ username, property, onChange }) {
+function EditLogin({ theme, username, property, onChange }) {
   const { update } = useSession();
   const [oldProperty, setOldProperty] = useState("");
   const [newProperty, setNewProperty] = useState("");
@@ -91,12 +64,10 @@ function EditLogin({ username, property, onChange }) {
           username: user,
           password: oldProperty,
           new: newProperty,
-        })
+        }),
       );
     }
   };
-
-  const theme = useTheme();
 
   return (
     <Sheet
@@ -205,103 +176,62 @@ function EditLogin({ username, property, onChange }) {
   );
 }
 
-export default function User({ username, role }) {
+export default function Account({ theme, username }) {
   const [storedUsername, setStoredUsername] = useState(username);
 
   const handleUsernameChange = (newUsername) => {
     setStoredUsername(newUsername);
   };
 
-  const [serverList, setServerList] = useState<string[]>([]);
-  const retrievedServers = useServerList();
-
-  // get server list
-  useEffect(() => {
-    if (retrievedServers) setServerList(retrievedServers);
-  }, [retrievedServers]);
-
-  const [page, setPage] = useState<JSX.Element>(
-    <Layout
-      username={username}
-      role={role}
-      page={"Home"}
-      serverList={serverList}
+  return (
+    <Sheet
+      sx={{
+        overflowY: "auto",
+        display: "grid",
+        gridTemplateColumns: "auto",
+        gridTemplateRows: "1fr auto",
+        height: "100%",
+      }}
     >
       <Sheet
         sx={{
-          display: "grid",
-          gridTemplateColumns: "auto",
-          gridTemplateRows: "auto",
-          minHeight: "100%", // set min-height to ensure the layout takes up the full height of the viewport
-          minWidth: "fit-content",
+          maxHeight: "10px",
         }}
-      >
-        <Typography level="h3">Loading...</Typography>
-      </Sheet>
-    </Layout>
-  );
-
-  const theme = useTheme();
-
-  useEffect(() => {
-    // @ts-ignore
-    setPage(
-      <Layout
-        username={storedUsername}
-        role={role}
-        page={`Account`}
-        serverList={serverList}
       >
         <Sheet
           sx={{
-            overflowY: "auto",
             display: "grid",
-            gridTemplateColumns: "auto",
-            gridTemplateRows: "1fr auto",
-            height: "100%",
+            gridTemplateColumns: "1fr",
+            gridTemplateRows: "auto 1fr 1fr",
+            gridRowGap: theme.spacing(4),
           }}
         >
           <Sheet
+            variant="outlined"
             sx={{
-              maxHeight: "10px",
+              p: 4,
+              borderRadius: "sm",
+              boxShadow: "sm",
+              display: "flex",
+              justifyContent: "center",
             }}
           >
-            <Sheet
-              sx={{
-                display: "grid",
-                gridTemplateColumns: "1fr",
-                gridTemplateRows: "auto 1fr 1fr",
-                gridRowGap: theme.spacing(4),
-              }}
-            >
-              <Sheet
-                variant="outlined"
-                sx={{
-                  p: 4,
-                  borderRadius: "sm",
-                  boxShadow: "sm",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <Typography level="h3">{`${storedUsername}`}</Typography>
-              </Sheet>
-              <EditLogin
-                username={storedUsername}
-                property="username"
-                onChange={handleUsernameChange}
-              />
-              <EditLogin
-                username={storedUsername}
-                property="password"
-                onChange={handleUsernameChange}
-              />
-            </Sheet>
+            <Typography level="h3">{`${storedUsername}`}</Typography>
           </Sheet>
+          <EditLogin
+            theme={theme}
+            username={storedUsername}
+            property="username"
+            onChange={handleUsernameChange}
+          />
+          <EditLogin
+            theme={theme}
+            username={storedUsername}
+            property="password"
+            onChange={handleUsernameChange}
+          />
         </Sheet>
-      </Layout>
-    );
-  }, [serverList, storedUsername]);
-
-  return page;
+      </Sheet>
+    </Sheet>
+  );
 }

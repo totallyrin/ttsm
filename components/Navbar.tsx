@@ -1,28 +1,25 @@
-import { Button, Link, List, ListItem, Typography } from "@mui/joy";
+import { Button, List, ListItem, Typography } from "@mui/joy";
 import * as React from "react";
-import { useEffect } from "react";
 import { AccountCircleRounded, LogoutRounded } from "@mui/icons-material";
+import { signOut } from "next-auth/react";
 
 function LogoutButton() {
-  useEffect(() => {
-    // this code only runs on the client-side
-    localStorage.removeItem("isLoggedIn");
-  }, []);
+  const handleSignOut = () => {
+    signOut({ callbackUrl: "/login" });
+  };
 
   return (
-    <Link href="/login">
-      <Button variant="soft" startDecorator={<LogoutRounded />}>
-        Log out
-      </Button>
-    </Link>
+    <Button
+      variant="soft"
+      startDecorator={<LogoutRounded />}
+      onClick={handleSignOut}
+    >
+      Log out
+    </Button>
   );
 }
 
-interface NavbarProps {
-  username: string;
-}
-
-export default function Navbar(props: NavbarProps) {
+export default function Navbar({ username, onPageChange }) {
   return (
     <List
       orientation="horizontal"
@@ -48,16 +45,18 @@ export default function Navbar(props: NavbarProps) {
       <ListItem>
         <ListItem>
           <Typography level="h4" component="h1">
-            {props.username !== "" ? `Welcome, ${props.username}!` : "Welcome!"}
+            {username !== "" ? `Welcome, ${username}!` : "Welcome!"}
           </Typography>
         </ListItem>
       </ListItem>
       <ListItem>
-        <Link href={`/account/${props.username}`}>
-          <Button variant="soft" startDecorator={<AccountCircleRounded />}>
-            Account
-          </Button>
-        </Link>
+        <Button
+          variant="soft"
+          startDecorator={<AccountCircleRounded />}
+          onClick={() => onPageChange("account")}
+        >
+          Account
+        </Button>
       </ListItem>
     </List>
   );
