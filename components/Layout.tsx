@@ -1,18 +1,23 @@
-import Navbar from "./navbar";
-import Footer from "./footer";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
 import { CssBaseline, CssVarsProvider, Sheet } from "@mui/joy";
-import Sidebar from "./sidebar";
+import Sidebar from "./Sidebar";
 import Head from "next/head";
 
-export default function Layout({ username, role, page, serverList, children }) {
-  const title = `TTSM - ${page}`;
-
+export default function Layout({
+  username,
+  role,
+  title,
+  serverList,
+  children,
+  onPageChange,
+}) {
   return (
     <CssBaseline>
       <CssVarsProvider defaultMode="system">
         <Head>
           <meta charSet="UTF-8" />
-          <title>{title}</title>
+          <title>{`TTSM - ${title}`}</title>
         </Head>
         <Sheet
           sx={{
@@ -32,7 +37,11 @@ export default function Layout({ username, role, page, serverList, children }) {
               px: 4,
             }}
           >
-            <Sidebar role={role} serverList={serverList} />
+            <Sidebar
+              role={role}
+              serverList={serverList}
+              onPageChange={onPageChange}
+            />
             {children}
           </Sheet>
           <Footer />

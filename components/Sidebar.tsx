@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { Button, Link, List, ListItem, Typography } from "@mui/joy";
+import { Button, List, ListItem, Typography } from "@mui/joy";
 import {
   AdminPanelSettingsRounded,
   HomeRounded,
@@ -8,7 +8,7 @@ import {
   StackedLineChartRounded,
 } from "@mui/icons-material";
 
-function ServerListItem({ game }) {
+function ServerListItem({ game, onPageChange }) {
   const gameName =
     game === "pz"
       ? "Project Zomboid"
@@ -16,31 +16,32 @@ function ServerListItem({ game }) {
 
   return (
     <ListItem nested>
-      <Link href={`/servers/${game}`} sx={{ width: "100%" }}>
-        <Button
-          variant="plain"
-          startDecorator={
-            <img
-              src={`../img/${game}.png`}
-              alt={game}
-              style={{ width: "24px", height: "24px" }}
-            />
-          }
-          sx={{ width: "100%", justifyContent: "flex-start" }}
+      {/*<Link href={`/servers/${game}`} sx={{ width: "100%" }}>*/}
+      <Button
+        variant="plain"
+        startDecorator={
+          <img
+            src={`../img/${game}.png`}
+            alt={game}
+            style={{ width: "24px", height: "24px" }}
+          />
+        }
+        onClick={() => onPageChange(`servers/${game}`)}
+        sx={{ width: "100%", justifyContent: "flex-start" }}
+      >
+        <Typography
+          level="body3"
+          sx={{ textTransform: "uppercase", textAlign: "left" }}
         >
-          <Typography
-            level="body3"
-            sx={{ textTransform: "uppercase", textAlign: "left" }}
-          >
-            {gameName}
-          </Typography>
-        </Button>
-      </Link>
+          {gameName}
+        </Typography>
+      </Button>
+      {/*</Link>*/}
     </ListItem>
   );
 }
 
-export default function Sidebar({ role, serverList }) {
+export default function Sidebar({ role, serverList, onPageChange }) {
   const [serversOpen, setServersOpen] = useState(false);
 
   return (
@@ -68,45 +69,48 @@ export default function Sidebar({ role, serverList }) {
         </Typography>
       </ListItem>
       <ListItem sx={{ width: "100%" }}>
-        <Link href="/home" sx={{ width: "100%" }}>
-          <Button
-            variant="plain"
-            startDecorator={<HomeRounded />}
-            sx={{ width: "100%", justifyContent: "flex-start" }}
-          >
-            <Typography level="body3" sx={{ textTransform: "uppercase" }}>
-              Home
-            </Typography>
-          </Button>
-        </Link>
+        {/*<Link href="/home" sx={{ width: "100%" }}>*/}
+        <Button
+          variant="plain"
+          startDecorator={<HomeRounded />}
+          onClick={() => onPageChange("home")}
+          sx={{ width: "100%", justifyContent: "flex-start" }}
+        >
+          <Typography level="body3" sx={{ textTransform: "uppercase" }}>
+            Home
+          </Typography>
+        </Button>
+        {/*</Link>*/}
       </ListItem>
       {role === "admin" && (
         <ListItem sx={{ width: "100%" }}>
-          <Link href="/admin" sx={{ width: "100%" }}>
-            <Button
-              variant="plain"
-              startDecorator={<AdminPanelSettingsRounded />}
-              sx={{ width: "100%", justifyContent: "flex-start" }}
-            >
-              <Typography level="body3" sx={{ textTransform: "uppercase" }}>
-                Admin
-              </Typography>
-            </Button>
-          </Link>
-        </ListItem>
-      )}
-      <ListItem>
-        <Link href="/system" sx={{ width: "100%" }}>
+          {/*<Link href="/admin" sx={{ width: "100%" }}>*/}
           <Button
             variant="plain"
-            startDecorator={<StackedLineChartRounded />}
+            startDecorator={<AdminPanelSettingsRounded />}
+            onClick={() => onPageChange("admin")}
             sx={{ width: "100%", justifyContent: "flex-start" }}
           >
             <Typography level="body3" sx={{ textTransform: "uppercase" }}>
-              System
+              Admin
             </Typography>
           </Button>
-        </Link>
+          {/*</Link>*/}
+        </ListItem>
+      )}
+      <ListItem>
+        {/*<Link href="/system" sx={{ width: "100%" }}>*/}
+        <Button
+          variant="plain"
+          startDecorator={<StackedLineChartRounded />}
+          onClick={() => onPageChange("system")}
+          sx={{ width: "100%", justifyContent: "flex-start" }}
+        >
+          <Typography level="body3" sx={{ textTransform: "uppercase" }}>
+            System
+          </Typography>
+        </Button>
+        {/*</Link>*/}
       </ListItem>
       <ListItem>
         <Button
@@ -139,7 +143,7 @@ export default function Sidebar({ role, serverList }) {
             }}
           >
             {serverList.map((game) => (
-              <ServerListItem game={game} />
+              <ServerListItem game={game} onPageChange={onPageChange} />
             ))}
           </List>
         </ListItem>
