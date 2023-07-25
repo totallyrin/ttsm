@@ -23,7 +23,6 @@ export default function Page() {
     async function checkSession() {
       const session = await getSession();
       setSession(session);
-
       if (!session) {
         router.push("/login");
       } else {
@@ -130,14 +129,16 @@ export default function Page() {
             {dashboard === "account" && (
               <Account theme={theme} username={username} />
             )}
-            {dashboard === "home" && (
-              <HomePage
-                theme={theme}
-                role={role}
-                serverList={serverList}
-                runningList={runningList}
-              />
-            )}
+            {dashboard === "home" &&
+              ((serverList.length > 0 &&
+                Object.keys(runningList).length > 0 && (
+                  <HomePage
+                    theme={theme}
+                    role={role}
+                    serverList={serverList}
+                    runningList={runningList}
+                  />
+                )) || <Loading />)}
             {dashboard === "admin" && (
               <Admin theme={theme} username={username} />
             )}
