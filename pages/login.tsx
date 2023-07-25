@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { CssVarsProvider } from "@mui/joy/styles";
 import {
   Alert,
@@ -20,8 +20,8 @@ import { useRouter } from "next/router";
 export default function LoginPage() {
   const [isClicked, setClicked] = useState(false);
   const [isError, setError] = useState(false);
-  const username = useRef("");
-  const password = useRef("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
 
   return (
@@ -76,9 +76,9 @@ export default function LoginPage() {
                   name="username"
                   type="username"
                   placeholder="username"
+                  value={username}
                   onInput={(event) => {
-                    // @ts-ignore
-                    username.current = event.target.value;
+                    setUsername((event.target as HTMLInputElement).value);
                   }}
                   onSubmit={(event) => {
                     event.preventDefault();
@@ -92,9 +92,9 @@ export default function LoginPage() {
                   name="password"
                   type="password"
                   placeholder="password"
+                  value={password}
                   onInput={(event) => {
-                    // @ts-ignore
-                    password.current = event.target.value;
+                    setPassword((event.target as HTMLInputElement).value);
                   }}
                   onSubmit={(event) => {
                     event.preventDefault();
@@ -108,13 +108,13 @@ export default function LoginPage() {
                 sx={{ width: "100%", mt: 4 /* margin top */ }}
                 onClick={async (e) => {
                   setClicked(true);
-                  if (username.current !== "" && password.current !== "") {
+                  if (username !== "" && password !== "") {
                     e.preventDefault();
 
                     const t0 = performance.now();
                     const result = await signIn("credentials", {
-                      username: username.current,
-                      password: password.current,
+                      username: username,
+                      password: password,
                       redirect: false,
                     });
                     const t1 = performance.now();
@@ -129,6 +129,8 @@ export default function LoginPage() {
                     }
                   } else setError(true);
                   setClicked(false);
+                  // setUsername("");
+                  setPassword("");
                 }}
               >
                 {isClicked ? "Logging in..." : "Log in"}
