@@ -15,6 +15,7 @@ import {
 } from "chart.js";
 import { Sheet, Typography } from "@mui/joy";
 import { url } from "../utils/utils";
+import Loading from "./Loading";
 
 ChartJS.register(
   TimeScale,
@@ -29,6 +30,8 @@ ChartJS.register(
 );
 
 export default function CPU() {
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const ws = new WebSocket(url);
 
@@ -37,6 +40,7 @@ export default function CPU() {
       const data = JSON.parse(message.data);
       // if message is about server status, update relevant status
       if (data.type === "cpu") {
+        setLoading(false);
         let received = [];
         for (const item of data.usage.items) {
           // @ts-ignore
@@ -163,8 +167,12 @@ export default function CPU() {
           height: "90%",
         }}
       >
-        {/*// @ts-ignore*/}
-        <Chart type="line" data={dataset} options={options} />
+        {loading ? (
+          <Loading />
+        ) : (
+          // @ts-ignore
+          <Chart type="line" data={dataset} options={options} />
+        )}
       </Sheet>
     </Sheet>
   );
