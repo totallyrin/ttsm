@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { CssVarsProvider } from "@mui/joy/styles";
 import {
   Alert,
@@ -15,12 +15,14 @@ import {
 import Footer from "../components/Footer";
 import { signIn } from "next-auth/react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
 export default function LoginPage() {
   const [isClicked, setClicked] = useState(false);
   const [isError, setError] = useState(false);
-  const username = useRef("");
-  const password = useRef("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
 
   return (
     <CssBaseline>
@@ -71,12 +73,12 @@ export default function LoginPage() {
                 <FormLabel sx={{ pl: 1 }}>Username</FormLabel>
                 <Input
                   required
-                  // html input attribute
                   name="username"
                   type="username"
                   placeholder="username"
-                  onChange={(event) => {
-                    username.current = event.target.value;
+                  value={username}
+                  onInput={(event) => {
+                    setUsername((event.target as HTMLInputElement).value);
                   }}
                   onSubmit={(event) => {
                     event.preventDefault();
@@ -90,8 +92,9 @@ export default function LoginPage() {
                   name="password"
                   type="password"
                   placeholder="password"
-                  onChange={(event) => {
-                    password.current = event.target.value;
+                  value={password}
+                  onInput={(event) => {
+                    setPassword((event.target as HTMLInputElement).value);
                   }}
                   onSubmit={(event) => {
                     event.preventDefault();
@@ -105,27 +108,29 @@ export default function LoginPage() {
                 sx={{ width: "100%", mt: 4 /* margin top */ }}
                 onClick={async (e) => {
                   setClicked(true);
-                  if (username.current !== "" && password.current !== "") {
+                  if (username !== "" && password !== "") {
                     e.preventDefault();
 
                     const t0 = performance.now();
                     const result = await signIn("credentials", {
-                      username: username.current,
-                      password: password.current,
-                      // redirect: false,
-                      callbackUrl: "/home",
+                      username: username,
+                      password: password,
+                      redirect: false,
                     });
                     const t1 = performance.now();
                     console.log(`Login in ${t1 - t0}ms`);
 
                     await result;
 
-                    // if (result?.ok) {
-                    //     const session = await getSession();
-                    //     console.log(session?.user?.name);
-                    // }
+                    if (result?.ok) {
+                      await router.push("/home");
+                    } else {
+                      setError(true);
+                    }
                   } else setError(true);
                   setClicked(false);
+                  // setUsername("");
+                  setPassword("");
                 }}
               >
                 {isClicked ? "Logging in..." : "Log in"}
