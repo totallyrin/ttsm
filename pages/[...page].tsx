@@ -98,7 +98,7 @@ export default function Page() {
   }, [serverList]);
 
   const [dashboard, setDashboard] = useState(router.query.page);
-  const [page, setPage] = useState<JSX.Element>(<BasicLayout />);
+  const [page, setPage] = useState(<BasicLayout />);
 
   useEffect(() => {
     if (!router.isReady) return;
