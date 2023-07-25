@@ -30,16 +30,12 @@ export default function Game({ theme, username, role, runningList, game }) {
           "--ListItem-paddingY": "1rem",
         }}
       >
-        {game && (
-          <ServerListItem
-            // @ts-ignore
-            game={game}
-            url={url}
-            auth={role !== "no-auth"}
-            // @ts-ignore
-            running={runningList[game]}
-          />
-        )}
+        <ServerListItem
+          game={game}
+          url={url}
+          auth={role !== "no-auth"}
+          running={runningList[game]}
+        />
       </List>
       <Console username={username} role={role} game={game} />
       {role === "admin" && <Config username={username} game={game} />}

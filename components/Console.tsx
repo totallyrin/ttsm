@@ -9,6 +9,8 @@ export default function Console({ username, role, game }) {
   ]);
   const sheetRef = useRef<null | any>(null);
 
+  useEffect(() => {}, [game]);
+
   useEffect(() => {
     // scroll to bottom of console when a new log is added
     if (sheetRef.current) {
@@ -20,6 +22,7 @@ export default function Console({ username, role, game }) {
 
   // open single websocket
   useEffect(() => {
+    setLogs([]);
     const ws = new WebSocket(url);
     setWs(ws);
     // receive messages from server
@@ -49,7 +52,7 @@ export default function Console({ username, role, game }) {
         }
       }
     };
-  }, [username]);
+  }, [game]);
 
   const [command, setCommand] = useState("");
   const sendConsoleCommand = (event) => {
