@@ -76,7 +76,8 @@ export default function LoginPage() {
                   name="username"
                   type="username"
                   placeholder="username"
-                  onChange={(event) => {
+                  onInput={(event) => {
+                    // @ts-ignore
                     username.current = event.target.value;
                   }}
                   onSubmit={(event) => {
@@ -91,7 +92,8 @@ export default function LoginPage() {
                   name="password"
                   type="password"
                   placeholder="password"
-                  onChange={(event) => {
+                  onInput={(event) => {
+                    // @ts-ignore
                     password.current = event.target.value;
                   }}
                   onSubmit={(event) => {
