@@ -116,7 +116,9 @@ export default function Page() {
     if (auth) {
       let title = "Loading...";
       if (typeof dashboard === "string") {
-        title = dashboard.charAt(0).toUpperCase() + dashboard.slice(1);
+        title = dashboard.includes("servers/")
+          ? "Servers"
+          : dashboard.charAt(0).toUpperCase() + dashboard.slice(1);
         setPage(
           <Layout
             username={username}
