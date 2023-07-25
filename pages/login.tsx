@@ -15,12 +15,14 @@ import {
 import Footer from "../components/Footer";
 import { signIn } from "next-auth/react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
 export default function LoginPage() {
   const [isClicked, setClicked] = useState(false);
   const [isError, setError] = useState(false);
   const username = useRef("");
   const password = useRef("");
+  const router = useRouter();
 
   return (
     <CssBaseline>
@@ -71,7 +73,6 @@ export default function LoginPage() {
                 <FormLabel sx={{ pl: 1 }}>Username</FormLabel>
                 <Input
                   required
-                  // html input attribute
                   name="username"
                   type="username"
                   placeholder="username"
@@ -112,18 +113,18 @@ export default function LoginPage() {
                     const result = await signIn("credentials", {
                       username: username.current,
                       password: password.current,
-                      // redirect: false,
-                      callbackUrl: "/home",
+                      redirect: false,
                     });
                     const t1 = performance.now();
                     console.log(`Login in ${t1 - t0}ms`);
 
                     await result;
 
-                    // if (result?.ok) {
-                    //     const session = await getSession();
-                    //     console.log(session?.user?.name);
-                    // }
+                    if (result?.ok) {
+                      await router.push("/home");
+                    } else {
+                      setError(true);
+                    }
                   } else setError(true);
                   setClicked(false);
                 }}
