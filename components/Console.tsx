@@ -3,13 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import { Input, Sheet, Typography } from "@mui/joy";
 import { url } from "../utils/utils";
 
-export default function Console({ username, role, game }) {
+export default function Console({ role, game }) {
   const [logs, setLogs] = useState<string[]>([
     // 'TTSM: Console loaded',
   ]);
   const sheetRef = useRef<null | any>(null);
-
-  useEffect(() => {}, [game]);
 
   useEffect(() => {
     // scroll to bottom of console when a new log is added
@@ -22,9 +20,12 @@ export default function Console({ username, role, game }) {
 
   // open single websocket
   useEffect(() => {
-    setLogs([]);
+    setLogs(["Loading..."]);
     const ws = new WebSocket(url);
     setWs(ws);
+    ws.onopen = () => {
+      setLogs([]);
+    };
     // receive messages from server
     ws.onmessage = function (event) {
       // get data from message
