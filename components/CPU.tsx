@@ -14,6 +14,7 @@ import {
   Tooltip,
 } from "chart.js";
 import { Sheet, Typography } from "@mui/joy";
+import { url } from "../utils/utils";
 
 ChartJS.register(
   TimeScale,
@@ -27,7 +28,7 @@ ChartJS.register(
   Filler,
 );
 
-export default function CPU({ url }) {
+export default function CPU() {
   useEffect(() => {
     const ws = new WebSocket(url);
 

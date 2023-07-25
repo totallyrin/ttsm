@@ -15,6 +15,7 @@ import {
   Tooltip,
 } from "chart.js";
 import { Sheet, Typography } from "@mui/joy";
+import { url } from "../utils/utils";
 
 ChartJS.register(
   TimeScale,
@@ -29,7 +30,7 @@ ChartJS.register(
   Filler,
 );
 
-export default function Memory({ url }) {
+export default function Memory() {
   useEffect(() => {
     const ws = new WebSocket(url);
 
@@ -48,7 +49,7 @@ export default function Memory({ url }) {
     };
 
     return () => ws.close();
-  }, [url]);
+  }, []);
 
   const [chartData, setChartData] = useState<
     { time: number; usage: number | StorageEstimate }[]
