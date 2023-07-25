@@ -5,7 +5,9 @@ export default class MyDocument extends Document {
   render() {
     return (
       <Html>
-        <Head></Head>
+        <Head>
+          <link rel="icon" href="/ico.png" />
+        </Head>
         <body>
           {getInitColorSchemeScript()}
           <Main />

@@ -11,8 +11,12 @@ export default function Config({ username, game }) {
 
   // open single websocket
   useEffect(() => {
+    setConfig("Loading...");
     const ws = new WebSocket(url);
     setWs(ws);
+    ws.onopen = () => {
+      setConfig("");
+    };
     // receive messages from server
     ws.onmessage = function (event) {
       // get data from message
@@ -30,7 +34,7 @@ export default function Config({ username, game }) {
         }
       }
     };
-  }, [username]);
+  }, [username, game]);
 
   const handleSave = (event) => {
     event.preventDefault();

@@ -1,5 +1,4 @@
 import { Sheet } from "@mui/joy";
-import { url } from "../../utils/utils";
 import CPU from "../CPU";
 import Memory from "../Memory";
 
@@ -13,8 +12,8 @@ export default function System({ theme }) {
         gridRowGap: theme.spacing(4),
       }}
     >
-      <CPU url={url} />
-      <Memory url={url} />
+      <CPU />
+      <Memory />
     </Sheet>
   );
 }

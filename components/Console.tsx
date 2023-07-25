@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Input, Sheet, Typography } from "@mui/joy";
 import { url } from "../utils/utils";
 
-export default function Console({ username, role, game }) {
+export default function Console({ role, game }) {
   const [logs, setLogs] = useState<string[]>([
     // 'TTSM: Console loaded',
   ]);
@@ -20,8 +20,12 @@ export default function Console({ username, role, game }) {
 
   // open single websocket
   useEffect(() => {
+    setLogs(["Loading..."]);
     const ws = new WebSocket(url);
     setWs(ws);
+    ws.onopen = () => {
+      setLogs([]);
+    };
     // receive messages from server
     ws.onmessage = function (event) {
       // get data from message
@@ -49,7 +53,7 @@ export default function Console({ username, role, game }) {
         }
       }
     };
-  }, [username]);
+  }, [game]);
 
   const [command, setCommand] = useState("");
   const sendConsoleCommand = (event) => {

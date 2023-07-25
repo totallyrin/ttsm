@@ -15,6 +15,8 @@ import {
   Tooltip,
 } from "chart.js";
 import { Sheet, Typography } from "@mui/joy";
+import { url } from "../utils/utils";
+import Loading from "./Loading";
 
 ChartJS.register(
   TimeScale,
@@ -29,7 +31,9 @@ ChartJS.register(
   Filler,
 );
 
-export default function Memory({ url }) {
+export default function Memory() {
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const ws = new WebSocket(url);
 
@@ -38,6 +42,7 @@ export default function Memory({ url }) {
       const data = JSON.parse(message.data);
       // if message is about server status, update relevant status
       if (data.type === "memory") {
+        setLoading(false);
         let received = [];
         for (const item of data.usage.items) {
           // @ts-ignore
@@ -48,7 +53,7 @@ export default function Memory({ url }) {
     };
 
     return () => ws.close();
-  }, [url]);
+  }, []);
 
   const [chartData, setChartData] = useState<
     { time: number; usage: number | StorageEstimate }[]
@@ -164,8 +169,12 @@ export default function Memory({ url }) {
           height: "90%",
         }}
       >
-        {/*// @ts-ignore*/}
-        <Chart type="line" data={dataset} options={options} />
+        {loading ? (
+          <Loading />
+        ) : (
+          // @ts-ignore
+          <Chart type="line" data={dataset} options={options} />
+        )}
       </Sheet>
     </Sheet>
   );
