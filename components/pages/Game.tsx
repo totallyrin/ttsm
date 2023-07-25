@@ -37,7 +37,7 @@ export default function Game({ theme, username, role, runningList, game }) {
           running={runningList[game]}
         />
       </List>
-      <Console username={username} role={role} game={game} />
+      <Console role={role} game={game} />
       {role === "admin" && <Config username={username} game={game} />}
     </Sheet>
   );

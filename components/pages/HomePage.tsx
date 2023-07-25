@@ -4,13 +4,7 @@ import Console from "../Console";
 import * as React from "react";
 import ServerListItem from "../ServerListItem";
 
-export default function HomePage({
-  theme,
-  username,
-  role,
-  serverList,
-  runningList,
-}) {
+export default function HomePage({ theme, role, serverList, runningList }) {
   return (
     <Sheet
       sx={{
@@ -48,7 +42,7 @@ export default function HomePage({
         ))}
       </List>
       <Sheet>
-        <Console username={username} role={role} game={undefined} />
+        <Console role={role} game={undefined} />
       </Sheet>
     </Sheet>
   );

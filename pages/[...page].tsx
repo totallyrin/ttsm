@@ -131,7 +131,6 @@ export default function Page() {
             {dashboard === "home" && (
               <HomePage
                 theme={theme}
-                username={username}
                 role={role}
                 serverList={serverList}
                 runningList={runningList}
