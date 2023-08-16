@@ -13,15 +13,9 @@ import {
   Typography,
 } from "@mui/joy";
 
-function RoleSelect({ onChange }) {
+function RoleSelect({ name, onChange }) {
   return (
-    <Select
-      name="role"
-      // type="role"
-      defaultValue="user"
-      // value={addRole}
-      onChange={onChange}
-    >
+    <Select name={name} defaultValue="user" onChange={onChange}>
       <Option value="no-auth">No-auth</Option>
       <Option value="user">User</Option>
       <Option value="admin">Admin</Option>
@@ -47,6 +41,12 @@ function AddUser({ ws }) {
     }
   };
 
+  const handleRoleChange = (event, role) => {
+    setAddRole(role);
+    setAddError(false);
+    setAddSuccess(false);
+  };
+
   const handleInputChange = (event) => {
     switch (event.target.name) {
       case "addusername":
@@ -54,9 +54,6 @@ function AddUser({ ws }) {
         break;
       case "addpassword":
         setAddPassword(event.target.value);
-        break;
-      case "role":
-        setAddRole(event.target.value);
         break;
     }
     setAddError(false);
@@ -78,7 +75,7 @@ function AddUser({ ws }) {
     }
     setAddUsername("");
     setAddPassword("");
-    setAddRole("");
+    setAddRole("user");
     setAddError(false);
     setAddSuccess(false);
   };
@@ -130,7 +127,7 @@ function AddUser({ ws }) {
         </FormControl>
         <FormControl sx={{ mt: 2 }}>
           <FormLabel sx={{ pl: 1 }}>Role</FormLabel>
-          <RoleSelect onChange={handleInputChange} />
+          <RoleSelect name="addrole" onChange={handleRoleChange} />
         </FormControl>
         <Button type="submit" sx={{ width: "100%", mt: 6 /* margin top */ }}>
           Add user
@@ -142,7 +139,7 @@ function AddUser({ ws }) {
 
 function EditUser({ ws }) {
   const [editUsername, setEditUsername] = useState("");
-  const [editRole, setEditRole] = useState("");
+  const [editRole, setEditRole] = useState("user");
   const [editError, setEditError] = useState(false);
   const [editSuccess, setEditSuccess] = useState(false);
   const [editDisp, setEditDisp] = useState("");
@@ -156,15 +153,14 @@ function EditUser({ ws }) {
     }
   };
 
+  const handleRoleChange = (event, role) => {
+    setEditRole(role);
+    setEditError(false);
+    setEditSuccess(false);
+  };
+
   const handleInputChange = (event) => {
-    switch (event.target.name) {
-      case "editusername":
-        setEditUsername(event.target.value);
-        break;
-      case "role":
-        setEditRole(event.target.value);
-        break;
-    }
+    setEditUsername(event.target.value);
     setEditError(false);
     setEditSuccess(false);
   };
@@ -182,7 +178,7 @@ function EditUser({ ws }) {
       );
     }
     setEditUsername("");
-    setEditRole("");
+    setEditRole("user");
     setEditError(false);
     setEditSuccess(false);
   };
@@ -234,7 +230,7 @@ function EditUser({ ws }) {
 
         <FormControl sx={{ mt: 2 }}>
           <FormLabel sx={{ pl: 1 }}>Role</FormLabel>
-          <RoleSelect onChange={handleInputChange} />
+          <RoleSelect name="editrole" onChange={handleRoleChange} />
         </FormControl>
 
         <Button type="submit" sx={{ width: "100%", mt: 6 /* margin top */ }}>
