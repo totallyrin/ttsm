@@ -7,14 +7,32 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Option,
+  Select,
   Sheet,
   Typography,
 } from "@mui/joy";
 
+function RoleSelect({ onChange }) {
+  return (
+    <Select
+      name="role"
+      // type="role"
+      defaultValue="user"
+      // value={addRole}
+      onChange={onChange}
+    >
+      <Option value="no-auth">No-auth</Option>
+      <Option value="user">User</Option>
+      <Option value="admin">Admin</Option>
+    </Select>
+  );
+}
+
 function AddUser({ ws }) {
   const [addUsername, setAddUsername] = useState("");
   const [addPassword, setAddPassword] = useState("");
-  const [addRole, setAddRole] = useState("");
+  const [addRole, setAddRole] = useState("user");
   const [addError, setAddError] = useState(false);
   const [addSuccess, setAddSuccess] = useState(false);
   const [addDisp, setAddDisp] = useState("");
@@ -23,7 +41,7 @@ function AddUser({ ws }) {
   ws.onmessage = function (message) {
     // get data from message
     const data = JSON.parse(message.data);
-    if (data.type === "AddUser") {
+    if (data.type === "addUser") {
       data.success ? setAddSuccess(true) : setAddError(true);
       setAddDisp(data.username);
     }
@@ -31,10 +49,10 @@ function AddUser({ ws }) {
 
   const handleInputChange = (event) => {
     switch (event.target.name) {
-      case "username":
+      case "addusername":
         setAddUsername(event.target.value);
         break;
-      case "password":
+      case "addpassword":
         setAddPassword(event.target.value);
         break;
       case "role":
@@ -51,7 +69,7 @@ function AddUser({ ws }) {
       // send command to server
       ws.send(
         JSON.stringify({
-          type: "AddUser",
+          type: "addUser",
           username: addUsername,
           password: addPassword,
           role: addRole,
@@ -61,6 +79,8 @@ function AddUser({ ws }) {
     setAddUsername("");
     setAddPassword("");
     setAddRole("");
+    setAddError(false);
+    setAddSuccess(false);
   };
 
   return (
@@ -78,44 +98,39 @@ function AddUser({ ws }) {
       </Typography>
       {addError && (
         <Alert color="danger" variant="solid">
-          An error occurred; cannot add user {addDisp}.
+          An error occurred; cannot add user '{addDisp}'.
         </Alert>
       )}
       {addSuccess && (
         <Alert color="success" variant="solid">
-          User {addDisp} added successfully!
+          User '{addDisp}' added successfully!
         </Alert>
       )}
       <form onSubmit={handleSubmit}>
         <FormControl sx={{ mt: 2 }}>
           <FormLabel sx={{ pl: 1 }}>Username</FormLabel>
           <Input
-            name="username"
-            type="username"
+            name="addusername"
             placeholder="username"
             value={addUsername}
             onChange={handleInputChange}
+            required
+            autoComplete="off"
           />
         </FormControl>
         <FormControl sx={{ mt: 2 }}>
           <FormLabel sx={{ pl: 1 }}>Password</FormLabel>
           <Input
-            name="password"
-            type="password"
+            name="addpassword"
             placeholder="password"
             value={addPassword}
             onChange={handleInputChange}
+            autoComplete="off"
           />
         </FormControl>
         <FormControl sx={{ mt: 2 }}>
           <FormLabel sx={{ pl: 1 }}>Role</FormLabel>
-          <Input
-            name="role"
-            type="role"
-            placeholder="user"
-            value={addRole}
-            onChange={handleInputChange}
-          />
+          <RoleSelect onChange={handleInputChange} />
         </FormControl>
         <Button type="submit" sx={{ width: "100%", mt: 6 /* margin top */ }}>
           Add user
@@ -130,7 +145,6 @@ function EditUser({ ws }) {
   const [editRole, setEditRole] = useState("");
   const [editError, setEditError] = useState(false);
   const [editSuccess, setEditSuccess] = useState(false);
-  const [editIsClicked, setEditIsClicked] = useState(false);
   const [editDisp, setEditDisp] = useState("");
 
   ws.onmessage = function (message) {
@@ -140,6 +154,37 @@ function EditUser({ ws }) {
       data.success ? setEditSuccess(true) : setEditError(true);
       setEditDisp(data.username);
     }
+  };
+
+  const handleInputChange = (event) => {
+    switch (event.target.name) {
+      case "editusername":
+        setEditUsername(event.target.value);
+        break;
+      case "role":
+        setEditRole(event.target.value);
+        break;
+    }
+    setEditError(false);
+    setEditSuccess(false);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (editUsername !== "") {
+      // send command to server
+      ws.send(
+        JSON.stringify({
+          type: "editUser",
+          username: editUsername,
+          role: editRole,
+        }),
+      );
+    }
+    setEditUsername("");
+    setEditRole("");
+    setEditError(false);
+    setEditSuccess(false);
   };
 
   return (
@@ -164,98 +209,35 @@ function EditUser({ ws }) {
 
       {editError && (
         <Alert color="danger" variant="solid">
-          An error occurred; cannot edit user {editDisp}.
+          An error occurred; cannot edit user '{editDisp}'.
         </Alert>
       )}
 
       {editSuccess && (
         <Alert color="success" variant="solid">
-          User {editDisp} edited successfully!
+          User '{editDisp}' edited successfully!
         </Alert>
       )}
 
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={handleSubmit}>
         <FormControl sx={{ mt: 2 }}>
           <FormLabel sx={{ pl: 1 }}>Username</FormLabel>
           <Input
-            name="username"
-            type="username"
+            name="editusername"
             placeholder="username"
             value={editUsername}
-            onChange={(event) => {
-              setEditUsername(event.target.value);
-              setEditError(false);
-              setEditSuccess(false);
-            }}
-            onSubmit={(event) => {
-              event.preventDefault();
-              setEditError(false);
-              setEditSuccess(false);
-            }}
+            onChange={handleInputChange}
+            required
+            autoComplete="off"
           />
         </FormControl>
 
         <FormControl sx={{ mt: 2 }}>
           <FormLabel sx={{ pl: 1 }}>Role</FormLabel>
-          <Input
-            name="role"
-            type="role"
-            placeholder="user"
-            value={editRole}
-            onChange={(event) => {
-              setEditRole(event.target.value);
-              setEditError(false);
-              setEditSuccess(false);
-            }}
-            onSubmit={(event) => {
-              event.preventDefault();
-              setEditError(false);
-              setEditSuccess(false);
-            }}
-          />
+          <RoleSelect onChange={handleInputChange} />
         </FormControl>
 
-        <Button
-          type="submit"
-          disabled={editIsClicked}
-          sx={{ width: "100%", mt: 6 /* margin top */ }}
-          onClick={async (e) => {
-            setEditIsClicked(true);
-            setEditError(false);
-            setEditSuccess(false);
-            if (editUsername !== "") {
-              e.preventDefault();
-              // send command to server
-              if (ws) {
-                console.log();
-                ws.send(
-                  JSON.stringify({
-                    type: "editUser",
-                    username: editUsername,
-                    role: editRole,
-                  }),
-                );
-              } else {
-                const websocket = new WebSocket(url);
-
-                websocket.onopen = async () => {
-                  await websocket.send(
-                    JSON.stringify({
-                      type: "editUser",
-                      username: editUsername,
-                      role: editRole,
-                    }),
-                  );
-
-                  websocket.close();
-                };
-              }
-            }
-            setEditUsername("");
-            setEditRole("");
-            setEditIsClicked(false);
-          }}
-        >
+        <Button type="submit" sx={{ width: "100%", mt: 6 /* margin top */ }}>
           Edit user
         </Button>
       </form>
@@ -267,7 +249,6 @@ function DelUser({ ws }) {
   const [delUsername, setDelUsername] = useState("");
   const [delError, setDelError] = useState(false);
   const [delSuccess, setDelSuccess] = useState(false);
-  const [delIsClicked, setDelIsClicked] = useState(false);
   const [delDisp, setDelDisp] = useState("");
 
   // receive messages from server
@@ -302,24 +283,39 @@ function DelUser({ ws }) {
 
       {delError && (
         <Alert color="danger" variant="solid">
-          An error occurred; cannot delete user {delDisp}.
+          An error occurred; cannot delete user '{delDisp}'.
         </Alert>
       )}
 
       {delSuccess && (
         <Alert color="success" variant="solid">
-          User {delDisp} deleted successfully!
+          User '{delDisp}' deleted successfully!
         </Alert>
       )}
 
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (delUsername !== "") {
+            // send command to server
+            ws.send(
+              JSON.stringify({
+                type: "delUser",
+                username: delUsername,
+              }),
+            );
+          }
+          setDelUsername("");
+        }}
+      >
         <FormControl sx={{ mt: 2 }}>
           <FormLabel sx={{ pl: 1 }}>Username</FormLabel>
           <Input
-            name="username"
-            type="username"
+            name="delusername"
             placeholder="username"
             value={delUsername}
+            required
+            autoComplete="off"
             onChange={(event) => {
               setDelUsername(event.target.value);
               setDelError(false);
@@ -333,43 +329,7 @@ function DelUser({ ws }) {
           />
         </FormControl>
 
-        <Button
-          type="submit"
-          disabled={delIsClicked}
-          sx={{ width: "100%", mt: 6 /* margin top */ }}
-          onClick={async (e) => {
-            setDelIsClicked(true);
-            setDelError(false);
-            setDelSuccess(false);
-            if (delUsername !== "") {
-              e.preventDefault();
-              // send command to server
-              if (ws) {
-                ws.send(
-                  JSON.stringify({
-                    type: "delUser",
-                    username: delUsername,
-                  }),
-                );
-              } else {
-                const websocket = new WebSocket(url);
-
-                websocket.onopen = () => {
-                  websocket.send(
-                    JSON.stringify({
-                      type: "delUser",
-                      username: delUsername,
-                    }),
-                  );
-                };
-
-                websocket.close();
-              }
-            }
-            setDelUsername("");
-            setDelIsClicked(false);
-          }}
-        >
+        <Button type="submit" sx={{ width: "100%", mt: 6 /* margin top */ }}>
           Delete user
         </Button>
       </form>
