@@ -57,11 +57,21 @@ export default function Admin({ theme, username }) {
               }}
             >
               {/* add user */}
-              <AddUser ws={ws} />
+              <AddUser ws={ws} setUsers={setUsers} />
               {/* edit user */}
-              <EditUser username={username} users={users} ws={ws} />
+              <EditUser
+                username={username}
+                users={users}
+                ws={ws}
+                setUsers={setUsers}
+              />
               {/* delete user */}
-              <DelUser username={username} users={users} ws={ws} />
+              <DelUser
+                username={username}
+                users={users}
+                ws={ws}
+                setUsers={setUsers}
+              />
             </Sheet>
           </Sheet>
         </Sheet>,

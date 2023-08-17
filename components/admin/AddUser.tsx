@@ -11,7 +11,7 @@ import {
 } from "@mui/joy";
 import RoleSelect from "./RoleSelect";
 
-export default function AddUser({ ws }) {
+export default function AddUser({ ws, setUsers }) {
   const [addUsername, setAddUsername] = useState("");
   const [addPassword, setAddPassword] = useState("");
   const [addRole, setAddRole] = useState("user");
@@ -24,7 +24,15 @@ export default function AddUser({ ws }) {
     // get data from message
     const data = JSON.parse(message.data);
     if (data.type === "addUser") {
-      data.success ? setAddSuccess(true) : setAddError(true);
+      if (data.success) {
+        setUsers((prevUsers) => [
+          ...prevUsers,
+          { username: data.username, role: data.role },
+        ]);
+        setAddSuccess(true);
+      } else {
+        setAddError(true);
+      }
       setAddDisp(data.username);
     }
   };
@@ -63,7 +71,6 @@ export default function AddUser({ ws }) {
     }
     setAddUsername("");
     setAddPassword("");
-    setAddRole("user");
     setAddError(false);
     setAddSuccess(false);
   };

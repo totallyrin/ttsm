@@ -10,7 +10,7 @@ import {
 } from "@mui/joy";
 import UserSelect from "./UserSelect";
 
-export default function DelUser({ username, users, ws }) {
+export default function DelUser({ username, users, ws, setUsers }) {
   const [delUsername, setDelUsername] = useState("");
   const [delError, setDelError] = useState(false);
   const [delSuccess, setDelSuccess] = useState(false);
@@ -21,7 +21,14 @@ export default function DelUser({ username, users, ws }) {
     // get data from message
     const data = JSON.parse(message.data);
     if (data.type === "delUser") {
-      data.success ? setDelSuccess(true) : setDelError(true);
+      if (data.success) {
+        setUsers((prevUsers) =>
+          prevUsers.filter((user) => user.username !== data.username),
+        );
+        setDelSuccess(true);
+      } else {
+        setDelError(true);
+      }
       setDelDisp(data.username);
     }
   };
@@ -70,34 +77,16 @@ export default function DelUser({ username, users, ws }) {
               }),
             );
           }
-          setDelUsername("");
         }}
       >
         <FormControl sx={{ mt: 2 }}>
           <FormLabel sx={{ pl: 1 }}>Username</FormLabel>
-          {/*<Input*/}
-          {/*  name="delusername"*/}
-          {/*  placeholder="username"*/}
-          {/*  value={delUsername}*/}
-          {/*  required*/}
-          {/*  autoComplete="off"*/}
-          {/*  onChange={(event) => {*/}
-          {/*    setDelUsername(event.target.value);*/}
-          {/*    setDelError(false);*/}
-          {/*    setDelSuccess(false);*/}
-          {/*  }}*/}
-          {/*  onSubmit={(event) => {*/}
-          {/*    event.preventDefault();*/}
-          {/*    setDelError(false);*/}
-          {/*    setDelSuccess(false);*/}
-          {/*  }}*/}
-          {/*/>*/}
           <UserSelect
             username={username}
             users={users}
             name="delusername"
-            onChange={(event, username) => {
-              setDelUsername(username);
+            onChange={(event, user) => {
+              user ? setDelUsername(user.username) : setDelUsername("");
               setDelSuccess(false);
             }}
           />

@@ -11,7 +11,7 @@ import {
 import RoleSelect from "./RoleSelect";
 import UserSelect from "./UserSelect";
 
-export default function EditUser({ username, ws, users }) {
+export default function EditUser({ username, ws, users, setUsers }) {
   const [editUsername, setEditUsername] = useState("");
   const [editRole, setEditRole] = useState("user");
   const [editError, setEditError] = useState(false);
@@ -22,7 +22,18 @@ export default function EditUser({ username, ws, users }) {
     // get data from message
     const data = JSON.parse(message.data);
     if (data.type === "editUser") {
-      data.success ? setEditSuccess(true) : setEditError(true);
+      if (data.success) {
+        setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user.username === data.username
+              ? { ...user, role: data.role }
+              : user,
+          ),
+        );
+        setEditSuccess(true);
+      } else {
+        setEditError(true);
+      }
       setEditDisp(data.username);
     }
   };
@@ -33,8 +44,8 @@ export default function EditUser({ username, ws, users }) {
     setEditSuccess(false);
   };
 
-  const handleUsernameChange = (event, username) => {
-    setEditUsername(username);
+  const handleUsernameChange = (event, user) => {
+    user ? setEditUsername(user.username) : setEditUsername("");
     setEditError(false);
     setEditSuccess(false);
   };
@@ -51,8 +62,6 @@ export default function EditUser({ username, ws, users }) {
         }),
       );
     }
-    setEditUsername("");
-    setEditRole("user");
     setEditError(false);
     setEditSuccess(false);
   };
@@ -92,14 +101,6 @@ export default function EditUser({ username, ws, users }) {
       <form onSubmit={handleSubmit}>
         <FormControl sx={{ mt: 2 }}>
           <FormLabel sx={{ pl: 1 }}>Username</FormLabel>
-          {/*<Input*/}
-          {/*  name="editusername"*/}
-          {/*  placeholder="username"*/}
-          {/*  value={editUsername}*/}
-          {/*  onChange={handleInputChange}*/}
-          {/*  required*/}
-          {/*  autoComplete="off"*/}
-          {/*/>*/}
           <UserSelect
             username={username}
             users={users}
