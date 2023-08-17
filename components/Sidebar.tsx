@@ -78,7 +78,7 @@ export default function Sidebar({ role, serverList, onPageChange }) {
           </Typography>
         </Button>
       </ListItem>
-      {role === "admin" && (
+      {role === ("owner" || "admin") && (
         <ListItem sx={{ width: "100%" }}>
           <Button
             variant="plain"

@@ -102,7 +102,7 @@ export default function Console({ role, game }) {
           ))}
         </Sheet>
       </Sheet>
-      {game && role === "admin" && (
+      {game && role === ("owner" || "admin") && (
         <form onSubmit={sendCommand}>
           <Input
             value={command}
