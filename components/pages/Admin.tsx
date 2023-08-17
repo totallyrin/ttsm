@@ -1,340 +1,14 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { url } from "../../utils/utils";
-import {
-  Alert,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  Option,
-  Select,
-  Sheet,
-  Typography,
-} from "@mui/joy";
-
-function RoleSelect({ name, onChange }) {
-  return (
-    <Select name={name} defaultValue="user" onChange={onChange}>
-      <Option value="no-auth">No-auth</Option>
-      <Option value="user">User</Option>
-      <Option value="admin">Admin</Option>
-    </Select>
-  );
-}
-
-function AddUser({ ws }) {
-  const [addUsername, setAddUsername] = useState("");
-  const [addPassword, setAddPassword] = useState("");
-  const [addRole, setAddRole] = useState("user");
-  const [addError, setAddError] = useState(false);
-  const [addSuccess, setAddSuccess] = useState(false);
-  const [addDisp, setAddDisp] = useState("");
-
-  // receive messages from server
-  ws.onmessage = function (message) {
-    // get data from message
-    const data = JSON.parse(message.data);
-    if (data.type === "addUser") {
-      data.success ? setAddSuccess(true) : setAddError(true);
-      setAddDisp(data.username);
-    }
-  };
-
-  const handleRoleChange = (event, role) => {
-    setAddRole(role);
-    setAddError(false);
-    setAddSuccess(false);
-  };
-
-  const handleInputChange = (event) => {
-    switch (event.target.name) {
-      case "addusername":
-        setAddUsername(event.target.value);
-        break;
-      case "addpassword":
-        setAddPassword(event.target.value);
-        break;
-    }
-    setAddError(false);
-    setAddSuccess(false);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (addUsername !== "") {
-      // send command to server
-      ws.send(
-        JSON.stringify({
-          type: "addUser",
-          username: addUsername,
-          password: addPassword,
-          role: addRole,
-        }),
-      );
-    }
-    setAddUsername("");
-    setAddPassword("");
-    setAddRole("user");
-    setAddError(false);
-    setAddSuccess(false);
-  };
-
-  return (
-    <Sheet
-      variant="outlined"
-      sx={{
-        p: 4,
-        borderRadius: "sm",
-        boxShadow: "sm",
-        display: "grid",
-      }}
-    >
-      <Typography level="h4" sx={{ alignSelf: "center", mb: 1 }}>
-        Add user
-      </Typography>
-      {addError && (
-        <Alert color="danger" variant="solid">
-          An error occurred; cannot add user '{addDisp}'.
-        </Alert>
-      )}
-      {addSuccess && (
-        <Alert color="success" variant="solid">
-          User '{addDisp}' added successfully!
-        </Alert>
-      )}
-      <form onSubmit={handleSubmit}>
-        <FormControl sx={{ mt: 2 }}>
-          <FormLabel sx={{ pl: 1 }}>Username</FormLabel>
-          <Input
-            name="addusername"
-            placeholder="username"
-            value={addUsername}
-            onChange={handleInputChange}
-            required
-            autoComplete="off"
-          />
-        </FormControl>
-        <FormControl sx={{ mt: 2 }}>
-          <FormLabel sx={{ pl: 1 }}>Password</FormLabel>
-          <Input
-            name="addpassword"
-            placeholder="password"
-            value={addPassword}
-            onChange={handleInputChange}
-            autoComplete="off"
-          />
-        </FormControl>
-        <FormControl sx={{ mt: 2 }}>
-          <FormLabel sx={{ pl: 1 }}>Role</FormLabel>
-          <RoleSelect name="addrole" onChange={handleRoleChange} />
-        </FormControl>
-        <Button type="submit" sx={{ width: "100%", mt: 6 /* margin top */ }}>
-          Add user
-        </Button>
-      </form>
-    </Sheet>
-  );
-}
-
-function EditUser({ ws }) {
-  const [editUsername, setEditUsername] = useState("");
-  const [editRole, setEditRole] = useState("user");
-  const [editError, setEditError] = useState(false);
-  const [editSuccess, setEditSuccess] = useState(false);
-  const [editDisp, setEditDisp] = useState("");
-
-  ws.onmessage = function (message) {
-    // get data from message
-    const data = JSON.parse(message.data);
-    if (data.type === "editUser") {
-      data.success ? setEditSuccess(true) : setEditError(true);
-      setEditDisp(data.username);
-    }
-  };
-
-  const handleRoleChange = (event, role) => {
-    setEditRole(role);
-    setEditError(false);
-    setEditSuccess(false);
-  };
-
-  const handleInputChange = (event) => {
-    setEditUsername(event.target.value);
-    setEditError(false);
-    setEditSuccess(false);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (editUsername !== "") {
-      // send command to server
-      ws.send(
-        JSON.stringify({
-          type: "editUser",
-          username: editUsername,
-          role: editRole,
-        }),
-      );
-    }
-    setEditUsername("");
-    setEditRole("user");
-    setEditError(false);
-    setEditSuccess(false);
-  };
-
-  return (
-    <Sheet
-      variant="outlined"
-      sx={{
-        p: 4,
-        borderRadius: "sm",
-        boxShadow: "sm",
-        display: "grid",
-      }}
-    >
-      <Typography
-        level="h4"
-        sx={{
-          alignSelf: "center",
-          mb: 1,
-        }}
-      >
-        Edit user
-      </Typography>
-
-      {editError && (
-        <Alert color="danger" variant="solid">
-          An error occurred; cannot edit user '{editDisp}'.
-        </Alert>
-      )}
-
-      {editSuccess && (
-        <Alert color="success" variant="solid">
-          User '{editDisp}' edited successfully!
-        </Alert>
-      )}
-
-      <form onSubmit={handleSubmit}>
-        <FormControl sx={{ mt: 2 }}>
-          <FormLabel sx={{ pl: 1 }}>Username</FormLabel>
-          <Input
-            name="editusername"
-            placeholder="username"
-            value={editUsername}
-            onChange={handleInputChange}
-            required
-            autoComplete="off"
-          />
-        </FormControl>
-
-        <FormControl sx={{ mt: 2 }}>
-          <FormLabel sx={{ pl: 1 }}>Role</FormLabel>
-          <RoleSelect name="editrole" onChange={handleRoleChange} />
-        </FormControl>
-
-        <Button type="submit" sx={{ width: "100%", mt: 6 /* margin top */ }}>
-          Edit user
-        </Button>
-      </form>
-    </Sheet>
-  );
-}
-
-function DelUser({ ws }) {
-  const [delUsername, setDelUsername] = useState("");
-  const [delError, setDelError] = useState(false);
-  const [delSuccess, setDelSuccess] = useState(false);
-  const [delDisp, setDelDisp] = useState("");
-
-  // receive messages from server
-  ws.onmessage = function (message) {
-    // get data from message
-    const data = JSON.parse(message.data);
-    if (data.type === "delUser") {
-      data.success ? setDelSuccess(true) : setDelError(true);
-      setDelDisp(data.username);
-    }
-  };
-
-  return (
-    <Sheet
-      variant="outlined"
-      sx={{
-        p: 4,
-        borderRadius: "sm",
-        boxShadow: "sm",
-        display: "grid",
-      }}
-    >
-      <Typography
-        level="h4"
-        sx={{
-          alignSelf: "center",
-          mb: 1,
-        }}
-      >
-        Delete user
-      </Typography>
-
-      {delError && (
-        <Alert color="danger" variant="solid">
-          An error occurred; cannot delete user '{delDisp}'.
-        </Alert>
-      )}
-
-      {delSuccess && (
-        <Alert color="success" variant="solid">
-          User '{delDisp}' deleted successfully!
-        </Alert>
-      )}
-
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          if (delUsername !== "") {
-            // send command to server
-            ws.send(
-              JSON.stringify({
-                type: "delUser",
-                username: delUsername,
-              }),
-            );
-          }
-          setDelUsername("");
-        }}
-      >
-        <FormControl sx={{ mt: 2 }}>
-          <FormLabel sx={{ pl: 1 }}>Username</FormLabel>
-          <Input
-            name="delusername"
-            placeholder="username"
-            value={delUsername}
-            required
-            autoComplete="off"
-            onChange={(event) => {
-              setDelUsername(event.target.value);
-              setDelError(false);
-              setDelSuccess(false);
-            }}
-            onSubmit={(event) => {
-              event.preventDefault();
-              setDelError(false);
-              setDelSuccess(false);
-            }}
-          />
-        </FormControl>
-
-        <Button type="submit" sx={{ width: "100%", mt: 6 /* margin top */ }}>
-          Delete user
-        </Button>
-      </form>
-    </Sheet>
-  );
-}
+import { Sheet } from "@mui/joy";
+import AddUser from "../admin/AddUser";
+import EditUser from "../admin/EditUser";
+import DelUser from "../admin/DelUser";
 
 export default function Admin({ theme, username }) {
   const [ws, setWs] = useState<WebSocket | null>(null);
+  const [users, setUsers] = useState([]);
 
   // open single websocket
   useEffect(() => {
@@ -343,11 +17,16 @@ export default function Admin({ theme, username }) {
 
     websocket.onopen = () => {
       websocket.send(JSON.stringify({ type: "username", username: username }));
+      websocket.send(JSON.stringify({ type: "users" }));
     };
 
-    websocket.onclose = () => {
-      console.log("websocket was closed");
-    };
+    websocket.addEventListener("message", (message) => {
+      // get data from message
+      const data = JSON.parse(message.data);
+      if (data.type === "users") {
+        setUsers(data.users);
+      }
+    });
   }, []);
 
   const [page, setPage] = useState(<Sheet />);
@@ -373,22 +52,22 @@ export default function Admin({ theme, username }) {
               sx={{
                 display: "grid",
                 gridTemplateColumns: "1fr",
-                gridTemplateRows: "auto 1fr 1fr",
+                gridTemplateRows: "auto auto auto",
                 gridRowGap: theme.spacing(4),
               }}
             >
               {/* add user */}
               <AddUser ws={ws} />
               {/* edit user */}
-              <EditUser ws={ws} />
+              <EditUser username={username} users={users} ws={ws} />
               {/* delete user */}
-              <DelUser ws={ws} />
+              <DelUser username={username} users={users} ws={ws} />
             </Sheet>
           </Sheet>
         </Sheet>,
       );
     }
-  }, [ws]);
+  }, [ws, users]);
 
   return page;
 }
