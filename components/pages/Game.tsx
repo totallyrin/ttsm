@@ -11,7 +11,8 @@ export default function Game({ theme, username, role, runningList, game }) {
       sx={{
         display: "grid",
         gridTemplateColumns: "1fr",
-        gridTemplateRows: role === "admin" ? "auto 1fr 1fr" : "auto 1fr",
+        gridTemplateRows:
+          role === ("owner" || "admin") ? "auto 1fr 1fr" : "auto 1fr",
         gridRowGap: theme.spacing(4),
       }}
     >
@@ -38,7 +39,9 @@ export default function Game({ theme, username, role, runningList, game }) {
         />
       </List>
       <Console role={role} game={game} />
-      {role === "admin" && <Config username={username} game={game} />}
+      {role === ("owner" || "admin") && (
+        <Config username={username} game={game} />
+      )}
     </Sheet>
   );
 }
