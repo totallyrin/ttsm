@@ -1,10 +1,11 @@
-import { Button, Link, List, ListItem, Typography } from "@mui/joy";
+import { Button, Link, List, ListItem, Typography, useTheme } from "@mui/joy";
 import { useColorScheme } from "@mui/joy/styles";
 import * as React from "react";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { DarkModeRounded, LightModeRounded } from "@mui/icons-material";
+import { useMediaQuery } from "@mui/material";
 
-function ModeToggle() {
+function ModeToggle({ mobile }: { mobile: boolean }) {
   const { mode, setMode } = useColorScheme();
   const [mounted, setMounted] = React.useState(false);
 
@@ -26,6 +27,7 @@ function ModeToggle() {
       onClick={() => {
         setMode(mode === "light" ? "dark" : "light");
       }}
+      size={mobile ? "sm" : "md"}
     >
       {mode === "light" ? "Dark mode" : "Light mode"}
     </Button>
@@ -33,16 +35,17 @@ function ModeToggle() {
 }
 
 export default function footer() {
+  const theme = useTheme();
+  const mobile = useMediaQuery(theme.breakpoints.up("xs"));
+
   return (
     <List
       orientation="horizontal"
       variant="outlined"
       sx={{
         width: "auto",
-        mx: 4, // margin left & right
-        my: 4, // margin top & bottom
-        py: 1, // padding top & bottom
-        px: 1, // padding left & right
+        m: { xs: 2, s: 3, md: 4 },
+        p: { xs: 0.25, s: 0.5, md: 1 },
         borderRadius: "sm",
         boxShadow: "sm",
         flexGrow: 0,
@@ -55,10 +58,15 @@ export default function footer() {
       }}
     >
       <ListItem>
-        <ModeToggle />
+        <ModeToggle mobile={mobile} />
       </ListItem>
       <ListItem sx={{ alignSelf: "center" }}>
-        <Typography level="body2" fontSize="sm" sx={{ alignSelf: "center" }}>
+        <Typography
+          sx={{
+            alignSelf: "center",
+            fontSize: { xs: "xs", md: "sm" },
+          }}
+        >
           Made by Lucy Woloszczuk
         </Typography>
       </ListItem>
@@ -66,6 +74,7 @@ export default function footer() {
         <Link href="https://github.com/totallyrin/ttsm">
           <Button
             variant="soft"
+            size={mobile ? "sm" : "md"}
             // startDecorator={<KeyboardArrowLeft />}
             // endDecorator={<KeyboardArrowRight />}
             startDecorator={<GitHubIcon />}

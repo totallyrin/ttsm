@@ -1,8 +1,9 @@
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { CssBaseline, CssVarsProvider, Sheet } from "@mui/joy";
+import { CssBaseline, CssVarsProvider, Sheet, useTheme } from "@mui/joy";
 import Sidebar from "./Sidebar";
 import Head from "next/head";
+import { useMediaQuery } from "@mui/material";
 
 export default function Layout({
   username,
@@ -12,6 +13,9 @@ export default function Layout({
   children,
   onPageChange,
 }) {
+  const theme = useTheme();
+  const mobile = useMediaQuery(theme.breakpoints.up("xs"));
+
   return (
     <CssBaseline>
       <CssVarsProvider defaultMode="system">
@@ -34,14 +38,16 @@ export default function Layout({
               display: "grid",
               gridTemplateColumns: "auto 1fr",
               minWidth: "fit-content",
-              px: 4,
+              mx: { xs: 2, s: 3, md: 4 },
             }}
           >
-            <Sidebar
-              role={role}
-              serverList={serverList}
-              onPageChange={onPageChange}
-            />
+            {!mobile && (
+              <Sidebar
+                role={role}
+                serverList={serverList}
+                onPageChange={onPageChange}
+              />
+            )}
             {children}
           </Sheet>
           <Footer />
