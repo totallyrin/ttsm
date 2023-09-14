@@ -24,13 +24,15 @@ export default function Page() {
       const session = await getSession();
       setSession(session);
       if (!session) {
-        router.push("/login");
+        await router.push("/login");
       } else {
         setAuth(true);
       }
     }
 
-    checkSession();
+    checkSession().then(() => {
+      setAuth(true);
+    });
   }, []);
 
   const [username, setUsername] = useState("");
@@ -106,7 +108,7 @@ export default function Page() {
 
   const handlePageChange = (newPage) => {
     setDashboard(newPage);
-    router.push(`${newPage}`);
+    router.push(`${newPage}`).then();
   };
 
   const theme = useTheme();
