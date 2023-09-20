@@ -73,7 +73,7 @@ function EditLogin({ theme, username, property, onChange }) {
     <Sheet
       variant="outlined"
       sx={{
-        p: 4,
+        p: { xs: 2, md: 4 },
         borderRadius: "sm",
         boxShadow: "sm",
       }}
@@ -86,7 +86,7 @@ function EditLogin({ theme, username, property, onChange }) {
             gridTemplateColumns: "auto",
             gridTemplateRows:
               isError || isSuccess ? "auto 1fr auto" : "1fr auto",
-            gridRowGap: theme.spacing(2),
+            gridRowGap: { xs: theme.spacing(2), md: theme.spacing(4) },
             alignItems: "center",
           }}
         >
@@ -157,7 +157,7 @@ function EditLogin({ theme, username, property, onChange }) {
           <Button
             type="submit"
             disabled={isClicked}
-            sx={{ width: "100%", mt: 6 /* margin top */ }}
+            sx={{ width: "100%", mt: { xs: 3, md: 6 } /* margin top */ }}
             onClick={async (e) => {
               setClicked(true);
               setError(false);
@@ -203,13 +203,13 @@ export default function Account({ theme, username }) {
             display: "grid",
             gridTemplateColumns: "1fr",
             gridTemplateRows: "auto 1fr 1fr",
-            gridRowGap: theme.spacing(4),
+            gridRowGap: { xs: theme.spacing(2), md: theme.spacing(4) },
           }}
         >
           <Sheet
             variant="outlined"
             sx={{
-              p: 4,
+              p: { xs: 2, md: 4 },
               borderRadius: "sm",
               boxShadow: "sm",
               display: "flex",

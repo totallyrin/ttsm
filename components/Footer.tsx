@@ -1,4 +1,12 @@
-import { Button, Link, List, ListItem, Typography, useTheme } from "@mui/joy";
+import {
+  Button,
+  IconButton,
+  Link,
+  List,
+  ListItem,
+  Typography,
+  useTheme,
+} from "@mui/joy";
 import { useColorScheme } from "@mui/joy/styles";
 import * as React from "react";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -18,20 +26,34 @@ function ModeToggle({ mobile }: { mobile: boolean }) {
     return null;
   }
 
-  return (
-    <Button
-      variant="soft"
-      startDecorator={
-        mode === "light" ? <DarkModeRounded /> : <LightModeRounded />
-      }
-      onClick={() => {
-        setMode(mode === "light" ? "dark" : "light");
-      }}
-      size={mobile ? "sm" : "md"}
-    >
-      {mode === "light" ? "Dark mode" : "Light mode"}
-    </Button>
-  );
+  if (mobile)
+    return (
+      <IconButton
+        color="primary"
+        variant="soft"
+        onClick={() => {
+          setMode(mode === "light" ? "dark" : "light");
+        }}
+        size={mobile ? "sm" : "md"}
+      >
+        {mode === "light" ? <DarkModeRounded /> : <LightModeRounded />}
+      </IconButton>
+    );
+  else
+    return (
+      <Button
+        variant="soft"
+        startDecorator={
+          mode === "light" ? <DarkModeRounded /> : <LightModeRounded />
+        }
+        onClick={() => {
+          setMode(mode === "light" ? "dark" : "light");
+        }}
+        size={mobile ? "sm" : "md"}
+      >
+        {mode === "light" ? "Dark mode" : "Light mode"}
+      </Button>
+    );
 }
 
 export default function footer() {
@@ -53,8 +75,6 @@ export default function footer() {
         // position: 'fixed',
         // bottom: 0,
         justifyContent: "space-between",
-        "--ListItemDecorator-size": "48px",
-        "--ListItem-paddingY": "1rem",
       }}
     >
       <ListItem>
@@ -72,15 +92,23 @@ export default function footer() {
       </ListItem>
       <ListItem>
         <Link href="https://github.com/totallyrin/ttsm">
-          <Button
-            variant="soft"
-            size={mobile ? "sm" : "md"}
-            // startDecorator={<KeyboardArrowLeft />}
-            // endDecorator={<KeyboardArrowRight />}
-            startDecorator={<GitHubIcon />}
-          >
-            Github
-          </Button>
+          {mobile ? (
+            <IconButton
+              color="primary"
+              variant="soft"
+              size={mobile ? "sm" : "md"}
+            >
+              <GitHubIcon />
+            </IconButton>
+          ) : (
+            <Button
+              variant="soft"
+              size={mobile ? "sm" : "md"}
+              startDecorator={<GitHubIcon />}
+            >
+              Github
+            </Button>
+          )}
         </Link>
       </ListItem>
     </List>

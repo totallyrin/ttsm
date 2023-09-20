@@ -53,7 +53,7 @@ export default function Admin({ theme, username }) {
                 display: "grid",
                 gridTemplateColumns: "1fr",
                 gridTemplateRows: "auto auto auto",
-                gridRowGap: theme.spacing(4),
+                gridRowGap: { xs: theme.spacing(2), md: theme.spacing(4) },
               }}
             >
               {/* add user */}

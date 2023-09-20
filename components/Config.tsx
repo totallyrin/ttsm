@@ -102,7 +102,7 @@ export default function Config({ username, game }) {
             value={config}
             onChange={handleInputChange}
             sx={{
-              typography: "body3",
+              typography: "body-xs",
               height: "100%",
             }}
           />

@@ -1,7 +1,8 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Button, List, ListItem, Typography } from "@mui/joy";
+import { Badge, Button, List, ListItem, Typography, useTheme } from "@mui/joy";
 import { PlayArrowRounded, StopRounded } from "@mui/icons-material";
+import { useMediaQuery } from "@mui/material";
 
 export default function ServerListItem({
   url,
@@ -14,6 +15,8 @@ export default function ServerListItem({
   running: "pinging" | boolean;
   auth: boolean;
 }) {
+  const theme = useTheme();
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [loading, setLoading] = useState(false);
   const gameName =
     game === "pz"
@@ -36,11 +39,43 @@ export default function ServerListItem({
         }}
       >
         <ListItem>
-          <img
-            src={`../img/${game}.png`}
-            alt={game}
-            style={{ width: "64px", height: "64px" }}
-          />
+          {mobile ? (
+            <Badge
+              // badgeContent={
+              //   running === "pinging" || loading
+              //     ? "pinging"
+              //     : running
+              //     ? "online"
+              //     : "offline"
+              // }
+              color={
+                running === "pinging" || loading
+                  ? "warning"
+                  : running
+                  ? "success"
+                  : "danger"
+              }
+              size="lg"
+            >
+              <img
+                src={`../img/${game}.png`}
+                alt={game}
+                style={{
+                  width: mobile ? "48px" : "64px",
+                  height: mobile ? "48px" : "64px",
+                }}
+              />
+            </Badge>
+          ) : (
+            <img
+              src={`../img/${game}.png`}
+              alt={game}
+              style={{
+                width: mobile ? "48px" : "64px",
+                height: mobile ? "48px" : "64px",
+              }}
+            />
+          )}
         </ListItem>
         <ListItem
           sx={{
@@ -48,43 +83,49 @@ export default function ServerListItem({
             width: "30%",
           }}
         >
-          <Typography level="h6" sx={{ textAlign: "center" }}>
+          <Typography
+            level={mobile ? "title-sm" : "title-md"}
+            sx={{ textAlign: "center" }}
+          >
             {gameName}
           </Typography>
         </ListItem>
-        <ListItem
-          sx={{
-            justifyContent: "center",
-          }}
-        >
-          <Typography
-            level="h6"
-            id={`${game}-status`}
-            className={`status ${
-              running === "pinging" ? "" : running ? "online" : "offline"
-            }`}
+        {!mobile && (
+          <ListItem
             sx={{
-              color:
-                running === "pinging" || loading
-                  ? "#eeb132"
-                  : running
-                  ? "#6bb700"
-                  : "#ed3e42",
+              justifyContent: "center",
             }}
           >
-            {running === "pinging" || loading
-              ? "pinging"
-              : running
-              ? "online"
-              : "offline"}
-          </Typography>
-        </ListItem>
+            <Typography
+              level={mobile ? "title-sm" : "title-md"}
+              id={`${game}-status`}
+              className={`status ${
+                running === "pinging" ? "" : running ? "online" : "offline"
+              }`}
+              sx={{
+                color:
+                  running === "pinging" || loading
+                    ? "#eeb132"
+                    : running
+                    ? "#6bb700"
+                    : "#ed3e42",
+              }}
+            >
+              {running === "pinging" || loading
+                ? "pinging"
+                : running
+                ? "online"
+                : "offline"}
+            </Typography>
+          </ListItem>
+        )}
         <ListItem
           sx={{
             justifyContent: "center",
           }}
         >
           <Button
+            size={mobile ? "sm" : "md"}
             id={`${game}-button`}
             loading={running === "pinging" || loading}
             startDecorator={running ? <StopRounded /> : <PlayArrowRounded />}

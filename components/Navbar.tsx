@@ -1,4 +1,11 @@
-import { Button, List, ListItem, Typography, useTheme } from "@mui/joy";
+import {
+  Button,
+  IconButton,
+  List,
+  ListItem,
+  Typography,
+  useTheme,
+} from "@mui/joy";
 import * as React from "react";
 import { AccountCircleRounded, LogoutRounded } from "@mui/icons-material";
 import { signOut } from "next-auth/react";
@@ -9,16 +16,28 @@ function LogoutButton({ mobile }: { mobile: boolean }) {
     signOut({ callbackUrl: "/login" });
   };
 
-  return (
-    <Button
-      size={mobile ? "sm" : "md"}
-      variant="soft"
-      startDecorator={<LogoutRounded />}
-      onClick={handleSignOut}
-    >
-      Log out
-    </Button>
-  );
+  if (mobile)
+    return (
+      <IconButton
+        color="primary"
+        variant="soft"
+        onClick={handleSignOut}
+        size={mobile ? "sm" : "md"}
+      >
+        <LogoutRounded />
+      </IconButton>
+    );
+  else
+    return (
+      <Button
+        size={mobile ? "sm" : "md"}
+        variant="soft"
+        startDecorator={<LogoutRounded />}
+        onClick={handleSignOut}
+      >
+        Log out
+      </Button>
+    );
 }
 
 export default function Navbar({ username, onPageChange }) {
@@ -40,27 +59,36 @@ export default function Navbar({ username, onPageChange }) {
         flexGrow: 0,
         display: "flex",
         justifyContent: "space-between",
-        "--ListItemDecorator-size": "48px",
-        "--ListItem-paddingY": "1rem",
       }}
     >
       <ListItem>
         <LogoutButton mobile={mobile} />
       </ListItem>
       <ListItem>
-        <Typography sx={{ fontSize: { xs: "h6", xl: "h1" } }}>
+        <Typography sx={{ fontSize: { xs: "md", md: "lg" } }}>
           {username !== "" ? `Welcome, ${username}!` : "Welcome!"}
         </Typography>
       </ListItem>
       <ListItem>
-        <Button
-          variant="soft"
-          startDecorator={<AccountCircleRounded />}
-          onClick={() => onPageChange("account")}
-          size={mobile ? "sm" : "md"}
-        >
-          Account
-        </Button>
+        {mobile ? (
+          <IconButton
+            color="primary"
+            variant="soft"
+            onClick={() => onPageChange("account")}
+            size={mobile ? "sm" : "md"}
+          >
+            <AccountCircleRounded />
+          </IconButton>
+        ) : (
+          <Button
+            variant="soft"
+            startDecorator={<AccountCircleRounded />}
+            onClick={() => onPageChange("account")}
+            size={mobile ? "sm" : "md"}
+          >
+            Account
+          </Button>
+        )}
       </ListItem>
     </List>
   );

@@ -94,7 +94,7 @@ export default function Console({ role, game }) {
       >
         <Sheet sx={{ maxHeight: "10px", pb: 4 }}>
           {logs.map((log, index) => (
-            <Typography key={index} level="body3">
+            <Typography key={index} level="body-xs">
               {role === "no-auth"
                 ? "Console disabled; user" + " not approved"
                 : log}
@@ -105,6 +105,7 @@ export default function Console({ role, game }) {
       {game && role === ("owner" || "admin") && (
         <form onSubmit={sendCommand}>
           <Input
+            placeholder=">_"
             value={command}
             onChange={sendConsoleCommand}
             sx={{

@@ -37,7 +37,7 @@ export default function DelUser({ username, users, ws, setUsers }) {
     <Sheet
       variant="outlined"
       sx={{
-        p: 4,
+        p: { xs: 2, md: 4 },
         borderRadius: "sm",
         boxShadow: "sm",
         display: "grid",
@@ -79,7 +79,7 @@ export default function DelUser({ username, users, ws, setUsers }) {
           }
         }}
       >
-        <FormControl sx={{ mt: 2 }}>
+        <FormControl sx={{ mt: { xs: 1, md: 2 } }}>
           <FormLabel sx={{ pl: 1 }}>Username</FormLabel>
           <UserSelect
             username={username}
@@ -92,7 +92,10 @@ export default function DelUser({ username, users, ws, setUsers }) {
           />
         </FormControl>
 
-        <Button type="submit" sx={{ width: "100%", mt: 6 /* margin top */ }}>
+        <Button
+          type="submit"
+          sx={{ width: "100%", mt: { xs: 3, md: 6 } /* margin top */ }}
+        >
           Delete user
         </Button>
       </form>

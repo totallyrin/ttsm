@@ -13,7 +13,7 @@ export default function Game({ theme, username, role, runningList, game }) {
         gridTemplateColumns: "1fr",
         gridTemplateRows:
           role === ("owner" || "admin") ? "auto 1fr 1fr" : "auto 1fr",
-        gridRowGap: theme.spacing(4),
+        gridRowGap: { xs: theme.spacing(2), md: theme.spacing(4) },
       }}
     >
       <List
@@ -21,14 +21,10 @@ export default function Game({ theme, username, role, runningList, game }) {
         variant="outlined"
         sx={{
           width: "100%",
-          py: 1, // padding top & bottom
-          px: 1, // padding left & right
           borderRadius: "sm",
           boxShadow: "sm",
           flexGrow: 0,
           display: "inline-flex",
-          "--ListItemDecorator-size": "48px",
-          "--ListItem-paddingY": "1rem",
         }}
       >
         <ServerListItem

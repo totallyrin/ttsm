@@ -9,7 +9,7 @@ export default function System({ theme }) {
         display: "grid",
         gridTemplateColumns: "auto",
         gridTemplateRows: "1fr 1fr",
-        gridRowGap: theme.spacing(4),
+        gridRowGap: { xs: theme.spacing(2), md: theme.spacing(4) },
       }}
     >
       <CPU />

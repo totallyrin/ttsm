@@ -14,9 +14,10 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import { Sheet, Typography } from "@mui/joy";
+import { Sheet, Typography, useTheme } from "@mui/joy";
 import { url } from "../utils/utils";
 import Loading from "./Loading";
+import { useMediaQuery } from "@mui/material";
 
 ChartJS.register(
   TimeScale,
@@ -32,6 +33,8 @@ ChartJS.register(
 );
 
 export default function Memory() {
+  const theme = useTheme();
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -91,7 +94,7 @@ export default function Memory() {
           tooltipFormat: "HH:mm:ss",
         },
         title: {
-          display: true,
+          display: !mobile,
           text: "Time",
         },
         ticks: {
@@ -106,7 +109,7 @@ export default function Memory() {
       },
       y: {
         title: {
-          display: true,
+          display: !mobile,
           text: "Memory Usage (%)",
         },
         min: 0,
@@ -146,7 +149,7 @@ export default function Memory() {
     <Sheet
       variant="outlined"
       sx={{
-        p: 2,
+        p: { xs: 1, md: 2 },
         borderRadius: "sm",
         boxShadow: "sm",
         display: "flex",
@@ -156,7 +159,7 @@ export default function Memory() {
       }}
     >
       <Typography
-        level="h3"
+        level={mobile ? "title-md" : "h3"}
         sx={{
           alignSelf: "center",
           mb: 1,

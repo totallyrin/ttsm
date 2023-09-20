@@ -11,7 +11,7 @@ export default function HomePage({ theme, role, serverList, runningList }) {
         display: "grid",
         gridTemplateColumns: "1fr",
         gridTemplateRows: "auto 1fr",
-        gridRowGap: theme.spacing(4),
+        gridRowGap: { xs: theme.spacing(2), md: theme.spacing(4) },
       }}
     >
       <List
@@ -19,14 +19,11 @@ export default function HomePage({ theme, role, serverList, runningList }) {
         variant="outlined"
         sx={{
           width: "100%",
-          py: 1, // padding top & bottom
-          px: 1, // padding left & right
+          py: 1,
           borderRadius: "sm",
           boxShadow: "sm",
           flexGrow: 0,
           display: "inline-flex",
-          "--ListItemDecorator-size": "48px",
-          "--ListItem-paddingY": "1rem",
         }}
       >
         {serverList.map((game, index) => (

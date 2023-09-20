@@ -1,9 +1,10 @@
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { CssBaseline, CssVarsProvider, Sheet, useTheme } from "@mui/joy";
+import { Sheet, useTheme } from "@mui/joy";
 import Sidebar from "./Sidebar";
 import Head from "next/head";
 import { useMediaQuery } from "@mui/material";
+import SidebarDrawer from "./SidebarDrawer";
 
 export default function Layout({
   username,
@@ -14,45 +15,56 @@ export default function Layout({
   onPageChange,
 }) {
   const theme = useTheme();
-  const mobile = useMediaQuery(theme.breakpoints.up("xs"));
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <CssBaseline>
-      <CssVarsProvider defaultMode="system">
-        <Head>
-          <meta charSet="UTF-8" />
-          <title>{`TTSM - ${title}`}</title>
-        </Head>
+    <div>
+      <Head>
+        <meta charSet="UTF-8" />
+        <title>{`TTSM - ${title}`}</title>
+      </Head>
+      <Sheet
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "auto",
+          gridTemplateRows: "auto 1fr auto",
+          height: "100vh",
+          // minWidth: "fit-content",
+          width: "100vw",
+        }}
+      >
+        <Navbar username={username} onPageChange={onPageChange} />
         <Sheet
           sx={{
             display: "grid",
-            gridTemplateColumns: "auto",
-            gridTemplateRows: "auto 1fr auto",
-            minHeight: "100vh", // set min-height to ensure the layout takes up the full height of the viewport
+            gridTemplateColumns: "auto 1fr",
             minWidth: "fit-content",
+            mx: { xs: 2, s: 3, md: 4 },
           }}
         >
-          <Navbar username={username} onPageChange={onPageChange} />
-          <Sheet
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "auto 1fr",
-              minWidth: "fit-content",
-              mx: { xs: 2, s: 3, md: 4 },
-            }}
-          >
-            {!mobile && (
+          {mobile ? (
+            <SidebarDrawer
+              role={role}
+              serverList={serverList}
+              onPageChange={onPageChange}
+            />
+          ) : (
+            <Sheet
+              sx={{
+                mr: { xs: 2, s: 3, md: 4 },
+              }}
+            >
               <Sidebar
                 role={role}
                 serverList={serverList}
                 onPageChange={onPageChange}
               />
-            )}
-            {children}
-          </Sheet>
-          <Footer />
+            </Sheet>
+          )}
+          {children}
         </Sheet>
-      </CssVarsProvider>
-    </CssBaseline>
+        <Footer />
+      </Sheet>
+    </div>
   );
 }

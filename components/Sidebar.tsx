@@ -29,7 +29,7 @@ function ServerListItem({ game, onPageChange }) {
         sx={{ width: "100%", justifyContent: "flex-start" }}
       >
         <Typography
-          level="body3"
+          level="body-xs"
           sx={{ textTransform: "uppercase", textAlign: "left" }}
         >
           {gameName}
@@ -46,20 +46,19 @@ export default function Sidebar({ role, serverList, onPageChange }) {
     <List
       variant="outlined"
       sx={{
-        mr: 4,
-        py: 1, // padding top & bottom
-        px: 1, // padding left & right
+        // mr: { xs: 2, s: 3, md: 4 },
+        p: 1, // padding top & bottom
         borderRadius: "sm",
         boxShadow: "sm",
         flexGrow: 0,
         display: "inline-flex",
         flexDirection: "column",
-        "--ListItemDecorator-size": "48px",
+        height: "100%",
       }}
     >
       <ListItem>
         <Typography
-          level="body3"
+          level="body-xs"
           // startDecorator={<Code />}
           sx={{ textTransform: "uppercase", width: "100%" }}
         >
@@ -73,7 +72,7 @@ export default function Sidebar({ role, serverList, onPageChange }) {
           onClick={() => onPageChange("home")}
           sx={{ width: "100%", justifyContent: "flex-start" }}
         >
-          <Typography level="body3" sx={{ textTransform: "uppercase" }}>
+          <Typography level="body-xs" sx={{ textTransform: "uppercase" }}>
             Home
           </Typography>
         </Button>
@@ -86,7 +85,7 @@ export default function Sidebar({ role, serverList, onPageChange }) {
             onClick={() => onPageChange("admin")}
             sx={{ width: "100%", justifyContent: "flex-start" }}
           >
-            <Typography level="body3" sx={{ textTransform: "uppercase" }}>
+            <Typography level="body-xs" sx={{ textTransform: "uppercase" }}>
               Admin
             </Typography>
           </Button>
@@ -99,7 +98,7 @@ export default function Sidebar({ role, serverList, onPageChange }) {
           onClick={() => onPageChange("system")}
           sx={{ width: "100%", justifyContent: "flex-start" }}
         >
-          <Typography level="body3" sx={{ textTransform: "uppercase" }}>
+          <Typography level="body-xs" sx={{ textTransform: "uppercase" }}>
             System
           </Typography>
         </Button>
@@ -116,7 +115,7 @@ export default function Sidebar({ role, serverList, onPageChange }) {
           onClick={() => setServersOpen(!serversOpen)}
         >
           <Typography
-            level="body3"
+            level="body-xs"
             sx={{
               textTransform: "uppercase",
               fontWeight: serversOpen ? "bold" : undefined,
@@ -134,8 +133,12 @@ export default function Sidebar({ role, serverList, onPageChange }) {
               py: 0,
             }}
           >
-            {serverList.map((game) => (
-              <ServerListItem game={game} onPageChange={onPageChange} />
+            {serverList.map((game, id) => (
+              <ServerListItem
+                game={game}
+                onPageChange={onPageChange}
+                key={id}
+              />
             ))}
           </List>
         </ListItem>
