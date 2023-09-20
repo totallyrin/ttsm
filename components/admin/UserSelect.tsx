@@ -39,7 +39,7 @@ export default function UserSelect({ username, users, name, onChange }) {
             }}
           >
             {option.username}
-            <Typography level="body2">{option.role}</Typography>
+            <Typography level="body-sm">{option.role}</Typography>
           </ListItemContent>
         </AutocompleteOption>
       )}
