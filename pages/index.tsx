@@ -14,16 +14,16 @@ import * as React from "react";
 
 function Content() {
   return (
-    <Sheet sx={{ p: 4 }}>
+    <Sheet sx={{ p: { xs: 2, md: 4 } }}>
       <Sheet
         sx={{
           textAlign: "center",
-          my: 4,
+          my: { xs: 1, md: 2 },
           width: "100%",
         }}
       >
         <Typography level="h2">Welcome to TTSM!</Typography>
-        <Typography level="body1">
+        <Typography level="body-md">
           The Totally Terrible Server Manager
         </Typography>
       </Sheet>
@@ -33,11 +33,11 @@ function Content() {
           textAlign: "center",
           // my: 4,
           width: "100%",
-          px: 8,
+          px: { xs: 1, md: 2 },
         }}
       >
         <Typography level="h3">About TTSM</Typography>
-        <Typography level="body2">
+        <Typography level="body-sm">
           TTSM (Totally Terrible Server Manager) is a web-based server
           management tool designed to make managing game servers easier and more
           convenient. With the TTSM, you can effortlessly start, stop, and
@@ -45,13 +45,13 @@ function Content() {
           changes with ease.
         </Typography>
         <br />
-        <Typography level="body2">
+        <Typography level="body-sm">
           Whether you're a game server administrator or a player looking to
           manage your own server, the TTSM provides a user-friendly interface
           and real-time updates to streamline your server management experience.
         </Typography>
         <br />
-        <Typography level="body2">
+        <Typography level="body-sm">
           In addition to server management, TTSM includes user roles and
           profiles, allowing users to change their usernames and passwords. User
           management features are also available for administrators to add,
@@ -59,7 +59,7 @@ function Content() {
           enabling bot commands to control servers and provide server updates.
         </Typography>
         <br />
-        <Typography level="body2">
+        <Typography level="body-sm">
           TTSM prioritizes security by securely hashing passwords and enforcing
           administrator-created user accounts. The application is flexible and
           can work with any configuration of game servers. It reads information
@@ -74,8 +74,8 @@ function Content() {
           flexDirection: "column",
           justifyContent: "center",
           textAlign: "center",
-          my: 4,
-          px: 8,
+          my: { xs: 2, md: 4 },
+          px: { xs: 1, md: 2 },
         }}
       >
         <Typography level="h3">Key Features</Typography>
@@ -89,49 +89,49 @@ function Content() {
           }}
         >
           <ListItem>
-            <Typography level="body2">
+            <Typography level="body-sm">
               Real-time server management through WebSocket communication.
             </Typography>
           </ListItem>
           <ListItem>
-            <Typography level="body2">
+            <Typography level="body-sm">
               Start, stop, and monitor game servers with ease.
             </Typography>
           </ListItem>
           <ListItem>
-            <Typography level="body2">
+            <Typography level="body-sm">
               View server logs and track server performance.
             </Typography>
           </ListItem>
           <ListItem>
-            <Typography level="body2">
+            <Typography level="body-sm">
               User roles and profiles for managing usernames and passwords.
             </Typography>
           </ListItem>
           <ListItem>
-            <Typography level="body2">
+            <Typography level="body-sm">
               User management with admin features for adding, editing and
               deleting users.
             </Typography>
           </ListItem>
           <ListItem>
-            <Typography level="body2">
+            <Typography level="body-sm">
               Integration with Discord for server control and updates.
             </Typography>
           </ListItem>
           <ListItem>
-            <Typography level="body2">
+            <Typography level="body-sm">
               Secure password hashing and administrator-controlled user
               registration.
             </Typography>
           </ListItem>
           <ListItem>
-            <Typography level="body2">
+            <Typography level="body-sm">
               Flexibility to work with any configuration of game servers.
             </Typography>
           </ListItem>
           <ListItem>
-            <Typography level="body2">
+            <Typography level="body-sm">
               Make configuration changes and apply them in real-time.
             </Typography>
           </ListItem>
@@ -163,10 +163,8 @@ export default function Index() {
             variant="outlined"
             sx={{
               width: "auto",
-              mx: 4, // margin left & right
-              my: 4, // margin top & bottom
-              py: 1, // padding top & bottom
-              px: 1, // padding left & right
+              m: { xs: 2, md: 4 },
+              p: 1,
               borderRadius: "sm",
               boxShadow: "sm",
               flexGrow: 0,
@@ -198,7 +196,7 @@ export default function Index() {
               display: "grid",
               gridTemplateColumns: "auto 1fr",
               minWidth: "fit-content",
-              mx: 4,
+              mx: { xs: 2, md: 4 },
               borderRadius: "sm",
               boxShadow: "sm",
             }}
@@ -210,7 +208,7 @@ export default function Index() {
                 height: "100%",
               }}
             >
-              <Sheet sx={{ maxHeight: "10px", pb: 4 }}>
+              <Sheet sx={{ maxHeight: "10px" }}>
                 <Content />
               </Sheet>
             </Sheet>
