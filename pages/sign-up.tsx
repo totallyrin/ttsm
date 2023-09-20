@@ -21,7 +21,7 @@ async function attempt_signup(username, password): Promise<boolean> {
   const ws = new WebSocket(url);
 
   return await new Promise((resolve, reject) => {
-    let result, user, signupPromise;
+    let result, signupPromise;
     const t0 = performance.now();
     ws.addEventListener("open", async () => {
       const t1 = performance.now();
@@ -99,10 +99,8 @@ export default function LoginPage() {
             variant="outlined"
             sx={{
               width: "auto",
-              mx: 4, // margin left & right
-              mt: 4,
-              py: 3, // padding top & bottom
-              px: 3, // padding left & right
+              m: { xs: 2, md: 4 },
+              p: 3,
               display: "flex",
               flexDirection: "column",
               gap: 2,
@@ -114,7 +112,7 @@ export default function LoginPage() {
               <Typography level="h4" component="h1">
                 Welcome!
               </Typography>
-              <Typography level="body2">Sign up to continue.</Typography>
+              <Typography level="body-sm">Sign up to continue.</Typography>
             </Sheet>
 
             {isError && (
