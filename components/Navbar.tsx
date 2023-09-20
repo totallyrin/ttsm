@@ -42,7 +42,7 @@ function LogoutButton({ mobile }: { mobile: boolean }) {
 
 export default function Navbar({ username, onPageChange }) {
   const theme = useTheme();
-  const mobile = useMediaQuery(theme.breakpoints.up("xs"));
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <List
@@ -50,10 +50,9 @@ export default function Navbar({ username, onPageChange }) {
       variant="outlined"
       sx={{
         width: "auto",
-        mx: { xs: 2, s: 3, md: 4 }, // margin left & right
-        my: { xs: 2, s: 3, md: 4 }, // margin top & bottom
-        py: { xs: 0.25, s: 0.5, md: 1 }, // padding top & bottom
-        px: { xs: 0.25, s: 0.5, md: 1 }, // padding left & right
+        m: { xs: 2, md: 4 },
+        px: { xs: 0.5, md: 1 },
+        py: { xs: 1, md: 2 },
         borderRadius: "sm",
         boxShadow: "sm",
         flexGrow: 0,

@@ -58,7 +58,7 @@ function ModeToggle({ mobile }: { mobile: boolean }) {
 
 export default function footer() {
   const theme = useTheme();
-  const mobile = useMediaQuery(theme.breakpoints.up("xs"));
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <List
@@ -66,8 +66,9 @@ export default function footer() {
       variant="outlined"
       sx={{
         width: "auto",
-        m: { xs: 2, s: 3, md: 4 },
-        p: { xs: 0.25, s: 0.5, md: 1 },
+        m: { xs: 2, md: 4 },
+        px: { xs: 0.5, md: 1 },
+        py: { xs: 1, md: 2 },
         borderRadius: "sm",
         boxShadow: "sm",
         flexGrow: 0,
