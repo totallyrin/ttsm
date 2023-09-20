@@ -107,7 +107,6 @@ export default function Page() {
   }, [router.isReady]);
 
   const handlePageChange = (newPage) => {
-    console.log(newPage);
     setDashboard(newPage);
     router.push(`${newPage}`).then();
   };
