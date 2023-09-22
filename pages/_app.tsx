@@ -4,11 +4,30 @@ import { CssBaseline, CssVarsProvider, extendTheme } from "@mui/joy";
 
 const theme = extendTheme({
   colorSchemes: {
-    light: {},
+    light: {
+      palette: {
+        primary: {},
+        neutral: {},
+        danger: {},
+        success: {},
+        warning: {},
+      },
+    },
     dark: {
       palette: {
-        background: {
-          // surface: "#000000",
+        background: {},
+        primary: {
+          plainColor: "var(--joy-palette-primary-500, #0B6BCB)",
+        },
+        neutral: {},
+        danger: {
+          plainColor: "var(--joy-palette-danger-500, #C41C1C)",
+        },
+        success: {
+          plainColor: "var(--joy-palette-success-500, #1F7A1F)",
+        },
+        warning: {
+          plainColor: "var(--joy-palette-warning-500, #9A5B13)",
         },
       },
     },

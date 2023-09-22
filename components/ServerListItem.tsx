@@ -57,11 +57,23 @@ export default function ServerListItem({
             <Badge
               badgeContent={
                 running === "pinging" || loading ? (
-                  <PendingRounded />
+                  <PendingRounded
+                    sx={{
+                      my: 0.5,
+                    }}
+                  />
                 ) : running ? (
-                  <CheckCircleRounded />
+                  <CheckCircleRounded
+                    sx={{
+                      my: 0.5,
+                    }}
+                  />
                 ) : (
-                  <CancelRounded />
+                  <CancelRounded
+                    sx={{
+                      my: 0.5,
+                    }}
+                  />
                 )
               }
               color={
@@ -74,6 +86,7 @@ export default function ServerListItem({
               variant="plain"
               size="sm"
               badgeInset="5%"
+              sx={{}}
             >
               <img
                 src={`../img/${game}.png`}
@@ -114,27 +127,6 @@ export default function ServerListItem({
               justifyContent: "center",
             }}
           >
-            {/*<Typography*/}
-            {/*  level={mobile ? "title-sm" : "title-md"}*/}
-            {/*  id={`${game}-status`}*/}
-            {/*  className={`status ${*/}
-            {/*    running === "pinging" ? "" : running ? "online" : "offline"*/}
-            {/*  }`}*/}
-            {/*  sx={{*/}
-            {/*    color:*/}
-            {/*      running === "pinging" || loading*/}
-            {/*        ? "#eeb132"*/}
-            {/*        : running*/}
-            {/*        ? "#6bb700"*/}
-            {/*        : "#ed3e42",*/}
-            {/*  }}*/}
-            {/*>*/}
-            {/*  {running === "pinging" || loading*/}
-            {/*    ? "pinging"*/}
-            {/*    : running*/}
-            {/*    ? "online"*/}
-            {/*    : "offline"}*/}
-            {/*</Typography>*/}
             <Chip
               variant="solid"
               id={`${game}-status`}
