@@ -92,7 +92,7 @@ export default function CPU() {
           tooltipFormat: "HH:mm:ss",
         },
         title: {
-          display: !mobile,
+          display: true,
           text: "Time",
         },
         ticks: {
@@ -107,7 +107,7 @@ export default function CPU() {
       },
       y: {
         title: {
-          display: !mobile,
+          display: true,
           text: "CPU Usage (%)",
         },
         min: 0,

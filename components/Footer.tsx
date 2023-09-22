@@ -29,7 +29,7 @@ function ModeToggle({ mobile }: { mobile: boolean }) {
   if (mobile)
     return (
       <IconButton
-        color="primary"
+        color="neutral"
         variant="soft"
         onClick={() => {
           setMode(mode === "light" ? "dark" : "light");
@@ -42,6 +42,7 @@ function ModeToggle({ mobile }: { mobile: boolean }) {
   else
     return (
       <Button
+        color="neutral"
         variant="soft"
         startDecorator={
           mode === "light" ? <DarkModeRounded /> : <LightModeRounded />
@@ -95,7 +96,7 @@ export default function footer() {
         <Link href="https://github.com/totallyrin/ttsm">
           {mobile ? (
             <IconButton
-              color="primary"
+              color="neutral"
               variant="soft"
               size={mobile ? "sm" : "md"}
             >
@@ -103,6 +104,7 @@ export default function footer() {
             </IconButton>
           ) : (
             <Button
+              color="neutral"
               variant="soft"
               size={mobile ? "sm" : "md"}
               startDecorator={<GitHubIcon />}

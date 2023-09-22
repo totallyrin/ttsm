@@ -1,7 +1,21 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Badge, Button, List, ListItem, Typography, useTheme } from "@mui/joy";
-import { PlayArrowRounded, StopRounded } from "@mui/icons-material";
+import {
+  Badge,
+  Button,
+  Chip,
+  List,
+  ListItem,
+  Typography,
+  useTheme,
+} from "@mui/joy";
+import {
+  CancelRounded,
+  CheckCircleRounded,
+  PendingRounded,
+  PlayArrowRounded,
+  StopRounded,
+} from "@mui/icons-material";
 import { useMediaQuery } from "@mui/material";
 
 export default function ServerListItem({
@@ -41,13 +55,15 @@ export default function ServerListItem({
         <ListItem>
           {mobile ? (
             <Badge
-              // badgeContent={
-              //   running === "pinging" || loading
-              //     ? "pinging"
-              //     : running
-              //     ? "online"
-              //     : "offline"
-              // }
+              badgeContent={
+                running === "pinging" || loading ? (
+                  <PendingRounded />
+                ) : running ? (
+                  <CheckCircleRounded />
+                ) : (
+                  <CancelRounded />
+                )
+              }
               color={
                 running === "pinging" || loading
                   ? "warning"
@@ -55,7 +71,9 @@ export default function ServerListItem({
                   ? "success"
                   : "danger"
               }
-              size="lg"
+              variant="plain"
+              size="sm"
+              badgeInset="5%"
             >
               <img
                 src={`../img/${game}.png`}
@@ -96,27 +114,53 @@ export default function ServerListItem({
               justifyContent: "center",
             }}
           >
-            <Typography
-              level={mobile ? "title-sm" : "title-md"}
+            {/*<Typography*/}
+            {/*  level={mobile ? "title-sm" : "title-md"}*/}
+            {/*  id={`${game}-status`}*/}
+            {/*  className={`status ${*/}
+            {/*    running === "pinging" ? "" : running ? "online" : "offline"*/}
+            {/*  }`}*/}
+            {/*  sx={{*/}
+            {/*    color:*/}
+            {/*      running === "pinging" || loading*/}
+            {/*        ? "#eeb132"*/}
+            {/*        : running*/}
+            {/*        ? "#6bb700"*/}
+            {/*        : "#ed3e42",*/}
+            {/*  }}*/}
+            {/*>*/}
+            {/*  {running === "pinging" || loading*/}
+            {/*    ? "pinging"*/}
+            {/*    : running*/}
+            {/*    ? "online"*/}
+            {/*    : "offline"}*/}
+            {/*</Typography>*/}
+            <Chip
+              variant="solid"
               id={`${game}-status`}
-              className={`status ${
-                running === "pinging" ? "" : running ? "online" : "offline"
-              }`}
-              sx={{
-                color:
-                  running === "pinging" || loading
-                    ? "#eeb132"
-                    : running
-                    ? "#6bb700"
-                    : "#ed3e42",
-              }}
+              color={
+                running === "pinging" || loading
+                  ? "warning"
+                  : running
+                  ? "success"
+                  : "danger"
+              }
+              startDecorator={
+                running === "pinging" || loading ? (
+                  <PendingRounded />
+                ) : running ? (
+                  <CheckCircleRounded />
+                ) : (
+                  <CancelRounded />
+                )
+              }
             >
               {running === "pinging" || loading
                 ? "pinging"
                 : running
                 ? "online"
                 : "offline"}
-            </Typography>
+            </Chip>
           </ListItem>
         )}
         <ListItem
@@ -125,6 +169,8 @@ export default function ServerListItem({
           }}
         >
           <Button
+            // color="neutral"
+            // variant="soft"
             size={mobile ? "sm" : "md"}
             id={`${game}-button`}
             loading={running === "pinging" || loading}

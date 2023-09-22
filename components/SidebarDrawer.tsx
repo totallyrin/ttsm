@@ -26,6 +26,7 @@ export default function SidebarDrawer({ role, serverList, onPageChange }) {
         }}
       >
         <Button
+          color="neutral"
           variant="plain"
           onClick={() => setIsOpen(true)}
           sx={{
@@ -49,8 +50,8 @@ export default function SidebarDrawer({ role, serverList, onPageChange }) {
                 display: "flex",
                 flexDirection: "column",
                 gap: 2,
-                height: "96vh",
-                overflow: "auto",
+                height: "96%",
+                overflow: "scroll",
               },
             },
           }}

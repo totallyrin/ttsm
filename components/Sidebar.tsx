@@ -17,6 +17,7 @@ function ServerListItem({ game, onPageChange }) {
   return (
     <ListItem nested>
       <Button
+        color="neutral"
         variant="plain"
         startDecorator={
           <img
@@ -67,6 +68,7 @@ export default function Sidebar({ role, serverList, onPageChange }) {
       </ListItem>
       <ListItem sx={{ width: "100%" }}>
         <Button
+          color="neutral"
           variant="plain"
           startDecorator={<HomeRounded />}
           onClick={() => onPageChange("home")}
@@ -80,6 +82,7 @@ export default function Sidebar({ role, serverList, onPageChange }) {
       {role === ("owner" || "admin") && (
         <ListItem sx={{ width: "100%" }}>
           <Button
+            color="neutral"
             variant="plain"
             startDecorator={<AdminPanelSettingsRounded />}
             onClick={() => onPageChange("admin")}
@@ -93,6 +96,7 @@ export default function Sidebar({ role, serverList, onPageChange }) {
       )}
       <ListItem>
         <Button
+          color="neutral"
           variant="plain"
           startDecorator={<StackedLineChartRounded />}
           onClick={() => onPageChange("system")}
@@ -105,6 +109,7 @@ export default function Sidebar({ role, serverList, onPageChange }) {
       </ListItem>
       <ListItem>
         <Button
+          color="neutral"
           variant="plain"
           startDecorator={
             <KeyboardArrowDown

@@ -19,7 +19,7 @@ function LogoutButton({ mobile }: { mobile: boolean }) {
   if (mobile)
     return (
       <IconButton
-        color="primary"
+        color="neutral"
         variant="soft"
         onClick={handleSignOut}
         size={mobile ? "sm" : "md"}
@@ -30,6 +30,7 @@ function LogoutButton({ mobile }: { mobile: boolean }) {
   else
     return (
       <Button
+        color="neutral"
         size={mobile ? "sm" : "md"}
         variant="soft"
         startDecorator={<LogoutRounded />}
@@ -71,7 +72,7 @@ export default function Navbar({ username, onPageChange }) {
       <ListItem>
         {mobile ? (
           <IconButton
-            color="primary"
+            color="neutral"
             variant="soft"
             onClick={() => onPageChange("account")}
             size={mobile ? "sm" : "md"}
@@ -80,6 +81,7 @@ export default function Navbar({ username, onPageChange }) {
           </IconButton>
         ) : (
           <Button
+            color="neutral"
             variant="soft"
             startDecorator={<AccountCircleRounded />}
             onClick={() => onPageChange("account")}
