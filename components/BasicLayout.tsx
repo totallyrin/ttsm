@@ -1,4 +1,4 @@
-import { Box, CssBaseline, Sheet } from "@mui/joy";
+import { Box, CssBaseline } from "@mui/joy";
 import { CssVarsProvider } from "@mui/joy/styles";
 import Head from "next/head";
 import Footer from "./Footer";
@@ -13,7 +13,7 @@ export default function BasicLayout() {
           <meta charSet="UTF-8" />
           <title>TTSM - Login</title>
         </Head>
-        <Sheet
+        <Box
           sx={{
             display: "grid",
             gridTemplateColumns: "auto",
@@ -26,7 +26,7 @@ export default function BasicLayout() {
           {/* Box component below is an empty placeholder to force footer to bottom of page */}
           <Box />
           <Footer />
-        </Sheet>
+        </Box>
       </CssVarsProvider>
     </CssBaseline>
   );

@@ -1,11 +1,11 @@
-import { CircularProgress, Sheet, useTheme } from "@mui/joy";
+import { Box, CircularProgress } from "@mui/joy";
 import * as React from "react";
 
 export default function Loading() {
-  const theme = useTheme();
+  // const theme = useTheme();
 
   return (
-    <Sheet
+    <Box
       sx={{
         width: "100%",
         height: "100%",
@@ -17,6 +17,6 @@ export default function Loading() {
       }}
     >
       <CircularProgress size="lg" />
-    </Sheet>
+    </Box>
   );
 }

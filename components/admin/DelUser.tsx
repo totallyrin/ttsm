@@ -84,7 +84,7 @@ export default function DelUser({ username, users, ws, setUsers }) {
           <UserSelect
             username={username}
             users={users}
-            name="delusername"
+            name="deluser"
             onChange={(event, user) => {
               user ? setDelUsername(user.username) : setDelUsername("");
               setDelSuccess(false);

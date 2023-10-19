@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { Button, List, ListItem, Typography } from "@mui/joy";
+import { Button, List, ListItem, Sheet, Typography } from "@mui/joy";
 import {
   AdminPanelSettingsRounded,
   HomeRounded,
@@ -44,110 +44,116 @@ export default function Sidebar({ role, serverList, onPageChange }) {
   const [serversOpen, setServersOpen] = useState(false);
 
   return (
-    <List
+    <Sheet
       variant="outlined"
       sx={{
-        // mr: { xs: 2, s: 3, md: 4 },
-        p: 1, // padding top & bottom
         borderRadius: "sm",
         boxShadow: "sm",
-        flexGrow: 0,
-        display: "inline-flex",
-        flexDirection: "column",
         height: "100%",
       }}
     >
-      <ListItem>
-        <Typography
-          level="body-xs"
-          // startDecorator={<Code />}
-          sx={{ textTransform: "uppercase", width: "100%" }}
-        >
-          TTSM - Totally Terrible Server Manager
-        </Typography>
-      </ListItem>
-      <ListItem sx={{ width: "100%" }}>
-        <Button
-          color="neutral"
-          variant="plain"
-          startDecorator={<HomeRounded />}
-          onClick={() => onPageChange("home")}
-          sx={{ width: "100%", justifyContent: "flex-start" }}
-        >
-          <Typography level="body-xs" sx={{ textTransform: "uppercase" }}>
-            Home
+      <List
+        sx={{
+          // mr: { xs: 2, s: 3, md: 4 },
+          p: 1, // padding top & bottom
+          flexGrow: 0,
+          display: "inline-flex",
+          flexDirection: "column",
+          height: "100%",
+        }}
+      >
+        <ListItem>
+          <Typography
+            level="body-xs"
+            // startDecorator={<Code />}
+            sx={{ textTransform: "uppercase", width: "100%" }}
+          >
+            TTSM - Totally Terrible Server Manager
           </Typography>
-        </Button>
-      </ListItem>
-      {role === ("owner" || "admin") && (
+        </ListItem>
         <ListItem sx={{ width: "100%" }}>
           <Button
             color="neutral"
             variant="plain"
-            startDecorator={<AdminPanelSettingsRounded />}
-            onClick={() => onPageChange("admin")}
+            startDecorator={<HomeRounded />}
+            onClick={() => onPageChange("home")}
             sx={{ width: "100%", justifyContent: "flex-start" }}
           >
             <Typography level="body-xs" sx={{ textTransform: "uppercase" }}>
-              Admin
+              Home
             </Typography>
           </Button>
         </ListItem>
-      )}
-      <ListItem>
-        <Button
-          color="neutral"
-          variant="plain"
-          startDecorator={<StackedLineChartRounded />}
-          onClick={() => onPageChange("system")}
-          sx={{ width: "100%", justifyContent: "flex-start" }}
-        >
-          <Typography level="body-xs" sx={{ textTransform: "uppercase" }}>
-            System
-          </Typography>
-        </Button>
-      </ListItem>
-      <ListItem>
-        <Button
-          color="neutral"
-          variant="plain"
-          startDecorator={
-            <KeyboardArrowDown
-              sx={{ transform: serversOpen ? "initial" : "rotate(-90deg)" }}
-            />
-          }
-          sx={{ width: "100%", justifyContent: "flex-start" }}
-          onClick={() => setServersOpen(!serversOpen)}
-        >
-          <Typography
-            level="body-xs"
-            sx={{
-              textTransform: "uppercase",
-              fontWeight: serversOpen ? "bold" : undefined,
-              color: serversOpen ? "inherit" : "",
-            }}
-          >
-            Servers
-          </Typography>
-        </Button>
-      </ListItem>
-      {serversOpen && (
+        {role === ("owner" || "admin") && (
+          <ListItem sx={{ width: "100%" }}>
+            <Button
+              color="neutral"
+              variant="plain"
+              startDecorator={<AdminPanelSettingsRounded />}
+              onClick={() => onPageChange("admin")}
+              sx={{ width: "100%", justifyContent: "flex-start" }}
+            >
+              <Typography level="body-xs" sx={{ textTransform: "uppercase" }}>
+                Admin
+              </Typography>
+            </Button>
+          </ListItem>
+        )}
         <ListItem>
-          <List
-            sx={{
-              py: 0,
-            }}
+          <Button
+            color="neutral"
+            variant="plain"
+            startDecorator={<StackedLineChartRounded />}
+            onClick={() => onPageChange("system")}
+            sx={{ width: "100%", justifyContent: "flex-start" }}
           >
-            {serverList.map((game, id) => (
-              <ServerListItem
-                game={game}
-                onPageChange={onPageChange}
-                key={id}
-              />
-            ))}
-          </List>
+            <Typography level="body-xs" sx={{ textTransform: "uppercase" }}>
+              System
+            </Typography>
+          </Button>
         </ListItem>
-      )}
-    </List>
+        <ListItem>
+          <Button
+            color="neutral"
+            variant="plain"
+            startDecorator={
+              <KeyboardArrowDown
+                sx={{ transform: serversOpen ? "initial" : "rotate(-90deg)" }}
+              />
+            }
+            sx={{ width: "100%", justifyContent: "flex-start" }}
+            onClick={() => setServersOpen(!serversOpen)}
+          >
+            <Typography
+              level="body-xs"
+              sx={{
+                textTransform: "uppercase",
+                fontWeight: serversOpen ? "bold" : undefined,
+                color: serversOpen ? "inherit" : "",
+              }}
+            >
+              Servers
+            </Typography>
+          </Button>
+        </ListItem>
+        {serversOpen && (
+          <ListItem>
+            <List
+              sx={{
+                py: 0,
+              }}
+            >
+              {serverList.map((game, id) => (
+                <ServerListItem
+                  game={game}
+                  onPageChange={onPageChange}
+                  key={id}
+                />
+              ))}
+            </List>
+          </ListItem>
+        )}
+      </List>
+    </Sheet>
   );
 }

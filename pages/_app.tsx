@@ -6,6 +6,10 @@ const theme = extendTheme({
   colorSchemes: {
     light: {
       palette: {
+        background: {
+          body: "var(--joy-palette-neutral-50)",
+          surface: "var(--joy-palette-common-white)",
+        },
         primary: {},
         neutral: {},
         danger: {},
@@ -15,7 +19,10 @@ const theme = extendTheme({
     },
     dark: {
       palette: {
-        background: {},
+        background: {
+          body: "var(--joy-palette-common-black)",
+          surface: "var(--joy-palette-neutral-900)",
+        },
         primary: {
           plainColor: "var(--joy-palette-primary-500, #0B6BCB)",
         },

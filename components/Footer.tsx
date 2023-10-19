@@ -4,6 +4,7 @@ import {
   Link,
   List,
   ListItem,
+  Sheet,
   Typography,
   useTheme,
 } from "@mui/joy";
@@ -62,58 +63,64 @@ export default function footer() {
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <List
-      orientation="horizontal"
+    <Sheet
       variant="outlined"
       sx={{
-        width: "auto",
         m: { xs: 2, md: 4 },
         px: { xs: 0.5, md: 1 },
         py: { xs: 1, md: 2 },
         borderRadius: "sm",
         boxShadow: "sm",
-        flexGrow: 0,
-        display: "flex",
-        // position: 'fixed',
-        // bottom: 0,
-        justifyContent: "space-between",
+        width: "auto",
       }}
     >
-      <ListItem>
-        <ModeToggle mobile={mobile} />
-      </ListItem>
-      <ListItem sx={{ alignSelf: "center" }}>
-        <Typography
-          sx={{
-            alignSelf: "center",
-            fontSize: { xs: "xs", md: "sm" },
-          }}
-        >
-          Made by Lucy Woloszczuk
-        </Typography>
-      </ListItem>
-      <ListItem>
-        <Link href="https://github.com/totallyrin/ttsm">
-          {mobile ? (
-            <IconButton
-              color="neutral"
-              variant="soft"
-              size={mobile ? "sm" : "md"}
-            >
-              <GitHubIcon />
-            </IconButton>
-          ) : (
-            <Button
-              color="neutral"
-              variant="soft"
-              size={mobile ? "sm" : "md"}
-              startDecorator={<GitHubIcon />}
-            >
-              Github
-            </Button>
-          )}
-        </Link>
-      </ListItem>
-    </List>
+      <List
+        orientation="horizontal"
+        sx={{
+          width: "auto",
+          flexGrow: 0,
+          display: "flex",
+          // position: 'fixed',
+          // bottom: 0,
+          justifyContent: "space-between",
+        }}
+      >
+        <ListItem>
+          <ModeToggle mobile={mobile} />
+        </ListItem>
+        <ListItem sx={{ alignSelf: "center" }}>
+          <Typography
+            sx={{
+              alignSelf: "center",
+              fontSize: { xs: "xs", md: "sm" },
+            }}
+          >
+            Made by Lucy Woloszczuk
+          </Typography>
+        </ListItem>
+        <ListItem>
+          <Link href="https://github.com/totallyrin/ttsm">
+            {mobile ? (
+              <IconButton
+                color="neutral"
+                variant="soft"
+                size={mobile ? "sm" : "md"}
+              >
+                <GitHubIcon />
+              </IconButton>
+            ) : (
+              <Button
+                color="neutral"
+                variant="soft"
+                size={mobile ? "sm" : "md"}
+                startDecorator={<GitHubIcon />}
+              >
+                Github
+              </Button>
+            )}
+          </Link>
+        </ListItem>
+      </List>
+    </Sheet>
   );
 }

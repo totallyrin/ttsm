@@ -1,10 +1,10 @@
-import { Sheet } from "@mui/joy";
+import { Box } from "@mui/joy";
 import CPU from "../CPU";
 import Memory from "../Memory";
 
 export default function System({ theme }) {
   return (
-    <Sheet
+    <Box
       sx={{
         display: "grid",
         gridTemplateColumns: "auto",
@@ -14,6 +14,6 @@ export default function System({ theme }) {
     >
       <CPU />
       <Memory />
-    </Sheet>
+    </Box>
   );
 }

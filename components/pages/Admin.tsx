@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { url } from "../../utils/utils";
-import { Sheet } from "@mui/joy";
+import { Box, Sheet } from "@mui/joy";
 import AddUser from "../admin/AddUser";
 import EditUser from "../admin/EditUser";
 import DelUser from "../admin/DelUser";
@@ -34,7 +34,7 @@ export default function Admin({ theme, username }) {
   useEffect(() => {
     if (ws && ws.OPEN) {
       setPage(
-        <Sheet
+        <Box
           sx={{
             overflowY: "auto",
             display: "grid",
@@ -43,12 +43,12 @@ export default function Admin({ theme, username }) {
             height: "100%",
           }}
         >
-          <Sheet
+          <Box
             sx={{
               maxHeight: "10px",
             }}
           >
-            <Sheet
+            <Box
               sx={{
                 display: "grid",
                 gridTemplateColumns: "1fr",
@@ -72,9 +72,9 @@ export default function Admin({ theme, username }) {
                 ws={ws}
                 setUsers={setUsers}
               />
-            </Sheet>
-          </Sheet>
-        </Sheet>,
+            </Box>
+          </Box>
+        </Box>,
       );
     }
   }, [ws, users]);

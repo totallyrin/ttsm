@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { url } from "../../utils/utils";
 import {
   Alert,
+  Box,
   Button,
   FormControl,
   FormLabel,
@@ -184,7 +185,7 @@ export default function Account({ theme, username }) {
   };
 
   return (
-    <Sheet
+    <Box
       sx={{
         overflowY: "auto",
         display: "grid",
@@ -193,12 +194,12 @@ export default function Account({ theme, username }) {
         height: "100%",
       }}
     >
-      <Sheet
+      <Box
         sx={{
           maxHeight: "10px",
         }}
       >
-        <Sheet
+        <Box
           sx={{
             display: "grid",
             gridTemplateColumns: "1fr",
@@ -230,8 +231,8 @@ export default function Account({ theme, username }) {
             property="password"
             onChange={handleUsernameChange}
           />
-        </Sheet>
-      </Sheet>
-    </Sheet>
+        </Box>
+      </Box>
+    </Box>
   );
 }

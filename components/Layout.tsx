@@ -1,6 +1,6 @@
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { Sheet, useTheme } from "@mui/joy";
+import { Box, useTheme } from "@mui/joy";
 import Sidebar from "./Sidebar";
 import Head from "next/head";
 import { useMediaQuery } from "@mui/material";
@@ -23,7 +23,7 @@ export default function Layout({
         <meta charSet="UTF-8" />
         <title>{`TTSM - ${title}`}</title>
       </Head>
-      <Sheet
+      <Box
         sx={{
           display: "grid",
           gridTemplateColumns: "auto",
@@ -34,7 +34,7 @@ export default function Layout({
         }}
       >
         <Navbar username={username} onPageChange={onPageChange} />
-        <Sheet
+        <Box
           sx={{
             display: "grid",
             gridTemplateColumns: "auto 1fr",
@@ -49,7 +49,7 @@ export default function Layout({
               onPageChange={onPageChange}
             />
           ) : (
-            <Sheet
+            <Box
               sx={{
                 mr: { xs: 2, s: 3, md: 4 },
               }}
@@ -59,12 +59,12 @@ export default function Layout({
                 serverList={serverList}
                 onPageChange={onPageChange}
               />
-            </Sheet>
+            </Box>
           )}
           {children}
-        </Sheet>
+        </Box>
         <Footer />
-      </Sheet>
+      </Box>
     </div>
   );
 }

@@ -3,6 +3,7 @@ import {
   IconButton,
   List,
   ListItem,
+  Sheet,
   Typography,
   useTheme,
 } from "@mui/joy";
@@ -46,51 +47,57 @@ export default function Navbar({ username, onPageChange }) {
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <List
-      orientation="horizontal"
+    <Sheet
       variant="outlined"
       sx={{
-        width: "auto",
         m: { xs: 2, md: 4 },
         px: { xs: 0.5, md: 1 },
         py: { xs: 1, md: 2 },
         borderRadius: "sm",
         boxShadow: "sm",
-        flexGrow: 0,
-        display: "flex",
-        justifyContent: "space-between",
+        width: "auto",
       }}
     >
-      <ListItem>
-        <LogoutButton mobile={mobile} />
-      </ListItem>
-      <ListItem>
-        <Typography sx={{ fontSize: { xs: "md", md: "lg" } }}>
-          {username !== "" ? `Welcome, ${username}!` : "Welcome!"}
-        </Typography>
-      </ListItem>
-      <ListItem>
-        {mobile ? (
-          <IconButton
-            color="neutral"
-            variant="soft"
-            onClick={() => onPageChange("account")}
-            size={mobile ? "sm" : "md"}
-          >
-            <AccountCircleRounded />
-          </IconButton>
-        ) : (
-          <Button
-            color="neutral"
-            variant="soft"
-            startDecorator={<AccountCircleRounded />}
-            onClick={() => onPageChange("account")}
-            size={mobile ? "sm" : "md"}
-          >
-            Account
-          </Button>
-        )}
-      </ListItem>
-    </List>
+      <List
+        orientation="horizontal"
+        sx={{
+          width: "100%",
+          flexGrow: 0,
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <ListItem>
+          <LogoutButton mobile={mobile} />
+        </ListItem>
+        <ListItem>
+          <Typography sx={{ fontSize: { xs: "md", md: "lg" } }}>
+            {username !== "" ? `Welcome, ${username}!` : "Welcome!"}
+          </Typography>
+        </ListItem>
+        <ListItem>
+          {mobile ? (
+            <IconButton
+              color="neutral"
+              variant="soft"
+              onClick={() => onPageChange("account")}
+              size={mobile ? "sm" : "md"}
+            >
+              <AccountCircleRounded />
+            </IconButton>
+          ) : (
+            <Button
+              color="neutral"
+              variant="soft"
+              startDecorator={<AccountCircleRounded />}
+              onClick={() => onPageChange("account")}
+              size={mobile ? "sm" : "md"}
+            >
+              Account
+            </Button>
+          )}
+        </ListItem>
+      </List>
+    </Sheet>
   );
 }

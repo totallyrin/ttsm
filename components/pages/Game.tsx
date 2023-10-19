@@ -1,13 +1,13 @@
 import * as React from "react";
 import { url } from "../../utils/utils";
-import { List, Sheet } from "@mui/joy";
+import { Box, List, Sheet } from "@mui/joy";
 import Console from "../Console";
 import ServerListItem from "../ServerListItem";
 import Config from "../Config";
 
 export default function Game({ theme, username, role, runningList, game }) {
   return (
-    <Sheet
+    <Box
       sx={{
         display: "grid",
         gridTemplateColumns: "1fr",
@@ -16,28 +16,33 @@ export default function Game({ theme, username, role, runningList, game }) {
         gridRowGap: { xs: theme.spacing(2), md: theme.spacing(4) },
       }}
     >
-      <List
-        id="server-list"
+      <Sheet
         variant="outlined"
         sx={{
-          width: "100%",
           borderRadius: "sm",
           boxShadow: "sm",
-          flexGrow: 0,
-          display: "inline-flex",
         }}
       >
-        <ServerListItem
-          game={game}
-          url={url}
-          auth={role !== "no-auth"}
-          running={runningList[game]}
-        />
-      </List>
+        <List
+          id="server-list"
+          sx={{
+            width: "100%",
+            flexGrow: 0,
+            display: "inline-flex",
+          }}
+        >
+          <ServerListItem
+            game={game}
+            url={url}
+            auth={role !== "no-auth"}
+            running={runningList[game]}
+          />
+        </List>
+      </Sheet>
       <Console role={role} game={game} />
       {role === ("owner" || "admin") && (
         <Config username={username} game={game} />
       )}
-    </Sheet>
+    </Box>
   );
 }
