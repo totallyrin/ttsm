@@ -68,7 +68,7 @@ export default function ServerVersion({
             id={`${game}-update`}
             loading={loading || running === "pinging"}
             startDecorator={<UpdateRoundedIcon />}
-            disabled={!auth || running !== false}
+            disabled={!auth || running === true || running === "pinging"}
             onClick={() => {
               setLoading(true);
               const ws = new WebSocket(url);
