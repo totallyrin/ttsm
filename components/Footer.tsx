@@ -115,7 +115,7 @@ export default function footer() {
                 size={mobile ? "sm" : "md"}
                 startDecorator={<GitHubIcon />}
               >
-                Github
+                GitHub
               </Button>
             )}
           </Link>

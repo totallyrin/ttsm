@@ -157,12 +157,12 @@ export default function ServerListItem({
               }
             >
               {running === "pinging" || loading
-                ? "pinging"
+                ? "Pinging"
                 : running === "updating"
-                ? "updating"
+                ? "Updating"
                 : running
-                ? "online"
-                : "offline"}
+                ? "Online"
+                : "Offline"}
             </Chip>
           </ListItem>
         )}
