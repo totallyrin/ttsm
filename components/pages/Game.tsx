@@ -1,9 +1,10 @@
 import * as React from "react";
 import { url } from "../../utils/utils";
-import { Box, List, Sheet } from "@mui/joy";
+import { Box, List, ListDivider, Sheet } from "@mui/joy";
 import Console from "../Console";
 import ServerListItem from "../ServerListItem";
 import Config from "../Config";
+import ServerVersion from "../ServerVersion";
 
 export default function Game({ theme, username, role, runningList, game }) {
   return (
@@ -36,6 +37,13 @@ export default function Game({ theme, username, role, runningList, game }) {
             url={url}
             auth={role !== "no-auth"}
             running={runningList[game]}
+          />
+          <ListDivider inset="gutter" />
+          <ServerVersion
+            url={url}
+            game={game}
+            running={runningList[game]}
+            auth={role === "admin" || role === "owner"}
           />
         </List>
       </Sheet>

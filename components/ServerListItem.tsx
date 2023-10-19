@@ -26,7 +26,7 @@ export default function ServerListItem({
 }: {
   url: string;
   game: string;
-  running: "pinging" | boolean;
+  running: "pinging" | "updating" | boolean;
   auth: boolean;
 }) {
   const theme = useTheme();
@@ -182,7 +182,7 @@ export default function ServerListItem({
               };
             }}
           >
-            {running ? "stop" : "start"}
+            {running ? "Stop" : "Start"}
           </Button>
         </ListItem>
       </List>
