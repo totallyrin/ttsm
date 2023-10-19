@@ -19,10 +19,6 @@ export default function ServerVersion({
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [loading, setLoading] = useState(false);
   const [version, setVersion] = useState("unknown");
-  const gameName =
-    game === "pz"
-      ? "Project Zomboid"
-      : game.charAt(0).toUpperCase() + game.slice(1);
 
   useEffect(() => {
     setLoading(false);
@@ -57,7 +53,7 @@ export default function ServerVersion({
             level={mobile ? "title-sm" : "title-md"}
             sx={{ textAlign: "center" }}
           >
-            {gameName} version: {version}
+            {mobile ? `Version: ${version}` : `Current version: ${version}`}
           </Typography>
         </ListItem>
         <ListItem

@@ -17,6 +17,7 @@ import {
   StopRounded,
 } from "@mui/icons-material";
 import { useMediaQuery } from "@mui/material";
+import UpdateRoundedIcon from "@mui/icons-material/UpdateRounded";
 
 export default function ServerListItem({
   url,
@@ -62,6 +63,12 @@ export default function ServerListItem({
                       my: 0.5,
                     }}
                   />
+                ) : running === "updating" ? (
+                  <UpdateRoundedIcon
+                    sx={{
+                      my: 0.5,
+                    }}
+                  />
                 ) : running ? (
                   <CheckCircleRounded
                     sx={{
@@ -77,7 +84,7 @@ export default function ServerListItem({
                 )
               }
               color={
-                running === "pinging" || loading
+                running === ("pinging" || "updating") || loading
                   ? "warning"
                   : running
                   ? "success"
@@ -131,7 +138,7 @@ export default function ServerListItem({
               variant="solid"
               id={`${game}-status`}
               color={
-                running === "pinging" || loading
+                running === ("pinging" || "updating") || loading
                   ? "warning"
                   : running
                   ? "success"
@@ -140,6 +147,8 @@ export default function ServerListItem({
               startDecorator={
                 running === "pinging" || loading ? (
                   <PendingRounded />
+                ) : running === "updating" ? (
+                  <UpdateRoundedIcon />
                 ) : running ? (
                   <CheckCircleRounded />
                 ) : (
@@ -149,6 +158,8 @@ export default function ServerListItem({
             >
               {running === "pinging" || loading
                 ? "pinging"
+                : running === "updating"
+                ? "updating"
                 : running
                 ? "online"
                 : "offline"}
@@ -180,6 +191,9 @@ export default function ServerListItem({
                 );
                 ws.close();
               };
+            }}
+            sx={{
+              minWidth: mobile ? "90px" : "101px",
             }}
           >
             {running ? "Stop" : "Start"}
