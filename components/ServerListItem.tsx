@@ -84,7 +84,7 @@ export default function ServerListItem({
                 )
               }
               color={
-                running === ("pinging" || "updating") || loading
+                running === "pinging" || running === "updating" || loading
                   ? "warning"
                   : running
                   ? "success"
@@ -138,7 +138,7 @@ export default function ServerListItem({
               variant="solid"
               id={`${game}-status`}
               color={
-                running === ("pinging" || "updating") || loading
+                running === "pinging" || running === "updating" || loading
                   ? "warning"
                   : running
                   ? "success"
@@ -178,7 +178,7 @@ export default function ServerListItem({
             id={`${game}-button`}
             loading={running === "pinging" || loading}
             startDecorator={running ? <StopRounded /> : <PlayArrowRounded />}
-            disabled={!auth}
+            disabled={!auth || running === "updating"}
             onClick={() => {
               setLoading(true);
               const ws = new WebSocket(url);

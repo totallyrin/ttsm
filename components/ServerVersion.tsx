@@ -66,7 +66,7 @@ export default function ServerVersion({
             // variant="soft"
             size={mobile ? "sm" : "md"}
             id={`${game}-update`}
-            loading={loading}
+            loading={loading || running === "pinging"}
             startDecorator={<UpdateRoundedIcon />}
             disabled={!auth || running !== false}
             onClick={() => {
