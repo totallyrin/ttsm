@@ -95,7 +95,7 @@ export default function footer() {
               fontSize: { xs: "xs", md: "sm" },
             }}
           >
-            Made by Lucy Woloszczuk
+            Made by totallyrin
           </Typography>
         </ListItem>
         <ListItem>
