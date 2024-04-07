@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
-import { url } from "../../utils/utils";
+import { hash, url } from "../../utils/utils";
 import {
   Alert,
   Box,
@@ -54,7 +54,7 @@ function EditLogin({ theme, username, property, onChange }) {
     };
   }, []);
 
-  const changeProperty = (event) => {
+  const changeProperty = async (event) => {
     event.preventDefault();
     // send command to server
     if (ws) {
@@ -63,8 +63,8 @@ function EditLogin({ theme, username, property, onChange }) {
           type: "change",
           property: property,
           username: user,
-          password: oldProperty,
-          new: newProperty,
+          password: await hash(oldProperty),
+          new: await hash(newProperty),
         }),
       );
     }

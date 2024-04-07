@@ -1,6 +1,6 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { url } from "../../../utils/utils";
+import { hash, url } from "../../../utils/utils";
 
 async function attempt_login(
   username,
@@ -18,7 +18,7 @@ async function attempt_login(
         JSON.stringify({
           type: "login",
           username: username,
-          password: password,
+          password: await hash(password),
         }),
       );
 
