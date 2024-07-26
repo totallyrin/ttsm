@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
-import { hash, url } from "../../utils/utils";
+import { url } from "../../utils/utils";
 import {
   Alert,
   Box,
@@ -63,8 +63,8 @@ function EditLogin({ theme, username, property, onChange }) {
           type: "change",
           property: property,
           username: user,
-          password: await hash(oldProperty),
-          new: await hash(newProperty),
+          password: oldProperty, // await hash(oldProperty),
+          new: newProperty, // await hash(newProperty),
         }),
       );
     }
