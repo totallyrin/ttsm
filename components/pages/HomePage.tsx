@@ -36,7 +36,7 @@ export default function HomePage({ theme, role, serverList, runningList }) {
                 game={game}
                 url={url}
                 auth={role !== "no-auth"}
-                running={runningList[game]}
+                running={runningList[game.game]}
               />
               {index !== serverList.length - 1 && (
                 <ListDivider inset="gutter" />
