@@ -22,7 +22,7 @@ export default function Config({ username, game }) {
       // get data from message
       const data = JSON.parse(event.data);
       if (data.type === "config") {
-        if (data.game === game) {
+        if (data.game === game.game) {
           setConfig(data.content);
         }
       }
@@ -43,7 +43,7 @@ export default function Config({ username, game }) {
       ws.send(
         JSON.stringify({
           type: "config",
-          game: game,
+          game: game.game,
           content: config,
         }),
       );

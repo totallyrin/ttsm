@@ -2,7 +2,7 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { useTheme } from "@mui/joy";
 import Layout from "../components/Layout";
-import useServerList from "../utils/useServerList";
+import useServerList, { ServerListItem } from "../utils/useServerList";
 import { url } from "../utils/utils";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
@@ -78,7 +78,7 @@ export default function Page() {
     };
   }, []);
 
-  const [serverList, setServerList] = useState<string[]>([]);
+  const [serverList, setServerList] = useState<ServerListItem[]>([]);
   const retrievedServers = useServerList();
 
   // get server list
@@ -92,7 +92,7 @@ export default function Page() {
     if (serverList) {
       const temp = {};
       serverList.forEach(function (game) {
-        temp[game] = "pinging";
+        temp[game.game] = "pinging";
       });
       setRunningList(temp);
     }
@@ -151,7 +151,9 @@ export default function Page() {
                 username={username}
                 role={role}
                 runningList={runningList}
-                game={dashboard.split("/")[1]}
+                game={serverList.find(
+                  (game) => dashboard.split("/")[1] === game.game,
+                )}
               />
             )}
           </Layout>,

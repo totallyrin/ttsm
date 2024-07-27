@@ -9,11 +9,6 @@ import {
 } from "@mui/icons-material";
 
 function ServerListItem({ game, onPageChange }) {
-  const gameName =
-    game === "pz"
-      ? "Project Zomboid"
-      : game.charAt(0).toUpperCase() + game.slice(1);
-
   return (
     <ListItem nested>
       <Button
@@ -21,19 +16,19 @@ function ServerListItem({ game, onPageChange }) {
         variant="plain"
         startDecorator={
           <img
-            src={`../img/${game}.png`}
-            alt={game}
+            src={`../img/${game.game}.png`}
+            alt={game.name}
             style={{ width: "24px", height: "24px" }}
           />
         }
-        onClick={() => onPageChange(`servers/${game}`)}
+        onClick={() => onPageChange(`servers/${game.game}`)}
         sx={{ width: "100%", justifyContent: "flex-start" }}
       >
         <Typography
           level="body-xs"
           sx={{ textTransform: "uppercase", textAlign: "left" }}
         >
-          {gameName}
+          {game.name}
         </Typography>
       </Button>
     </ListItem>

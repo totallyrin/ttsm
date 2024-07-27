@@ -33,9 +33,7 @@ export default function Console({ role, game }) {
       // if message doesn't have a type
       if (data.type === "console") {
         if (game) {
-          game =
-            game === "pz" ? "PZ" : game.charAt(0).toUpperCase() + game.slice(1);
-          if (data.data.startsWith(`${game} server:`)) {
+          if (data.data.startsWith(`${game.name} server:`)) {
             // append to console
             setLogs((prevLogs) => {
               let temp = [...prevLogs];
@@ -64,7 +62,7 @@ export default function Console({ role, game }) {
     // send command to server
     if (ws) {
       ws.send(
-        JSON.stringify({ type: "command", game: game, command: command }),
+        JSON.stringify({ type: "command", game: game.game, command: command }),
       );
     }
     setCommand("");
@@ -93,13 +91,13 @@ export default function Console({ role, game }) {
         }}
       >
         <Sheet sx={{ maxHeight: "10px", pb: 4 }}>
-          {logs.map((log, index) => (
-            <Typography key={index} level="body-xs">
-              {role === "no-auth"
-                ? "Console disabled; user" + " not approved"
-                : log}
-            </Typography>
-          ))}
+          {role === "no-auth"
+            ? "Console disabled; user not approved"
+            : logs.map((log, index) => (
+                <Typography key={index} level="body-xs">
+                  {log}
+                </Typography>
+              ))}
         </Sheet>
       </Sheet>
       {game && role === ("owner" || "admin") && (

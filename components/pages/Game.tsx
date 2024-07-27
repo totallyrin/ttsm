@@ -36,13 +36,13 @@ export default function Game({ theme, username, role, runningList, game }) {
             game={game}
             url={url}
             auth={role !== "no-auth"}
-            running={runningList[game]}
+            running={runningList[game.game]}
           />
           <ListDivider inset="gutter" />
           <ServerVersion
             url={url}
             game={game}
-            running={runningList[game]}
+            running={runningList[game.game]}
             auth={role === "admin" || role === "owner"}
           />
         </List>

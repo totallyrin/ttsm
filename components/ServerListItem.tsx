@@ -18,6 +18,7 @@ import {
 } from "@mui/icons-material";
 import { useMediaQuery } from "@mui/material";
 import UpdateRoundedIcon from "@mui/icons-material/UpdateRounded";
+import { ServerListItem } from "../utils/useServerList";
 
 export default function ServerListItem({
   url,
@@ -26,17 +27,13 @@ export default function ServerListItem({
   auth,
 }: {
   url: string;
-  game: string;
+  game: ServerListItem;
   running: "pinging" | "updating" | boolean;
   auth: boolean;
 }) {
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [loading, setLoading] = useState(false);
-  const gameName =
-    game === "pz"
-      ? "Project Zomboid"
-      : game.charAt(0).toUpperCase() + game.slice(1);
 
   useEffect(() => {
     setLoading(false);
@@ -46,7 +43,7 @@ export default function ServerListItem({
     <ListItem sx={{ display: "flex", justifyContent: "space-between" }}>
       <List
         orientation="horizontal"
-        id={game}
+        id={game.game}
         sx={{
           flex: 1,
           width: "100%",
@@ -96,8 +93,8 @@ export default function ServerListItem({
               sx={{}}
             >
               <img
-                src={`../img/${game}.png`}
-                alt={game}
+                src={`../img/${game.game}.png`}
+                alt={game.name}
                 style={{
                   width: mobile ? "48px" : "64px",
                   height: mobile ? "48px" : "64px",
@@ -106,8 +103,8 @@ export default function ServerListItem({
             </Badge>
           ) : (
             <img
-              src={`../img/${game}.png`}
-              alt={game}
+              src={`../img/${game.game}.png`}
+              alt={game.name}
               style={{
                 width: mobile ? "48px" : "64px",
                 height: mobile ? "48px" : "64px",
@@ -125,7 +122,7 @@ export default function ServerListItem({
             level={mobile ? "title-sm" : "title-md"}
             sx={{ textAlign: "center" }}
           >
-            {gameName}
+            {game.name}
           </Typography>
         </ListItem>
         {!mobile && (
@@ -136,7 +133,7 @@ export default function ServerListItem({
           >
             <Chip
               variant="solid"
-              id={`${game}-status`}
+              id={`${game.game}-status`}
               color={
                 running === "pinging" || running === "updating" || loading
                   ? "warning"
@@ -175,7 +172,7 @@ export default function ServerListItem({
             // color="neutral"
             // variant="soft"
             size={mobile ? "sm" : "md"}
-            id={`${game}-button`}
+            id={`${game.game}-button`}
             loading={running === "pinging" || loading}
             startDecorator={running ? <StopRounded /> : <PlayArrowRounded />}
             disabled={!auth || running === "updating"}
@@ -183,10 +180,10 @@ export default function ServerListItem({
               setLoading(true);
               const ws = new WebSocket(url);
               ws.onopen = async () => {
-                await ws.send(
+                ws.send(
                   JSON.stringify({
                     type: "startStop",
-                    game: game,
+                    game: game.game,
                   }),
                 );
                 ws.close();

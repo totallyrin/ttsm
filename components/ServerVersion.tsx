@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Button, List, ListItem, Typography, useTheme } from "@mui/joy";
 import { useMediaQuery } from "@mui/material";
 import UpdateRoundedIcon from "@mui/icons-material/UpdateRounded";
+import { ServerListItem } from "../utils/useServerList";
 
 export default function ServerVersion({
   url,
@@ -11,7 +12,7 @@ export default function ServerVersion({
   auth,
 }: {
   url: string;
-  game: string;
+  game: ServerListItem;
   running: "pinging" | "updating" | boolean;
   auth: boolean;
 }) {
@@ -34,7 +35,7 @@ export default function ServerVersion({
     >
       <List
         orientation="horizontal"
-        id={game}
+        id={game.game}
         sx={{
           flex: 1,
           width: "100%",
@@ -65,7 +66,7 @@ export default function ServerVersion({
             // color="neutral"
             // variant="soft"
             size={mobile ? "sm" : "md"}
-            id={`${game}-update`}
+            id={`${game.game}-update`}
             loading={loading || running === "updating"}
             startDecorator={<UpdateRoundedIcon />}
             disabled={!auth || running === true || running === "pinging"}
@@ -73,10 +74,10 @@ export default function ServerVersion({
               setLoading(true);
               const ws = new WebSocket(url);
               ws.onopen = async () => {
-                await ws.send(
+                ws.send(
                   JSON.stringify({
                     type: "update",
-                    game: game,
+                    game: game.game,
                   }),
                 );
                 ws.close();
