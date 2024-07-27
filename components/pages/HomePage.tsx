@@ -31,7 +31,7 @@ export default function HomePage({ theme, role, serverList, runningList }) {
           }}
         >
           {serverList.map((game, index) => (
-            <Sheet key={game} sx={{ width: "100%" }}>
+            <Sheet key={game.game} sx={{ width: "100%" }}>
               <ServerListItem
                 game={game}
                 url={url}
